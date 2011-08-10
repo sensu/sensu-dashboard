@@ -1,0 +1,103 @@
+require 'eventmachine'
+require 'sinatra/async'
+require 'em-http-request'
+require 'sass'
+
+EventMachine.run do
+
+  class DashboardServer < Sinatra::Base
+
+    register Sinatra::Async
+    set :root, File.dirname(__FILE__)
+    set :static, true
+    set :public, Proc.new { File.join(root, "public") }
+
+    api_server = 'http://127.0.0.1:8080'
+
+    before do
+      content_type 'application/json'
+    end
+
+    aget '/' do
+      content_type 'text/html'
+      body erb :index
+    end
+
+    aget '/css/sonian.css' do
+      content_type 'text/css'
+      body sass :sonian
+    end
+
+    # api proxy
+    aget '/events' do
+      begin
+        http = EventMachine::HttpRequest.new("#{api_server}/events").get
+      rescue => e
+        puts e
+        status 404
+        body '{"error":"could not retrieve alerts from the monitoring api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not retrieve alerts from the monitoring api"}'
+      end
+
+      http.callback do
+        body http.response
+      end
+    end
+
+    aget '/clients' do
+      begin
+        http = EventMachine::HttpRequest.new("#{api_server}/clients").get
+      rescue => e
+        puts e
+        status 404
+        body '{"error":"could not retrieve clients from the monitoring api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not retrieve clients from the monitoring api"}'
+      end
+
+      http.callback do
+        body http.response
+      end
+    end
+
+    aget '/client/:id' do |id|
+      begin
+        http = EventMachine::HttpRequest.new("#{api_server}/client/#{id}").get
+      rescue => e
+        puts e
+        status 404
+        body '{"error":"could not retrieve clients from the monitoring api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not retrieve clients from the monitoring api"}'
+      end
+
+      http.callback do
+        body http.response
+      end
+    end
+
+  end
+
+  DashboardServer.run!({:port => 7070})
+
+  #
+  # Recognize exit command
+  #
+  Signal.trap("INT") do
+    EM.stop
+  end
+  Signal.trap("TERM") do
+    EM.stop
+  end
+
+end
