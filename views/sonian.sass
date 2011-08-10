@@ -76,12 +76,17 @@ section#main_content
       &.warning
         background-color: #fff
         border-bottom: 1px solid #ccc
+      &.unknown
+        background-color: #ffffee
+        border-bottom: 1px solid #fffbb5
       &:first-child
         &.critical
           border-top: 1px solid #933
         &.warning
           border-top: 1px solid #ccc
-      &.critical:hover, &.warning:hover
+        &.unknown
+          border-top: 1px solid #fffbb5
+      &.critical:hover, &.warning:hover, &.unknown:hover
         background-color: #992222
         color: #fff
         border-bottom: 1px solid #880000

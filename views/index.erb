@@ -124,6 +124,13 @@
   </tr>
 </script>
 
+<!-- Unknown Event template -->
+<script id="unknownEventTemplate" type="text/x-jquery-tmpl">
+  <tr class="unknown" id="${client}_${check}" rel="leanModal" href="#${client}_${check}_modal">
+    <td>${client}</td><td>${check}</td><td>${status}</td><td>${output}</td>
+  </tr>
+</script>
+
 <!-- Warning Event template -->
 <script id="warnEventTemplate" type="text/x-jquery-tmpl">
   <tr class="warning" id="${client}_${check}" rel="leanModal" href="#${client}_${check}_modal">

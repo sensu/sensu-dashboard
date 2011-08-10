@@ -1,12 +1,13 @@
 // remap jQuery to $
 (function($){})(window.jQuery);
 
-var alerts_crit, alerts_warn;
+var alerts_crit, alerts_warn, alerts_unknown;
 
 function fetchAlerts() {
   $.getJSON('/events', function(data) {
 
     alerts_crit = new Array();
+    alerts_unknown = new Array();
     alerts_warn = new Array();
 
     for (var nodekey in data) {
@@ -26,22 +27,31 @@ function fetchAlerts() {
             roles: client_data['subscriptions']
           };
 
-          if (node[a]['status'] == 2 || node[a]['status'] == 3) {
+          if (node[a]['status'] == 1) {
+            alerts_warn.push(dataObject);
+          }
+          else if (node[a]['status'] == 2) {
             alerts_crit.push(dataObject);
           } else {
-            alerts_warn.push(dataObject);
+            alerts_unknown.push(dataObject);
           }
         }
 
         $('#critEventTemplate').tmpl(alerts_crit).appendTo('table#alerts > tbody');
+        $('#unknownEventTemplate').tmpl(alerts_unknown).appendTo('table#alerts > tbody');
         $('#warnEventTemplate').tmpl(alerts_warn).appendTo('table#alerts > tbody');
         $('#eventDetailsTemplate').tmpl(alerts_crit).appendTo('#event_detail_modals');
+        $('#eventDetailsTemplate').tmpl(alerts_unknown).appendTo('#event_detail_modals');
         $('#eventDetailsTemplate').tmpl(alerts_warn).appendTo('#event_detail_modals');
         $('tr[rel*=leanModal]').leanModal({ top : 50 });
 
         // Add events to the generated templates
         for (var a in alerts_crit) {
           var identifier = alerts_crit[a]['client']+'_'+alerts_crit[a]['check'];
+          addClipboardToDetails(identifier);
+        }
+        for (var a in alerts_unknown) {
+          var identifier = alerts_unknown[a]['client']+'_'+alerts_unknown[a]['check'];
           addClipboardToDetails(identifier);
         }
         for (var a in alerts_warn) {
