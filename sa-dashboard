@@ -1,6 +1,7 @@
 require 'eventmachine'
 require 'sinatra/async'
 require 'em-http-request'
+require 'em-websocket'
 require 'sass'
 
 EventMachine.run do
@@ -83,6 +84,38 @@ EventMachine.run do
 
       http.callback do
         body http.response
+      end
+    end
+
+    websocket_connections = Array.new
+    EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 9000) do |websocket|
+      websocket.onopen do
+        websocket_connections.push websocket
+        puts 'client connected to websocket'
+      end
+      websocket.onclose do
+        websocket_connections.delete websocket
+        puts 'client disconnected from websocket'
+      end
+    end
+
+    update_clients = proc do
+      websocket_connections.each do |websocket|
+        websocket.send '{"success":"true"}'
+      end
+      puts 'updated clients'
+    end
+
+    apost '/events' do
+      #if secret == params[:secret]
+      if true
+        unless websocket_connections.empty?
+          EventMachine.defer(update_clients)
+        end
+        body '{"success":"updated events"}'
+      else
+        status 400
+        body '{"error":"invalid secret"}'
       end
     end
 

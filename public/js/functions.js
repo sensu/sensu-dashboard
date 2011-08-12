@@ -10,6 +10,9 @@ function fetchAlerts() {
     alerts_unknown = new Array();
     alerts_warn = new Array();
 
+    $('table#alerts > tbody').empty();
+    $('#event_detail_modals').empty();
+
     for (var nodekey in data) {
       var node = data[nodekey];
 
@@ -80,6 +83,11 @@ function addClipboardToDetails(identifier) {
 $(document).ready(function () {
 
   fetchAlerts();
+
+  ws = new WebSocket("ws://" + location.hostname + ":9000");
+  ws.onmessage = function(evt) {
+    fetchAlerts();
+  }
 
 });
 
