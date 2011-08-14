@@ -95,7 +95,83 @@
 
 	</footer>
 
-        <div id="event_detail_modals"></div>
+	<div id="event_details_modal" class="alert_details_modal">
+
+	    <div class="alert_detail_group">
+	      <div class="alert_detail">
+	        <h1>Client name</h1>
+	        <p></p>
+	      </div>
+	      <div class="copy">Copy</div>
+	      <div style="clear: both;"></div>
+	    </div>
+
+	    <div class="alert_detail_group">
+	      <div class="alert_detail">
+	        <h1>Check</h1>
+	        <p></p>
+	      </div>
+	      <div class="copy">Copy</div>
+	      <div style="clear: both;"></div>
+	    </div>
+
+	    <div class="alert_detail_group">
+	      <div class="alert_detail">
+	        <h1>Status</h1>
+	        <p></p>
+	      </div>
+	      <div class="copy">Copy</div>
+	      <div style="clear: both;"></div>
+	    </div>
+
+	    <div class="alert_detail_group">
+	      <div class="alert_detail">
+	        <h1>Output</h1>
+	        <p></p>
+	      </div>
+	      <div class="copy">Copy</div>
+	      <div style="clear: both;"></div>
+	    </div>
+
+	    <div class="alert_detail_group">
+	      <div class="alert_detail">
+	        <h1>Environment</h1>
+	        <p></p>
+	      </div>
+	      <div class="copy">Copy</div>
+	      <div style="clear: both;"></div>
+	    </div>
+
+	    <div class="alert_detail_group">
+	      <div class="alert_detail">
+	        <h1>Hostname</h1>
+	        <p></p>
+	      </div>
+	      <div class="copy">Copy</div>
+	      <div style="clear: both;"></div>
+	    </div>
+
+	    <div class="alert_detail_group">
+	      <div class="alert_detail">
+	        <h1>Public IP</h1>
+	        <p></p>
+	      </div>
+	      <div class="copy">Copy</div>
+	      <div style="clear: both;"></div>
+	    </div>
+
+	    <div class="alert_detail_group">
+	      <div class="alert_detail">
+	        <h1>Roles</h1>
+	        <ul>
+	          <li></li>
+	        </ul>
+	      </div>
+	      <div class="copy">Copy</div>
+	      <div style="clear: both;"></div>
+	    </div>
+
+	  </div>
 
 </div>
 
@@ -117,108 +193,16 @@
 <!-- this is where we put our custom functions -->
 <script src="js/functions.js"></script>
 
-<!-- Critical Event template -->
-<script id="critEventTemplate" type="text/x-jquery-tmpl">
-  <tr class="critical" id="${client}_${check}" rel="leanModal" href="#${client}_${check}_modal">
-    <td>${client}</td><td>${check}</td><td>${status}</td><td>${output}</td>
-  </tr>
-</script>
-
-<!-- Unknown Event template -->
-<script id="unknownEventTemplate" type="text/x-jquery-tmpl">
-  <tr class="unknown" id="${client}_${check}" rel="leanModal" href="#${client}_${check}_modal">
-    <td>${client}</td><td>${check}</td><td>${status}</td><td>${output}</td>
-  </tr>
-</script>
-
-<!-- Warning Event template -->
-<script id="warnEventTemplate" type="text/x-jquery-tmpl">
-  <tr class="warning" id="${client}_${check}" rel="leanModal" href="#${client}_${check}_modal">
+<!-- Event template -->
+<script id="eventTemplate" type="text/x-jquery-tmpl">
+  <tr class="status${status}" id="${client}_${check}" rel="leanModal" href="#event_details_modal">
     <td>${client}</td><td>${check}</td><td>${status}</td><td>${output}</td>
   </tr>
 </script>
 
 <!-- Event Details template  -->
 <script id="eventDetailsTemplate" type="text/x-jquery-tmpl">
-  <div id="${client}_${check}_modal" class="alert_details_modal">
 
-    <div class="alert_detail_group">
-      <div class="alert_detail">
-        <h1>Client name</h1>
-        <p>${client}</p>
-      </div>
-      <div class="copy">Copy</div>
-      <div style="clear: both;"></div>
-    </div>
-
-    <div class="alert_detail_group">
-      <div class="alert_detail">
-        <h1>Check</h1>
-        <p>${check}</p>
-      </div>
-      <div class="copy">Copy</div>
-      <div style="clear: both;"></div>
-    </div>
-
-    <div class="alert_detail_group">
-      <div class="alert_detail">
-        <h1>Status</h1>
-        <p>${status}</p>
-      </div>
-      <div class="copy">Copy</div>
-      <div style="clear: both;"></div>
-    </div>
-
-    <div class="alert_detail_group">
-      <div class="alert_detail">
-        <h1>Output</h1>
-        <p>${output}</p>
-      </div>
-      <div class="copy">Copy</div>
-      <div style="clear: both;"></div>
-    </div>
-
-    <div class="alert_detail_group">
-      <div class="alert_detail">
-        <h1>Environment</h1>
-        <p>${environment}</p>
-      </div>
-      <div class="copy">Copy</div>
-      <div style="clear: both;"></div>
-    </div>
-
-    <div class="alert_detail_group">
-      <div class="alert_detail">
-        <h1>Hostname</h1>
-        <p>ip_10-20-10-20</p>
-      </div>
-      <div class="copy">Copy</div>
-      <div style="clear: both;"></div>
-    </div>
-
-    <div class="alert_detail_group">
-      <div class="alert_detail">
-        <h1>Public IP</h1>
-        <p>${address}</p>
-      </div>
-      <div class="copy">Copy</div>
-      <div style="clear: both;"></div>
-    </div>
-
-    <div class="alert_detail_group">
-      <div class="alert_detail">
-        <h1>Roles</h1>
-        <ul>
-          {{each roles}}
-          <li>${$value}</li>
-          {{/each}}
-        </ul>
-      </div>
-      <div class="copy">Copy</div>
-      <div style="clear: both;"></div>
-    </div>
-
-  </div>
 </script>
 
 </body>

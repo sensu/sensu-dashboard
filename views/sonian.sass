@@ -69,24 +69,24 @@ section#main_content
     tbody tr
       background-color: #fff
       cursor: pointer
-      &.critical
+      &.status2
         background-color: #b55
         color: #fff
         border-bottom: 1px solid #933
-      &.warning
+      &.status1
         background-color: #fff
         border-bottom: 1px solid #ccc
-      &.unknown
+      &.status3
         background-color: #ffffee
         border-bottom: 1px solid #fffbb5
       &:first-child
-        &.critical
+        &.status2
           border-top: 1px solid #933
-        &.warning
+        &.status1
           border-top: 1px solid #ccc
-        &.unknown
+        &.status3
           border-top: 1px solid #fffbb5
-      &.critical:hover, &.warning:hover, &.unknown:hover
+      &.status2:hover, &.status1:hover, &.status3:hover
         background-color: #992222
         color: #fff
         border-bottom: 1px solid #880000
