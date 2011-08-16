@@ -1,8 +1,6 @@
 // remap jQuery to $
 (function($){})(window.jQuery);
 
-var events;
-
 function fetchAlerts() {
   $.getJSON('/events', function(data) {
 
@@ -23,22 +21,26 @@ function fetchAlerts() {
           output: node[a]['output'],
         };
 
-        if (m_events[node[a]['status']] == null) {
-          m_events[node[a]['status']] = new Array();
+        if (m_events[node[a]['status'][nodekey+a]] == null) {
+          m_events[node[a]['status'][nodekey+a]] = new Array();
         }
 
-        m_events[node[a]['status']].push(dataObject);
+        m_events[node[a]['status'][nodekey+a]].push(dataObject);
       }
     }
 
     for (status in m_events) {
       for (a in m_events[status]) {
         var m_event = m_events[status][a];
+        var ccheck = m_event['client'] + m_event['check'];
 
         $('#eventTemplate').tmpl(m_event).prependTo('table#alerts > tbody');
 
-        $('tr#' + m_event['client'] + '_' + m_event['check']).click(function() {
-          // TODO: replace or clear & generate the contents of the modal dialog
+        $('tr#' + ccheck).click(function() {
+          $('#eventDetailsRowTemplate').tmpl(m_event).appendTo('div#event_details_modal > div#event_data');
+          $.getJSON('/client/'+m_event['client'], function(clientdata) {
+            $('#clientDetailsRowTemplate').tmpl(clientdata).appendTo('div#event_details_modal > div#client_data');
+          });
         });
       }
     }

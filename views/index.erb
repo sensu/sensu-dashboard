@@ -97,81 +97,13 @@
 
 	<div id="event_details_modal" class="alert_details_modal">
 
-	    <div class="alert_detail_group">
-	      <div class="alert_detail">
-	        <h1>Client name</h1>
-	        <p></p>
-	      </div>
-	      <div class="copy">Copy</div>
-	      <div style="clear: both;"></div>
-	    </div>
+		<h1 class="section_title">Event Data</h1>
+		<div id="event_data"></div>
 
-	    <div class="alert_detail_group">
-	      <div class="alert_detail">
-	        <h1>Check</h1>
-	        <p></p>
-	      </div>
-	      <div class="copy">Copy</div>
-	      <div style="clear: both;"></div>
-	    </div>
+		<h1 class="section_title">Client Data</h1>
+		<div id="client_data"></div>
 
-	    <div class="alert_detail_group">
-	      <div class="alert_detail">
-	        <h1>Status</h1>
-	        <p></p>
-	      </div>
-	      <div class="copy">Copy</div>
-	      <div style="clear: both;"></div>
-	    </div>
-
-	    <div class="alert_detail_group">
-	      <div class="alert_detail">
-	        <h1>Output</h1>
-	        <p></p>
-	      </div>
-	      <div class="copy">Copy</div>
-	      <div style="clear: both;"></div>
-	    </div>
-
-	    <div class="alert_detail_group">
-	      <div class="alert_detail">
-	        <h1>Environment</h1>
-	        <p></p>
-	      </div>
-	      <div class="copy">Copy</div>
-	      <div style="clear: both;"></div>
-	    </div>
-
-	    <div class="alert_detail_group">
-	      <div class="alert_detail">
-	        <h1>Hostname</h1>
-	        <p></p>
-	      </div>
-	      <div class="copy">Copy</div>
-	      <div style="clear: both;"></div>
-	    </div>
-
-	    <div class="alert_detail_group">
-	      <div class="alert_detail">
-	        <h1>Public IP</h1>
-	        <p></p>
-	      </div>
-	      <div class="copy">Copy</div>
-	      <div style="clear: both;"></div>
-	    </div>
-
-	    <div class="alert_detail_group">
-	      <div class="alert_detail">
-	        <h1>Roles</h1>
-	        <ul>
-	          <li></li>
-	        </ul>
-	      </div>
-	      <div class="copy">Copy</div>
-	      <div style="clear: both;"></div>
-	    </div>
-
-	  </div>
+	</div>
 
 </div>
 
@@ -195,14 +127,57 @@
 
 <!-- Event template -->
 <script id="eventTemplate" type="text/x-jquery-tmpl">
-  <tr class="status${status}" id="${client}_${check}" rel="leanModal" href="#event_details_modal">
+  <tr class="status${status}" id="${client}${check}" rel="leanModal" href="#event_details_modal">
     <td>${client}</td><td>${check}</td><td>${status}</td><td>${output}</td>
   </tr>
 </script>
 
-<!-- Event Details template  -->
-<script id="eventDetailsTemplate" type="text/x-jquery-tmpl">
+<!-- Event details row template  -->
+<script id="eventDetailsRowTemplate" type="text/x-jquery-tmpl">
+<div class="alert_detail_group">
+  <div class="alert_detail">
+    <h1>Client</h1>
+    <p>${client}</p>
+  </div>
+  <div class="copy">Copy</div>
+  <div style="clear: both;"></div>
+</div>
+<div class="alert_detail_group">
+  <div class="alert_detail">
+    <h1>Check</h1>
+    <p>${check}</p>
+  </div>
+  <div class="copy">Copy</div>
+  <div style="clear: both;"></div>
+</div>
+<div class="alert_detail_group">
+  <div class="alert_detail">
+    <h1>Status</h1>
+    <p>${status}</p>
+  </div>
+  <div class="copy">Copy</div>
+  <div style="clear: both;"></div>
+</div>
+<div class="alert_detail_group">
+  <div class="alert_detail">
+    <h1>Output</h1>
+    <p>${output}</p>
+  </div>
+  <div class="copy">Copy</div>
+  <div style="clear: both;"></div>
+</div>
+</script>
 
+<!-- Client details row template  -->
+<script id="clientDetailsRowTemplate" type="text/x-jquery-tmpl">
+<div class="alert_detail_group">
+  <div class="alert_detail">
+    <h1>${client}</h1>
+    <p>${}</p>
+  </div>
+  <div class="copy">Copy</div>
+  <div style="clear: both;"></div>
+</div>
 </script>
 
 </body>
