@@ -21,6 +21,7 @@ EventMachine.run do
 
     aget '/' do
       content_type 'text/html'
+      @js = erb :event_templates, :layout => false
       body erb :index
     end
 

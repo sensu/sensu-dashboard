@@ -1,6 +1,7 @@
 body
   background-color: #c0c0c0
   background-image: url('../img/footer_bg.png')
+  z-index: 1
 
 header
   background-color: #992222
@@ -99,6 +100,55 @@ section#main_content
           width: 150px
         &.status_col
           width: 80px
+  div.alert_details_modal
+    background-color: white
+    width: 600px
+    padding: 30px
+    display: none
+    border-radius: 5px
+    -moz-border-radius: 5px
+    -webkit-border-radius: 5px
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7)
+    -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.7)
+    -moz-box-shadow: 0 0px 4px rgba(0, 0, 0, 0.7)
+    h1.section_title
+      margin: 20px 0 10px 0
+      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif
+      font-weight: 300
+      font-size: 16px
+    h1.section_title:first-child
+      margin-top: 0
+    div
+      &.alert_detail_group
+        background-color: #f0f0f0
+        margin-bottom: 10px
+        padding: 7px
+        border-radius: 5px
+        -moz-border-radius: 5px
+        -webkit-border-radius: 5px
+        &:last-child
+          margin-bottom: 0
+        div.alert_detail
+          float: left
+        h1
+          font-size: 13px
+          margin-bottom: 7px
+          color: #333
+          font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif
+          font-weight: bold
+          margin-bottom: 4px
+          text-shadow: none
+        p
+      &.copy
+        float: right
+        padding: 7px
+        background-color: #933
+        color: white
+        border: 1px solid #880000
+        border-radius: 5px
+        -moz-border-radius: 5px
+        -webkit-border-radius: 5px
+        cursor: pointer
 
 footer
   border-top: 1px solid #ccc
@@ -123,52 +173,6 @@ span.alerts_count
   width: 100%
   background: #000
   display: none
-
-div.alert_details_modal
-  background-color: white
-  width: 600px
-  padding: 30px
-  display: none
-  border-radius: 5px
-  -moz-border-radius: 5px
-  -webkit-border-radius: 5px
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7)
-  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.7)
-  -moz-box-shadow: 0 0px 4px rgba(0, 0, 0, 0.7)
-  h1.section_title
-    margin: 20px 0 10px 0
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif
-    font-weight: 300
-    font-size: 16px
-  h1.section_title:first-child
-    margin-top: 0
-  div
-    &.alert_detail_group
-      background-color: #f0f0f0
-      margin-bottom: 10px
-      padding: 7px
-      border-radius: 5px
-      -moz-border-radius: 5px
-      -webkit-border-radius: 5px
-      &:last-child
-        margin-bottom: 0
-      div.alert_detail
-        float: left
-      h1
-        font-size: 13px
-        margin-bottom: 7px
-        color: #333
-      p
-    &.copy
-      float: right
-      padding: 7px
-      background-color: #933
-      color: white
-      border: 1px solid #880000
-      border-radius: 5px
-      -moz-border-radius: 5px
-      -webkit-border-radius: 5px
-      cursor: pointer
 
 a
   color: #992222
