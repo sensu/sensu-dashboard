@@ -170,14 +170,16 @@
 
 <!-- Client details row template  -->
 <script id="clientDetailsRowTemplate" type="text/x-jquery-tmpl">
+{{each $data}}
 <div class="alert_detail_group">
   <div class="alert_detail">
-    <h1>${client}</h1>
-    <p>${}</p>
+    <h1>${capitaliseFirstLetter($index)}</h1>
+    <p>${$value}</p>
   </div>
   <div class="copy">Copy</div>
   <div style="clear: both;"></div>
 </div>
+{{/each}}
 </script>
 
 </body>

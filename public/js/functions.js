@@ -1,6 +1,15 @@
 // remap jQuery to $
 (function($){})(window.jQuery);
 
+function capitaliseFirstLetter(string) {
+  var newStr = '';
+  var splitStr = string.split(' ');
+  for (var word in splitStr) {
+    newStr += splitStr[word].charAt(0).toUpperCase() + splitStr[word].slice(1) + ' ';
+  }
+  return newStr;
+}
+
 function fetchAlerts() {
   $.getJSON('/events', function(data) {
 
@@ -37,6 +46,8 @@ function fetchAlerts() {
         $('#eventTemplate').tmpl(m_event).prependTo('table#alerts > tbody');
 
         $('tr#' + ccheck).click(function() {
+          $('div#event_details_modal > div#event_data').empty();
+          $('div#event_details_modal > div#client_data').empty();
           $('#eventDetailsRowTemplate').tmpl(m_event).appendTo('div#event_details_modal > div#event_data');
           $.getJSON('/client/'+m_event['client'], function(clientdata) {
             $('#clientDetailsRowTemplate').tmpl(clientdata).appendTo('div#event_details_modal > div#client_data');
