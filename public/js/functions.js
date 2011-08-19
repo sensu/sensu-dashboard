@@ -51,6 +51,9 @@ function fetchAlerts() {
           $('#eventDetailsRowTemplate').tmpl(m_event).appendTo('div#event_details_modal > div#event_data');
           $.getJSON('/client/'+m_event['client'], function(clientdata) {
             $('#clientDetailsRowTemplate').tmpl(clientdata).appendTo('div#event_details_modal > div#client_data');
+            $('div#event_details_modal > div#client_data > h1').click(function() {
+              $(this).select();
+            });
           });
         });
       }
