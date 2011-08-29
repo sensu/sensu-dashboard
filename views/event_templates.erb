@@ -54,3 +54,12 @@
 </div>
 {{/each}}
 </script>
+
+<script type="text/javascript">
+fetchAlerts();
+
+ws = new WebSocket("ws://" + location.hostname + ":9000");
+ws.onmessage = function(evt) {
+  fetchAlerts();
+}
+</script>

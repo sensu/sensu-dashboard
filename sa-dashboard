@@ -25,13 +25,19 @@ EventMachine.run do
       body erb :index
     end
 
+    aget '/clients' do
+      content_type 'text/html'
+      @js = erb :client_templates, :layout => false
+      body erb :clients
+    end
+
     aget '/css/sonian.css' do
       content_type 'text/css'
       body sass :sonian
     end
 
     # api proxy
-    aget '/events' do
+    aget '/events.json' do
       begin
         http = EventMachine::HttpRequest.new("#{api_server}/events").get
       rescue => e
@@ -50,7 +56,7 @@ EventMachine.run do
       end
     end
 
-    aget '/clients' do
+    aget '/clients.json' do
       begin
         http = EventMachine::HttpRequest.new("#{api_server}/clients").get
       rescue => e
@@ -69,7 +75,7 @@ EventMachine.run do
       end
     end
 
-    aget '/client/:id' do |id|
+    aget '/client/:id.json' do |id|
       begin
         http = EventMachine::HttpRequest.new("#{api_server}/client/#{id}").get
       rescue => e
@@ -107,7 +113,7 @@ EventMachine.run do
       puts 'updated clients'
     end
 
-    apost '/events' do
+    apost '/events.json' do
       #if secret == params[:secret]
       if true
         unless websocket_connections.empty?

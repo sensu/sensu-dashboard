@@ -10,8 +10,12 @@ function capitaliseFirstLetter(string) {
   return newStr;
 }
 
+function sortEvents(a,b) {
+  return a - b;
+}
+
 function fetchAlerts() {
-  $.getJSON('/events', function(data) {
+  $.getJSON('/events.json', function(data) {
 
     m_events = new Array();
 
@@ -38,6 +42,8 @@ function fetchAlerts() {
       }
     }
 
+    m_events.sort(sortEvents);
+
     for (status in m_events) {
       for (a in m_events[status]) {
         var m_event = m_events[status][a];
@@ -49,7 +55,7 @@ function fetchAlerts() {
           $('div#event_details_modal > div#event_data').empty();
           $('div#event_details_modal > div#client_data').empty();
           $('#eventDetailsRowTemplate').tmpl(m_event).appendTo('div#event_details_modal > div#event_data');
-          $.getJSON('/client/'+m_event['client'], function(clientdata) {
+          $.getJSON('/client/'+m_event['client']+'.json', function(clientdata) {
             $('#clientDetailsRowTemplate').tmpl(clientdata).appendTo('div#event_details_modal > div#client_data');
             $('div#event_details_modal > div#client_data > h1').click(function() {
               $(this).select();
@@ -61,18 +67,34 @@ function fetchAlerts() {
 
     $('tr[rel*=leanModal]').leanModal({ top : 50 });
 
+    var row_count = $('table#alerts > tbody > tr').length;
+    $('span#alert_count').html(row_count);
+
+  });
+}
+
+function fetchClients() {
+  $.getJSON('/clients.json', function(data) {
+
+    m_clients = new Array();
+
+    $('table#clients > tbody').empty();
+
+    for (var clientkey in data) {
+      var client = data[clientkey];
+      client['subscriptions'] = client['subscriptions'].join(', ');
+      m_clients.push(client);
+    }
+
+    $('#clientTemplate').tmpl(m_clients).prependTo('table#clients > tbody');
+
+    var row_count = $('table#clients > tbody > tr').length;
+    $('span#client_count').html(row_count);
   });
 }
 
 /* trigger when page is ready */
 $(document).ready(function () {
-
-  fetchAlerts();
-
-  ws = new WebSocket("ws://" + location.hostname + ":9000");
-  ws.onmessage = function(evt) {
-    fetchAlerts();
-  }
 
   // TODO: fix clipboard support
   /*$('div#event_details_modal > div.alert_detail_group > div.copy').click(function() {

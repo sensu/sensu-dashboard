@@ -1,0 +1,15 @@
+<!-- Client template -->
+<script id="clientTemplate" type="text/x-jquery-tmpl">
+  <tr id="${name}">
+    <td>${name}</td><td>${address}</td><td>${timestamp}</td><td>${environment}</td><td>${subscriptions}</td>
+  </tr>
+</script>
+
+<script type="text/javascript">
+fetchClients();
+
+ws = new WebSocket("ws://" + location.hostname + ":9000");
+ws.onmessage = function(evt) {
+  fetchClients();
+}
+</script>

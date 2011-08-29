@@ -67,6 +67,12 @@ section#main_content
         font-weight: 600
         font-size: 14px
         text-shadow: 0 1px 0 white
+        &.col_clients
+          width: 100px
+        &.col_checks
+          width: 150px
+        &.col_status
+          width: 80px
     tbody tr
       background-color: #fff
       cursor: pointer
@@ -94,12 +100,17 @@ section#main_content
         border-top: 1px solid #880000
       td
         padding: 7px
-        &.client_col
-          width: 100px
-        &.check_col
-          width: 150px
-        &.status_col
-          width: 80px
+  table#clients
+    tbody
+      tr:first-child
+        border-top: 1px solid #ccc
+      tr
+        border-bottom: 1px solid #ccc
+      tr:hover
+        background-color: #992222
+        color: #fff
+        border-bottom: 1px solid #880000
+        border-top: 1px solid #880000
   div.alert_details_modal
     background-color: white
     width: 600px
