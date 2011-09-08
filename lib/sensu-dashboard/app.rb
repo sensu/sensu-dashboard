@@ -3,6 +3,7 @@ require 'sinatra/async'
 require 'em-http-request'
 require 'em-websocket'
 require 'sass'
+require 'sensu/config'
 
 EventMachine.run do
 
@@ -14,6 +15,10 @@ EventMachine.run do
     set :public, Proc.new { File.join(root, "public") }
 
     api_server = 'http://127.0.0.1:8080'
+
+    config = Sensu::Config.new
+    settings = config.settings
+    secret = settings['dashboard']['key']
 
     before do
       content_type 'application/json'
@@ -114,8 +119,7 @@ EventMachine.run do
     end
 
     apost '/events.json' do
-      #if secret == params[:secret]
-      if true
+      if secret == params[:secret]
         unless websocket_connections.empty?
           EventMachine.defer(update_clients)
         end
