@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.description = %q{Display current events and clients in sensu via a simple web interface}
 
   s.add_dependency("eventmachine")
+  s.add_dependency("rack", ">= 1.3.4")
   s.add_dependency("async_sinatra")
   s.add_dependency("em-http-request")
   s.add_dependency("em-websocket")
