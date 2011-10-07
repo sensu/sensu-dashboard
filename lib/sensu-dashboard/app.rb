@@ -12,13 +12,13 @@ EventMachine.run do
     register Sinatra::Async
     set :root, File.dirname(__FILE__)
     set :static, true
-    set :public, Proc.new { File.join(root, "public") }
+    set :public_folder, Proc.new { File.join(root, "public") }
 
-    api_server = 'http://127.0.0.1:8080'
-
-    config = Sensu::Config.new
+    options = Sensu::Config.read_arguments(ARGV)
+    config = Sensu::Config.new(options)
     settings = config.settings
-    secret = settings['dashboard']['key']
+    secret = settings.has_key?('dashboard') ? settings['dashboard']['key'] : 'secret'
+    api_server = 'http://' + settings['api']['host'] + ':' + settings['api']['port'].to_s
 
     before do
       content_type 'application/json'
