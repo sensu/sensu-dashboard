@@ -111,17 +111,12 @@ EventMachine.run do
       end
     end
 
-    update_clients = proc do
-      websocket_connections.each do |websocket|
-        websocket.send '{"success":"true"}'
-      end
-      puts 'updated clients'
-    end
-
     apost '/events.json' do
-      if secret == params[:secret]
+      if secret == JSON.parse(request.body.read)['secret']
         unless websocket_connections.empty?
-          EventMachine.defer(update_clients)
+          websocket_connections.each do |websocket|
+            websocket.send '{"success":"true"}'
+          end
         end
         body '{"success":"updated events"}'
       else
