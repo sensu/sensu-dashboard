@@ -48,12 +48,12 @@ EventMachine.run do
       rescue => e
         puts e
         status 404
-        body '{"error":"could not retrieve alerts from the monitoring api"}'
+        body '{"error":"could not retrieve alerts from the sensu api"}'
       end
 
       http.errback do
         status 404
-        body '{"error":"could not retrieve alerts from the monitoring api"}'
+        body '{"error":"could not retrieve alerts from the sensu api"}'
       end
 
       http.callback do
@@ -67,12 +67,12 @@ EventMachine.run do
       rescue => e
         puts e
         status 404
-        body '{"error":"could not retrieve clients from the monitoring api"}'
+        body '{"error":"could not retrieve clients from the sensu api"}'
       end
 
       http.errback do
         status 404
-        body '{"error":"could not retrieve clients from the monitoring api"}'
+        body '{"error":"could not retrieve clients from the sensu api"}'
       end
 
       http.callback do
@@ -86,15 +86,75 @@ EventMachine.run do
       rescue => e
         puts e
         status 404
-        body '{"error":"could not retrieve clients from the monitoring api"}'
+        body '{"error":"could not retrieve clients from the sensu api"}'
       end
 
       http.errback do
         status 404
-        body '{"error":"could not retrieve clients from the monitoring api"}'
+        body '{"error":"could not retrieve clients from the sensu api"}'
       end
 
       http.callback do
+        body http.response
+      end
+    end
+
+    aget '/stash/*.json' do |path|
+      begin
+        http = EventMachine::HttpRequest.new("#{api_server}/stash/#{path}").get
+      rescue => e
+        puts e
+        status 404
+        body '{"error":"could not retrieve a stash from the sensu api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not retrieve a stash from the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        body http.response
+      end
+    end
+
+    apost '/stash/*.json' do |path|
+      begin
+        http = EventMachine::HttpRequest.new("#{api_server}/stash/#{path}").post :body => request.body.read
+      rescue => e
+        puts e
+        status 404
+        body '{"error":"could not create a stash with the sensu api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not create a stash with the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        body http.response
+      end
+    end
+
+    adelete '/stash/*.json' do |path|
+      begin
+        http = EventMachine::HttpRequest.new("#{api_server}/stash/#{path}").delete
+      rescue => e
+        puts e
+        status 404
+        body '{"error":"could not delete a stash with the sensu api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not delete a stash with the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
         body http.response
       end
     end
