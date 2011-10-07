@@ -57,6 +57,7 @@ EventMachine.run do
       end
 
       http.callback do
+        status http.response_header.status
         body http.response
       end
     end
@@ -76,6 +77,7 @@ EventMachine.run do
       end
 
       http.callback do
+        status http.response_header.status
         body http.response
       end
     end
@@ -95,6 +97,7 @@ EventMachine.run do
       end
 
       http.callback do
+        status http.response_header.status
         body http.response
       end
     end
