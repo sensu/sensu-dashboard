@@ -127,6 +127,9 @@ section#main_content
       font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif
       font-weight: 300
       font-size: 16px
+      -moz-user-select: none
+      -khtml-user-select: none
+      user-select: none
     h1.section_title:first-child
       margin-top: 0
     div
@@ -150,8 +153,9 @@ section#main_content
           font-weight: bold
           margin-bottom: 4px
           text-shadow: none
-      &.copy
-        float: right
+      &.action_btn
+        float: left
+        margin-right: 7px
         padding: 7px
         background-color: #933
         color: white
@@ -160,6 +164,16 @@ section#main_content
         -moz-border-radius: 5px
         -webkit-border-radius: 5px
         cursor: pointer
+        -moz-user-select: none
+        -khtml-user-select: none
+        user-select: none
+        &.copy
+          float: right
+          margin-right: 0
+        &:hover
+          background-color: #b33
+        &:active
+          background-color: #733
 
 footer
   border-top: 1px solid #ccc
