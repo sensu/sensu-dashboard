@@ -10,7 +10,7 @@
 <div class="alert_detail_group">
   <div class="alert_detail">
     <h1>Client</h1>
-    <p>${client}</p>
+    <p id="client_id_value">${client}</p>
   </div>
   <!--<div class="copy">Copy</div>-->
   <div style="clear: both;"></div>
@@ -18,7 +18,7 @@
 <div class="alert_detail_group">
   <div class="alert_detail">
     <h1>Check</h1>
-    <p>${check}</p>
+    <p id="check_name_value">${check}</p>
   </div>
   <!--<div class="copy">Copy</div>-->
   <div style="clear: both;"></div>
@@ -62,4 +62,43 @@ ws = new WebSocket("ws://" + location.hostname + ":9000");
 ws.onmessage = function(evt) {
   fetchAlerts();
 }
+
+$("#disable_client_alerts").click(function() {
+  var client_id = $("#client_id_value").html();
+
+  $.ajax({
+    type: 'POST',
+    url: '/stash/silence/'+client_id+'.json',
+    data: '',
+    success: function() {
+      var alert_img = $("#disable_client_alerts").children().first();
+      if(alert_img.attr("src") == "/img/megaphone_icon.png") {
+        alert_img.attr("src", "/img/megaphone_icon_off.png");
+      } else {
+        alert_img.attr("src", "/img/megaphone_icon.png");
+      }
+    },
+    dataType: 'json'
+  });
+});
+
+$("#disable_client_check_alerts").click(function() {
+  var client_id = $("#client_id_value").html();
+  var check_name = $("#check_name_value").html();
+
+  $.ajax({
+    type: 'POST',
+    url: '/stash/silence/'+client_id+'/'+check_name+'.json',
+    data: '',
+    success: function() {
+      var alert_img = $("#disable_client_check_alerts").children().first();
+      if(alert_img.attr("src") == "/img/megaphone_icon.png") {
+        alert_img.attr("src", "/img/megaphone_icon_off.png");
+      } else {
+        alert_img.attr("src", "/img/megaphone_icon.png");
+      }
+    },
+    dataType: 'json'
+  });
+});
 </script>
