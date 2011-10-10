@@ -145,7 +145,6 @@ EventMachine.run do
     adelete '/stash/*.json' do |path|
       begin
         http = EventMachine::HttpRequest.new("#{api_server}/stash/#{path}").delete
-        puts http
       rescue => e
         puts e
         status 404
