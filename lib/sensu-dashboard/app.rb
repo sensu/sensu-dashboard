@@ -17,8 +17,13 @@ EventMachine.run do
     options = Sensu::Config.read_arguments(ARGV)
     config = Sensu::Config.new(options)
     settings = config.settings
-    secret = settings.has_key?('dashboard') ? settings['dashboard']['key'] : 'secret'
+    dashboard_user = settings['dashboard']['user'] || 'admin'
+    dashboard_password = settings['dashboard']['password'] || 'secret'
     api_server = 'http://' + settings['api']['host'] + ':' + settings['api']['port'].to_s
+
+    use Rack::Auth::Basic do |user, password|
+      user == dashboard_user && password == dashboard_password
+    end
 
     before do
       content_type 'application/json'
@@ -175,19 +180,13 @@ EventMachine.run do
     end
 
     apost '/events.json' do
-      if secret == JSON.parse(request.body.read)['secret']
-        unless websocket_connections.empty?
-          websocket_connections.each do |websocket|
-            websocket.send '{"success":"true"}'
-          end
+      unless websocket_connections.empty?
+        websocket_connections.each do |websocket|
+          websocket.send '{"update":"true"}'
         end
-        body '{"success":"updated events"}'
-      else
-        status 400
-        body '{"error":"invalid secret"}'
       end
+      body '{"success":"triggered dashboard refresh"}'
     end
-
   end
 
   DashboardServer.run!({:port => 7070})
