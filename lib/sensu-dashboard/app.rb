@@ -17,8 +17,8 @@ EventMachine.run do
     options = Sensu::Config.read_arguments(ARGV)
     config = Sensu::Config.new(options)
     settings = config.settings
-    dashboard_user = settings['dashboard']['user'] || 'admin'
-    dashboard_password = settings['dashboard']['password'] || 'secret'
+    dashboard_user = settings.has_key?('dashboard') ? settings['dashboard']['user'] : 'admin'
+    dashboard_password = settings.has_key?('dashboard') ? settings['dashboard']['password'] : 'secret'
     api_server = 'http://' + settings['api']['host'] + ':' + settings['api']['port'].to_s
 
     use Rack::Auth::Basic do |user, password|
