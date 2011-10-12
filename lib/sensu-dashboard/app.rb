@@ -17,12 +17,10 @@ EventMachine.run do
     options = Sensu::Config.read_arguments(ARGV)
     config = Sensu::Config.new(options)
     settings = config.settings
-    dashboard_user = settings.has_key?('dashboard') ? settings['dashboard']['user'] : 'admin'
-    dashboard_password = settings.has_key?('dashboard') ? settings['dashboard']['password'] : 'secret'
     api_server = 'http://' + settings['api']['host'] + ':' + settings['api']['port'].to_s
 
     use Rack::Auth::Basic do |user, password|
-      user == dashboard_user && password == dashboard_password
+      user == settings['dashboard']['user'] && password == settings['dashboard']['password']
     end
 
     before do
@@ -189,7 +187,7 @@ EventMachine.run do
     end
   end
 
-  DashboardServer.run!({:port => 7070})
+  DashboardServer.run!({:port => settings['dashboard']['port']})
 
   #
   # Recognize exit command
