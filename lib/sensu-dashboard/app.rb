@@ -5,6 +5,10 @@ require 'em-websocket'
 require 'sass'
 require 'sensu/config'
 
+options = Sensu::Config.read_arguments(ARGV)
+config = Sensu::Config.new(options)
+SETTINGS = config.settings
+
 EventMachine.run do
 
   class DashboardServer < Sinatra::Base
@@ -14,13 +18,10 @@ EventMachine.run do
     set :static, true
     set :public_folder, Proc.new { File.join(root, "public") }
 
-    options = Sensu::Config.read_arguments(ARGV)
-    config = Sensu::Config.new(options)
-    settings = config.settings
-    api_server = 'http://' + settings['api']['host'] + ':' + settings['api']['port'].to_s
+    api_server = 'http://' + SETTINGS['api']['host'] + ':' + SETTINGS['api']['port'].to_s
 
     use Rack::Auth::Basic do |user, password|
-      user == settings['dashboard']['user'] && password == settings['dashboard']['password']
+      user == SETTINGS['dashboard']['user'] && password == SETTINGS['dashboard']['password']
     end
 
     before do
@@ -187,7 +188,7 @@ EventMachine.run do
     end
   end
 
-  DashboardServer.run!({:port => settings['dashboard']['port']})
+  DashboardServer.run!({:port => SETTINGS['dashboard']['port']})
 
   #
   # Recognize exit command
