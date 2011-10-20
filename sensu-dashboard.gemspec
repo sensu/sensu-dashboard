@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.add_dependency("eventmachine")
   s.add_dependency("rack", ">= 1.3.4")
   s.add_dependency("async_sinatra")
-  s.add_dependency("em-http-request")
+  s.add_dependency("em-http-request", "0.3.0")
   s.add_dependency("em-websocket")
   s.add_dependency("sass")
   s.add_dependency("sensu")
