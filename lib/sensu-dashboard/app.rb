@@ -68,47 +68,73 @@ EventMachine.run do
     end
 
     # api proxy
-    aget '/events_clients.json' do
-      begin
-        http = EventMachine::HttpRequest.new("#{api_server}/events").get
-      rescue => e
-        puts e
-        status 404
-        body '{\"error\":\"could not retrieve alerts from the sensu api\"}'
+    aget '/autocomplete.json' do
+      multi = EventMachine::MultiRequest.new
+
+      requests = [
+        "#{api_server}/events",
+        "#{api_server}/clients"
+      ]
+
+      requests.each do |url|
+        multi.add EventMachine::HttpRequest.new(url).get
       end
 
-      http.errback do
-        status 404
-        body '{\"error\":\"could not retrieve alerts from the sensu api\"}'
-      end
-
-      http.callback do
-        status http.response_header.status
-        result = JSON.parse(http.response)
-
-        # searching by client name, status
+      multi.callback do
+        events = {}
         clients = []
-        statuses = {:warning => [], :critical => [], :unknown => []}
-        result.each do |client, data|
-          clients.push({:value => client, :name => client})
-          data.each do |check_name, check_data|
-            status = check_data["status"]
-            if status == 1
-              statuses[:warning].push(client)
-            elsif status == 2
-              statuses[:critical].push(client)
-            else
-              statuses[:unknown].push(status)
-            end
+
+        multi.responses[:succeeded].each do |request|
+          body = JSON.parse(request.response)
+          case body
+          when Hash
+            events = body
+          when Array
+            clients = body
           end
         end
 
-        # searching by status
-        statuses.each do |k, v|
-          clients.push({:value => v.join(','), :name => k})
-        end
+        if events && clients
+          autocomplete = []
+          statuses = {:warning => [], :critical => [], :unknown => []}
+          subscriptions = {}
 
-        body clients.to_json
+          clients.each do |client|
+            client_name = client['name']
+            if events.include?(client_name)
+              autocomplete.push({:value => client, :name => client})
+              client['subscriptions'].each do |subscription|
+                subscriptions[subscription] ||= []
+                subscriptions[subscription].push(client_name)
+              end
+              events[client_name].each do |check, event|
+                case event["status"]
+                when 1
+                  statuses[:warning].push(client_name)
+                when 2
+                  statuses[:critical].push(client_name)
+                else
+                  statuses[:unknown].push(client_name)
+                end
+              end
+            end
+          end
+
+          # searching by subscription
+          subscriptions.each do |k, v|
+            autocomplete.push({:value => v.join(','), :name => k})
+          end
+
+          # searching by status
+          statuses.each do |k, v|
+            autocomplete.push({:value => v.join(','), :name => k})
+          end
+
+          body autocomplete.to_json
+        else
+          status 404
+          body '{"error":"could not retrieve events and/or clients from the sensu api"}'
+        end
       end
     end
 
