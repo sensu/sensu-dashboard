@@ -3,6 +3,7 @@ require 'sinatra/async'
 require 'em-http-request'
 require 'em-websocket'
 require 'sass'
+require 'json'
 require 'sensu/config'
 
 options = Sensu::Config.read_arguments(ARGV)
@@ -63,6 +64,51 @@ EventMachine.run do
       http.callback do
         status http.response_header.status
         body http.response
+      end
+    end
+
+    # api proxy
+    aget '/events_clients.json' do
+      begin
+        http = EventMachine::HttpRequest.new("#{api_server}/events").get
+      rescue => e
+        puts e
+        status 404
+        body '{\"error\":\"could not retrieve alerts from the sensu api\"}'
+      end
+
+      http.errback do
+        status 404
+        body '{\"error\":\"could not retrieve alerts from the sensu api\"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        result = JSON.parse(http.response)
+
+        # searching by client name, status
+        clients = []
+        statuses = {:warning => [], :critical => [], :unknown => []}
+        result.each do |client, data|
+          clients.push({:value => client, :name => client})
+          data.each do |check_name, check_data|
+            status = check_data["status"]
+            if status == 1
+              statuses[:warning].push(client)
+            elsif status == 2
+              statuses[:critical].push(client)
+            else
+              statuses[:unknown].push(status)
+            end
+          end
+        end
+
+        # searching by status
+        statuses.each do |k, v|
+          clients.push({:value => v.join(','), :name => k})
+        end
+
+        body clients.to_json
       end
     end
 
