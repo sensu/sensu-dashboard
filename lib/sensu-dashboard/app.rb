@@ -102,7 +102,7 @@ EventMachine.run do
           clients.each do |client|
             client_name = client['name']
             if events.include?(client_name)
-              autocomplete.push({:value => client, :name => client})
+              autocomplete.push({:value => client_name, :name => client_name})
               client['subscriptions'].each do |subscription|
                 subscriptions[subscription] ||= []
                 subscriptions[subscription].push(client_name)
