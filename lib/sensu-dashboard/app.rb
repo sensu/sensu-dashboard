@@ -53,12 +53,12 @@ EventMachine.run do
       rescue => e
         puts e
         status 404
-        body '{"error":"could not retrieve alerts from the sensu api"}'
+        body '{"error":"could not retrieve events from the sensu api"}'
       end
 
       http.errback do
         status 404
-        body '{"error":"could not retrieve alerts from the sensu api"}'
+        body '{"error":"could not retrieve events from the sensu api"}'
       end
 
       http.callback do
