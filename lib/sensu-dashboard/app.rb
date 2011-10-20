@@ -86,9 +86,26 @@ EventMachine.run do
         status http.response_header.status
         result = JSON.parse(http.response)
 
+        # searching by client name, status
         clients = []
+        statuses = {:warning => [], :critical => [], :unknown => []}
         result.each do |client, data|
           clients.push({:value => client, :name => client})
+          data.each do |check_name, check_data|
+            status = check_data["status"]
+            if status == 1
+              statuses[:warning].push(client)
+            elsif status == 2
+              statuses[:critical].push(client)
+            else
+              statuses[:unknown].push(status)
+            end
+          end
+        end
+
+        # searching by status
+        statuses.each do |k, v|
+          clients.push({:value => v.join(','), :name => k})
         end
 
         body clients.to_json
