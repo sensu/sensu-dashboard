@@ -7,40 +7,40 @@
 
 <!-- Event details row template  -->
 <script id="eventDetailsRowTemplate" type="text/x-jquery-tmpl">
-<div class="alert_detail_group">
-  <div class="alert_detail">
+<div class="event_detail_group">
+  <div class="event_detail">
     <h1>Client</h1>
     <p id="client_id_value">${client}</p>
   </div>
   <!--<div class="copy">Copy</div>-->
   <div style="clear: both;"></div>
 </div>
-<div class="alert_detail_group">
-  <div class="alert_detail">
+<div class="event_detail_group">
+  <div class="event_detail">
     <h1>Check</h1>
     <p id="check_name_value">${check}</p>
   </div>
   <!--<div class="copy">Copy</div>-->
   <div style="clear: both;"></div>
 </div>
-<div class="alert_detail_group">
-  <div class="alert_detail">
+<div class="event_detail_group">
+  <div class="event_detail">
     <h1>Status</h1>
     <p>${status}</p>
   </div>
   <!--<div class="copy">Copy</div>-->
   <div style="clear: both;"></div>
 </div>
-<div class="alert_detail_group">
-  <div class="alert_detail">
+<div class="event_detail_group">
+  <div class="event_detail">
     <h1>Output</h1>
     <p>${output}</p>
   </div>
   <!--<div class="copy">Copy</div>-->
   <div style="clear: both;"></div>
 </div>
-<div class="alert_detail_group">
-  <div class="alert_detail">
+<div class="event_detail_group">
+  <div class="event_detail">
     <h1>Occurrences</h1>
     <p>${occurrences}</p>
   </div>
@@ -52,8 +52,8 @@
 <!-- Client details row template  -->
 <script id="clientDetailsRowTemplate" type="text/x-jquery-tmpl">
 {{each $data}}
-<div class="alert_detail_group">
-  <div class="alert_detail">
+<div class="event_detail_group">
+  <div class="event_detail">
     <h1>${capitaliseFirstLetter($index)}</h1>
     <p>${$value}</p>
   </div>
@@ -64,14 +64,14 @@
 </script>
 
 <script type="text/javascript">
-fetchAlerts();
+fetchEvents();
 
 ws = new WebSocket("ws://" + location.hostname + ":9000");
 ws.onmessage = function(evt) {
-  fetchAlerts();
+  fetchEvents();
 }
 
-$("#disable_client_alerts").click(function() {
+$("#disable_client_events").click(function() {
   var client_id = $("#client_id_value").html();
   var alert_img = $("#disable_client_alerts").children().first();
 
