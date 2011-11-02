@@ -1,6 +1,10 @@
 <!-- Event template -->
 <script id="eventTemplate" type="text/x-jquery-tmpl">
+  {{if is_unknown}}
+  <tr class="status3" id="${client}${check}" rel="leanModal" href="#event_details_modal">
+  {{else}}
   <tr class="status${status}" id="${client}${check}" rel="leanModal" href="#event_details_modal">
+  {{/if}}
     <td id="client">${client}</td><td id="check">${check}</td><td id="status">${status}</td><td id="output">${output}</td>
   </tr>
 </script>
