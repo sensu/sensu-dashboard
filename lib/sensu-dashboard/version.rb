@@ -1,5 +1,5 @@
 module Sensu
   module Dashboard
-    VERSION = "0.5.3"
+    VERSION = "0.5.5"
   end
 end
