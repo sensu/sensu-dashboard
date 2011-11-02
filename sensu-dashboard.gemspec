@@ -11,13 +11,10 @@ Gem::Specification.new do |s|
   s.summary     = %q{A web interface for sensu, a publish/subscribe server monitoring framework}
   s.description = %q{Display current events and clients in sensu via a simple web interface}
 
-  s.add_dependency("eventmachine")
-  s.add_dependency("rack", ">= 1.3.4")
-  s.add_dependency("async_sinatra")
+  s.add_dependency("sensu")
   s.add_dependency("em-http-request", "0.3.0")
   s.add_dependency("em-websocket")
   s.add_dependency("sass")
-  s.add_dependency("sensu")
 
   s.files         = `git ls-files`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
