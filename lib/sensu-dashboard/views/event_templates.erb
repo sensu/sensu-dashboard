@@ -79,6 +79,7 @@ $("#disable_client_events").click(function() {
     alert_img.attr("src", "/img/loading_circle.gif");
     $.ajax({
       type: 'DELETE',
+      contentType: 'application/json',
       url: '/stash/silence/'+client_id+'.json',
       success: function(data, textStatus, xhr) {
         alert_img.attr("src", "/img/megaphone_icon.png");
@@ -94,6 +95,7 @@ $("#disable_client_events").click(function() {
     alert_img.attr("src", "/img/loading_circle.gif");
     $.ajax({
       type: 'POST',
+      contentType: 'application/json',
       url: '/stash/silence/'+client_id+'.json',
       success: function(data, textStatus, xhr) {
         alert_img.attr("src", "/img/megaphone_icon_off.png");
@@ -114,6 +116,7 @@ $("#disable_client_check_alerts").click(function() {
     alert_img.attr("src", "/img/loading_circle.gif");
     $.ajax({
       type: 'DELETE',
+      contentType: 'application/json',
       url: '/stash/silence/'+client_id+'/'+check_name+'.json',
       success: function(data, textStatus, xhr) {
         alert_img.attr("src", "/img/megaphone_icon.png");
@@ -129,6 +132,7 @@ $("#disable_client_check_alerts").click(function() {
     alert_img.attr("src", "/img/loading_circle.gif");
     $.ajax({
       type: 'POST',
+      contentType: 'application/json',
       url: '/stash/silence/'+client_id+'/'+check_name+'.json',
       success: function(data, textStatus, xhr) {
         alert_img.attr("src", "/img/megaphone_icon_off.png");
