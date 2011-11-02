@@ -200,7 +200,14 @@ EventMachine.run do
 
     apost '/stash/*.json' do |path|
       begin
-        http = EventMachine::HttpRequest.new("#{api_server}/stash/#{path}").post :body => request.body.read
+        puts request.body.read
+        request_options = {
+          :body => {'timestamp' => Time.now.to_i}.to_json,
+          :head => {
+            'content-type' => 'application/json'
+          }
+        }
+        http = EventMachine::HttpRequest.new("#{api_server}/stash/#{path}").post request_options
       rescue => e
         puts e
         status 404
