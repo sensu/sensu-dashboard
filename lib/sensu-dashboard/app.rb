@@ -200,7 +200,6 @@ EventMachine.run do
 
     apost '/stash/*.json' do |path|
       begin
-        puts request.body.read
         request_options = {
           :body => {'timestamp' => Time.now.to_i}.to_json,
           :head => {
@@ -237,6 +236,32 @@ EventMachine.run do
       http.errback do
         status 404
         body '{"error":"could not delete a stash with the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        body http.response
+      end
+    end
+
+    apost '/event/resolve.json' do
+      begin
+        request_options = {
+          :body => request.body.read,
+          :head => {
+            'content-type' => 'application/json'
+          }
+        }
+        http = EventMachine::HttpRequest.new("#{api_server}/event/resolve").post request_options
+      rescue => e
+        puts e
+        status 404
+        body '{"error":"could not resolve an event with the sensu api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not resolve an event with the sensu api"}'
       end
 
       http.callback do

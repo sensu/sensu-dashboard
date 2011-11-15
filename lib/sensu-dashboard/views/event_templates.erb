@@ -147,4 +147,22 @@ $("#disable_client_check_alerts").click(function() {
     });
   }
 });
+$("#resolve_event").click(function() {
+  var client = $("#client_id_value").html();
+  var check = $("#check_name_value").html();
+  $.ajax({
+    type: 'POST',
+    contentType: 'application/json',
+    url: '/event/resolve.json',
+    data: JSON.stringify({"client":client, "check":check}),
+    success: function(data, textStatus, xhr) {
+      $("#lean_overlay").fadeOut(200);
+      $("#event_details_modal").css({'display':'none'});
+      fetchEvents();
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      alert('Failed to resolve event');
+    }
+  });
+});
 </script>
