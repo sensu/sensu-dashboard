@@ -1,6 +1,10 @@
 <!-- Event template -->
 <script id="eventTemplate" type="text/x-jquery-tmpl">
+  {{if is_unknown}}
+  <tr class="status3" id="${identifier}" rel="leanModal" href="#event_details_modal">
+  {{else}}
   <tr class="status${status}" id="${identifier}" rel="leanModal" href="#event_details_modal">
+  {{/if}}
     <td id="client">${client}</td><td id="check">${check}</td><td id="status">${status}</td><td id="output">${output}</td>
   </tr>
 </script>
@@ -71,7 +75,7 @@ ws.onmessage = function(evt) {
   fetchEvents();
 }
 
-$("#disable_client_events").click(function() {
+$("#disable_client_alerts").click(function() {
   var client_id = $("#client_id_value").html();
   var alert_img = $("#disable_client_alerts").children().first();
 
@@ -142,5 +146,23 @@ $("#disable_client_check_alerts").click(function() {
       dataType: 'json'
     });
   }
+});
+$("#resolve_event").click(function() {
+  var client = $("#client_id_value").html();
+  var check = $("#check_name_value").html();
+  $.ajax({
+    type: 'POST',
+    contentType: 'application/json',
+    url: '/event/resolve.json',
+    data: JSON.stringify({"client":client, "check":check}),
+    success: function(data, textStatus, xhr) {
+      $("#lean_overlay").fadeOut(200);
+      $("#event_details_modal").css({'display':'none'});
+      fetchEvents();
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      alert('Failed to resolve event');
+    }
+  });
 });
 </script>
