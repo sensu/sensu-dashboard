@@ -59,7 +59,7 @@ section#main_content
      *-moz-box-shadow: 0 -1px 0 rgba(0,0,0,0.15);
      *box-shadow: 0 -1px 0 rgba(0,0,0,0.15);
   table
-    width: 100%
+    table-layout: fixed
     thead tr
       cursor: pointer
       td
@@ -70,7 +70,7 @@ section#main_content
         &.col_clients
           width: 100px
         &.col_checks
-          width: 150px
+          width: 150px 
         &.col_status
           width: 80px
           display: none
@@ -101,6 +101,7 @@ section#main_content
         border-top: 1px solid #880000
       td
         padding: 7px
+        word-break: break-all
         &#status
           display: none
   table#clients
