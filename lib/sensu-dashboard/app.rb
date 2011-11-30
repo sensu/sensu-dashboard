@@ -98,6 +98,7 @@ EventMachine.run do
           autocomplete = []
           statuses = {:warning => [], :critical => [], :unknown => []}
           subscriptions = {}
+          checks = {}
 
           clients.each do |client|
             client_name = client['name']
@@ -116,6 +117,8 @@ EventMachine.run do
                 else
                   statuses[:unknown].push(client_name)
                 end
+                checks[check] ||= []
+                checks[check].push(client_name)
               end
             end
           end
@@ -127,6 +130,11 @@ EventMachine.run do
 
           # searching by status
           statuses.each do |k, v|
+            autocomplete.push({:value => v.join(','), :name => k})
+          end
+
+          # searching by check
+          checks.each do |k, v|
             autocomplete.push({:value => v.join(','), :name => k})
           end
 
