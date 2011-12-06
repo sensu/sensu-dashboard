@@ -41,6 +41,12 @@ EventMachine.run do
       body erb :clients
     end
 
+    aget '/stashes' do
+      content_type 'text/html'
+      @js = erb :stash_templates, :layout => false
+      body erb :stashes
+    end
+
     aget '/css/sonian.css' do
       content_type 'text/css'
       body sass :sonian
@@ -267,6 +273,62 @@ EventMachine.run do
       http.callback do
         status http.response_header.status
         body http.response
+      end
+    end
+
+    aget '/stashes.json' do
+      begin
+        request_options = {
+#          :body => request.body.read,
+          :head => {
+            'content-type' => 'application/json'
+          }
+        }
+        http = EventMachine::HttpRequest.new("#{api_server}/stashes").get request_options
+      rescue => e
+        puts e
+        status 404
+        body '{"error":"could not retrieve a list of stashes from the sensu api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not retrieve a list of stashes from the sensu api"}'
+      end
+
+      http.callback do
+        resp = http.response
+        puts resp
+        status http.response_header.status
+        body resp
+      end
+    end
+
+    apost '/stashes.json' do
+      begin
+        request_options = {
+          :body => request.body.read,
+          :head => {
+            'content-type' => 'application/json'
+          }
+        }
+        http = EventMachine::HttpRequest.new("#{api_server}/stashes").post request_options
+      rescue => e
+        puts e
+        status 404
+        body '{\"error\":\"could not retrieve a list of stashes from the sensu api\"}'
+      end
+
+      http.errback do
+        status 404
+        body '{\"error\":\"could not retrieve a list of stashes from the sensu api\"}'
+      end
+
+      http.callback do
+        resp = http.response
+        puts resp
+        status http.response_header.status
+        body resp
       end
     end
 
