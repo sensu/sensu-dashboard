@@ -105,7 +105,6 @@ EventMachine.run do
           statuses = {:warning => [], :critical => [], :unknown => []}
           subscriptions = {}
           checks = []
-          environments = {}
 
           # searching by client
           clients.each do |client|
@@ -144,11 +143,6 @@ EventMachine.run do
           # searching by check
           checks.uniq.each do |v|
             autocomplete.push({:value => [v], :type => 'check', :name => v})
-          end
-
-          # searching by environment
-          environments.each do |k, v|
-            autocomplete.push({:value => v.uniq, :type => 'environment', :name => k})
           end
 
           body autocomplete.to_json
