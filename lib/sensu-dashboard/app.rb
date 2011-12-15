@@ -104,44 +104,51 @@ EventMachine.run do
           autocomplete = []
           statuses = {:warning => [], :critical => [], :unknown => []}
           subscriptions = {}
-          checks = {}
+          checks = []
+          environments = {}
 
+          # searching by client
           clients.each do |client|
             client_name = client['name']
             if events.include?(client_name)
-              autocomplete.push({:value => client_name, :name => client_name})
+              autocomplete.push({:value => [client_name], :type => 'client', :name => client_name})
               client['subscriptions'].each do |subscription|
                 subscriptions[subscription] ||= []
                 subscriptions[subscription].push(client_name)
               end
               events[client_name].each do |check, event|
-                case event["status"]
+                
+                case event['status']
                 when 1
-                  statuses[:warning].push(client_name)
+                  statuses[:warning].push(event['status'])
                 when 2
-                  statuses[:critical].push(client_name)
+                  statuses[:critical].push(event['status'])
                 else
-                  statuses[:unknown].push(client_name)
+                  statuses[:unknown].push(event['status'])
                 end
-                checks[check] ||= []
-                checks[check].push(client_name)
+                checks.push(check)
               end
             end
           end
 
           # searching by subscription
           subscriptions.each do |k, v|
-            autocomplete.push({:value => v.join(','), :name => k})
+            autocomplete.push({:value => v.uniq, :type => 'subscription', :name => k})
           end
 
           # searching by status
           statuses.each do |k, v|
-            autocomplete.push({:value => v.join(','), :name => k})
+            autocomplete.push({:value => v.uniq, :type => 'status', :name => k})
           end
 
           # searching by check
-          checks.each do |k, v|
-            autocomplete.push({:value => v.join(','), :name => k})
+          checks.uniq.each do |v|
+            autocomplete.push({:value => [v], :type => 'check', :name => v})
+          end
+
+          # searching by environment
+          environments.each do |k, v|
+            autocomplete.push({:value => v.uniq, :type => 'environment', :name => k})
           end
 
           body autocomplete.to_json
