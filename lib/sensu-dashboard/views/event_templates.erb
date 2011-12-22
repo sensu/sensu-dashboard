@@ -147,6 +147,7 @@ $("#disable_client_check_alerts").click(function() {
     });
   }
 });
+
 $("#resolve_event").click(function() {
   var client = $("#client_id_value").html();
   var check = $("#check_name_value").html();
@@ -164,5 +165,23 @@ $("#resolve_event").click(function() {
       alert('Failed to resolve event');
     }
   });
+});
+
+$("input[type=text]").autoSuggest("http://" + location.hostname + ":" + location.port + "/autocomplete.json", {
+  startText: "Enter keywords to filter by",
+  selectedItemProp: "name",
+  searchObjProps: "name",
+  selectionAdded: function(elem) {
+    fetchEvents();
+  },
+  selectionRemoved: function(elem) {
+    elem.fadeTo("fast", 0, function() { elem.remove(); });
+    fetchEvents();
+  }
+});
+
+$('#filter_unknown_checks').change(function() {
+  filter_unknown_checks = !filter_unknown_checks;
+  fetchEvents();
 });
 </script>
