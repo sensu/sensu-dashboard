@@ -179,12 +179,32 @@ EventMachine.run do
       rescue => e
         puts e
         status 404
-        body '{"error":"could not retrieve clients from the sensu api"}'
+        body '{"error":"could not retrieve client from the sensu api"}'
       end
 
       http.errback do
         status 404
-        body '{"error":"could not retrieve clients from the sensu api"}'
+        body '{"error":"could not retrieve client from the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        body http.response
+      end
+    end
+
+    adelete '/client/:id.json' do |id|
+      begin
+        http = EventMachine::HttpRequest.new("#{api_server}/client/#{id}").delete
+      rescue => e
+        puts e
+        status 404
+        body '{"error":"could not delete client from the sensu api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not delete client from the sensu api"}'
       end
 
       http.callback do
