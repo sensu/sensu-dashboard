@@ -173,6 +173,57 @@ EventMachine.run do
       end
     end
 
+    # api proxy
+    aget '/clients/autocomplete.json' do
+      multi = EventMachine::MultiRequest.new
+
+      requests = [
+        "#{api_server}/clients"
+      ]
+
+      requests.each do |url|
+        multi.add EventMachine::HttpRequest.new(url).get
+      end
+
+      multi.callback do
+        events = {}
+        clients = []
+
+        multi.responses[:succeeded].each do |request|
+          body = JSON.parse(request.response)
+          case body
+          when Array
+            clients = body
+          end
+        end
+
+        if clients
+          autocomplete = []
+          subscriptions = {}
+
+          # searching by client
+          clients.each do |client|
+            client_name = client['name']
+            autocomplete.push({:value => [client_name], :type => 'client', :name => client_name})
+            client['subscriptions'].each do |subscription|
+              subscriptions[subscription] ||= []
+              subscriptions[subscription].push(client_name)
+            end
+          end
+
+          # searching by subscription
+          subscriptions.each do |k, v|
+            autocomplete.push({:value => v.uniq, :type => 'subscription', :name => k})
+          end
+
+          body autocomplete.to_json
+        else
+          status 404
+          body '{"error":"could not retrieve clients from the sensu api"}'
+        end
+      end
+    end
+
     aget '/client/:id.json' do |id|
       begin
         http = EventMachine::HttpRequest.new("#{api_server}/client/#{id}").get
