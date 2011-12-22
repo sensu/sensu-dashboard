@@ -11,7 +11,7 @@
 <div class="event_detail_group">
   <div class="event_detail">
     <h1>${capitaliseFirstLetter($index)}</h1>
-    <p>${$value}</p>
+    <p id="${$index}">${$value}</p>
   </div>
   <!--<div class="copy">Copy</div>-->
   <div style="clear: both;"></div>
@@ -26,4 +26,25 @@ ws = new WebSocket("ws://" + location.hostname + ":9000");
 ws.onmessage = function(evt) {
   fetchClients();
 }
+
+$("#remove_client").click(function() {
+  var client = $("#name").html();
+  var cross_img = $("#remove_client").children().first();
+  cross_img.attr("src", "/img/loading_circle.gif");
+  $.ajax({
+    type: 'DELETE',
+    contentType: 'application/json',
+    url: '/client/'+client+'.json',
+    success: function(data, textStatus, xhr) {
+	    cross_img.attr("src", "/img/cross.png");
+      $("#lean_overlay").fadeOut(200);
+      $("#event_details_modal").css({'display':'none'});
+      fetchClients();
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      cross_img.attr("src", "/img/cross.png");
+      alert('Client was not found in sensu. This may be due to a delay in a previous removal attempt.');
+    }
+  });
+});
 </script>
