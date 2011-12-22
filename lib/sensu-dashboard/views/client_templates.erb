@@ -36,6 +36,7 @@ $("#remove_client").click(function() {
     contentType: 'application/json',
     url: '/client/'+client+'.json',
     success: function(data, textStatus, xhr) {
+      alert('Client '+client+' is being removed, resolving events...');
 	    cross_img.attr("src", "/img/cross.png");
       $("#lean_overlay").fadeOut(200);
       $("#event_details_modal").css({'display':'none'});
