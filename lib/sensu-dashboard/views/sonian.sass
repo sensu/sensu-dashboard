@@ -59,22 +59,16 @@ section#main_content
      *-moz-box-shadow: 0 -1px 0 rgba(0,0,0,0.15);
      *box-shadow: 0 -1px 0 rgba(0,0,0,0.15);
   table
-    table-layout: fixed
+    //table-layout: fixed
     width: 100%
     thead tr
       cursor: pointer
-      td
+      th
         padding: 7px
         font-weight: 600
         font-size: 14px
         text-shadow: 0 1px 0 white
-        &.col_clients
-          width: 100px
-        &.col_checks
-          width: 150px 
-        &.col_status
-          width: 80px
-          display: none
+        text-align: left
     tbody tr
       background-color: #fff
       cursor: pointer
@@ -103,9 +97,15 @@ section#main_content
         border-top: 1px solid #880000
       td
         padding: 7px
-        word-break: break-all
-        &#status
-          display: none
+        white-space: nowrap
+        &#output
+          white-space: normal
+          word-break: break-all
+          width: 100%
+        &#subscriptions
+          white-space: normal
+          word-break: break-all
+          width: 100%
   table#clients
     table-layout: auto
     tbody
