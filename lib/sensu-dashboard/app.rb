@@ -378,7 +378,6 @@ EventMachine.run do
 
       http.callback do
         resp = http.response
-        puts resp
         status http.response_header.status
         body resp
       end
