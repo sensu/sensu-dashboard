@@ -22,9 +22,18 @@ class Dashboard < Sinatra::Base
   end
 
   def self.setup(options={})
-    config = Sensu::Config.new(options.merge({:validate => false}))
+    config = Sensu::Config.new(options)
     $settings = config.settings
     $logger = config.logger || config.open_log
+    unless $settings.key?('dashboard')
+      raise config.invalid_config('missing the following key: dashboard')
+    end
+    unless $settings.dashboard.port.is_a?(Integer)
+      raise config.invalid_config('dashboard must have a port')
+    end
+    unless $settings.dashboard.user.is_a?(String) && $settings.dashboard.password.is_a?(String)
+      raise config.invalid_config('dashboard must have a user and password')
+    end
     if options[:daemonize]
       Process.daemonize
     end
