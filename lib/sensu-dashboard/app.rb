@@ -22,7 +22,7 @@ class Dashboard < Sinatra::Base
   end
 
   def self.setup(options={})
-    config = Sensu::Config.new(options)
+    config = Sensu::Config.new(options.merge({:validate => false}))
     $settings = config.settings
     $logger = config.logger || config.open_log
     if options[:daemonize]
@@ -36,21 +36,21 @@ class Dashboard < Sinatra::Base
 
   def self.websocket_server
     $websocket_connections = []
-    EM::WebSocket.start(:host => "0.0.0.0", :port => 9000) do |websocket|
+    EM::WebSocket.start(:host => '0.0.0.0', :port => 9000) do |websocket|
       websocket.onopen do
-        $websocket_connections.push(websocket)
         $logger.info('[websocket] -- client connected to websocket')
+        $websocket_connections.push(websocket)
       end
       websocket.onclose do
-        $websocket_connections.delete websocket
         $logger.info('[websocket] -- client disconnected from websocket')
+        $websocket_connections.delete(websocket)
       end
     end
   end
 
   set :root, File.dirname(__FILE__)
   set :static, true
-  set :public_folder, Proc.new { File.join(root, "public") }
+  set :public_folder, Proc.new { File.join(root, 'public') }
 
   use Rack::Auth::Basic do |user, password|
     user == $settings.dashboard.user && password == $settings.dashboard.password
@@ -84,7 +84,7 @@ class Dashboard < Sinatra::Base
   end
 
   apost '/events.json' do
-    $logger.debug('[events] -- ' + request.ip + ' -- POST -- triggering dashboard refreshes with websocket')
+    $logger.debug('[events] -- ' + request.ip + ' -- POST -- triggering dashboard refresh')
     unless $websocket_connections.empty?
       $websocket_connections.each do |websocket|
         websocket.send '{"update":"true"}'
