@@ -2,6 +2,7 @@ require 'sensu/config'
 require 'em-http-request'
 require 'em-websocket'
 require 'sinatra/async'
+require 'slim'
 require 'sass'
 
 class Dashboard < Sinatra::Base
@@ -60,6 +61,7 @@ class Dashboard < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :static, true
   set :public_folder, Proc.new { File.join(root, 'public') }
+  set :haml, { :format => :html5 }
 
   use Rack::Auth::Basic do |user, password|
     user == $settings.dashboard.user && password == $settings.dashboard.password
@@ -70,28 +72,35 @@ class Dashboard < Sinatra::Base
   end
 
   aget '/' do
+    redirect '/events'
+  end
+
+  aget '/events' do
     content_type 'text/html'
-    @js = erb :event_templates, :layout => false
-    body erb :index
+    @path = request.path_info
+#    @js = erb :event_templates, :layout => false
+    body slim :events
   end
 
   aget '/clients' do
     content_type 'text/html'
-    @js = erb :client_templates, :layout => false
+    @path = request.path_info
+    @js = erb :client_templates
     body erb :clients
   end
 
   aget '/stashes' do
     content_type 'text/html'
-    @js = erb :stash_templates, :layout => false
+    @path = request.path_info
+    @js = erb :stash_templates
     body erb :stashes
   end
 
-  aget '/css/sonian.css' do
+  aget '/css/main.css' do
     content_type 'text/css'
-    body sass :sonian
+    body sass :main
   end
-
+  
   apost '/events.json' do
     $logger.debug('[events] -- ' + request.ip + ' -- POST -- triggering dashboard refresh')
     unless $websocket_connections.empty?

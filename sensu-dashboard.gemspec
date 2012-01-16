@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.add_dependency("em-http-request", "0.3.0")
   s.add_dependency("em-websocket")
   s.add_dependency("sass")
+  s.add_dependency("slim")
 
   s.files         = `git ls-files`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }

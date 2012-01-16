@@ -1,0 +1,93 @@
+body
+  background-color: #eee
+
+div#content
+  background-color: white
+  padding: 20px
+  margin: 40px 20px 0px 20px
+  -webkit-border-radius: 0 0 6px 6px
+  -moz-border-radius: 0 0 6px 6px
+  border-radius: 0 0 6px 6px
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15)
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15)
+  box-shadow: 0 1px 2px rgba(0,0,0,.15)
+
+footer
+  text-align: center
+  font-size: 11px
+  color: #333
+  margin-top: -10px
+
+div#other_info
+  padding: 7px
+  clear: both
+
+  ul#event_counts
+    list-style: none
+    padding: 0
+    margin: 0
+    li
+      float: left
+      margin-left: 2px
+      margin-right: 2px
+
+div#filter_unknown_container
+  padding: 8px
+  input
+    margin-right: 4px
+
+input#events_filter
+  width: 100%
+
+table.sensu-table
+  border-collapse: collapse
+  border: 0
+
+  tr
+    th
+      border: 0
+    td
+      border: 0
+
+  tbody
+    tr:first-child
+      td:first-child
+        -webkit-border-top-left-radius: 4px
+        -moz-border-radius-topleft: 4px
+        border-top-left-radius: 4px
+      td:last-child
+        -webkit-border-top-right-radius: 4px
+        -moz-border-radius-topright: 4px
+        border-top-right-radius: 4px
+
+table#events
+  tbody
+    tr
+      cursor: pointer
+
+      td#client_col
+        white-space: nowrap
+
+    tr.unknown
+      background-color: #fee9cc
+      color: #f89406
+
+    tr.unknown:hover
+      background-color: #f89406
+      color: #fff
+
+    tr.critical
+      background-color: #f4c8c5
+      color: #9d261d
+
+    tr.critical:hover
+      background-color: #9d261d
+      color: #fff
+
+    tr.warning
+      background-color: #eee
+      color: #999
+
+    tr.warning:hover
+      background-color: #999
+      color: #fff

@@ -1,0 +1,46 @@
+.form-stacked#other_info
+  label Events Count
+  ul#event_counts
+    li
+      span.label.important 3 critical
+    li
+      span.label.warning 12 warning
+    li
+      span.label 5 unknown
+
+br(style="clear: both;")
+
+#filter_unknown_container
+  input#filter_unknown(type="checkbox" checked="checked")
+  strong Filter Unknown Checks
+
+input#events_filter(type="text")
+
+table.bordered-table.sensu-table#events
+  thead
+    tr
+      th Client
+      th Check
+      th Output
+  tbody
+    tr.critical(data-controls-modal="event_modal")
+      td#client_col i-84bc6be6
+      td check_disk
+      td DISK WARNING - free space: / 7998 MB (83% inode=87%); /dev 7499 MB (99% inode=99%); /var/run 7506 MB (99% inode=99%); /var/lock 7506 MB (100% inode=99%); /mnt 1716555 MB (99% inode=99%); /sonian 1716555 MB (99% inode=99%); /var/log 1716555 MB (99% inode=99%); /mnt/elasticsearch 452760 MB (10% inode=99%);| /=1569MB;9071;9575;0;10079 /dev=0MB;6749;7124;0;7499 /var/run=0MB;6755;7130;0;7506 /var/lock=0MB;6755;7130;0;7506 /mnt=2778MB;1547400;1633367;0;1719334 /sonian=2778MB;1547400;1633367;0;1719334 /var/log=2778MB;1547400;1633367;0;1719334 /mnt/elasticsearch=3739473MB;3773010;3982622;0;4192234
+    tr.unknown
+      td#client_col i-84bc6be6
+      td rabbitmq_queue_metrics
+      td sh: rabbitmq-queue-metrics.rb: command not found
+    tr.warning
+      td#client_col i-84bc6be6
+      td disk_check
+      td "/" is 98% full
+
+#event_modal.modal.fade(data-backdrop="true" data-keyboard="true" style="display: block")
+  .modal-header
+    a.close(href="#")
+    h3 Event details
+  .modal-body
+    p Testing
+  .modal-footer
+    | Meow
