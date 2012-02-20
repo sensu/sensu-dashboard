@@ -52,7 +52,7 @@ $("#remove_client").click(function() {
   });
 });
 
-$("input[type=text]").autoSuggest("http://" + location.hostname + ":" + location.port + "/clients/autocomplete.json", {
+$("input[type=text]").autoSuggest(location.protocol + "//" + location.hostname + ":" + location.port + "/clients/autocomplete.json", {
   startText: "Enter keywords to filter by",
   selectedItemProp: "name",
   searchObjProps: "name",
