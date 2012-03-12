@@ -22,7 +22,7 @@ table.bordered-table.sensu-table#events
       th Client
       th Check
       th Output
-  tbody
+  tbody#events
     tr.critical(data-controls-modal="event_modal")
       td#client_col i-84bc6be6
       td check_disk
@@ -44,3 +44,9 @@ table.bordered-table.sensu-table#events
     p Testing
   .modal-footer
     | Meow
+
+script(type='text/template' id='tpl-test-row')
+  tr.<%= status %>
+    td <%= client %>
+    td <%= check %>
+    td <%= output %>

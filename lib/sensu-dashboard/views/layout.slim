@@ -8,8 +8,6 @@ html(lang="en")
     meta(name="Copyright" content="Copyright Sonian, Inc. 2012. MIT License.")
     link(rel="stylesheet" type="text/css" href="css/bootstrap.min.css")
     link(rel="stylesheet" type="text/css" href="css/main.css")
-    script(type="text/javascript" src="js/jquery.min.js")
-    script(type="text/javascript" src="js/bootstrap-modal.js")
   body
     .topbar-wrapper
       .topbar
@@ -19,11 +17,11 @@ html(lang="en")
               a(href="#") Sensu Dashboard
             ul.nav.secondary-nav
               li.active
-                a(href="#") Current Events
+                a(href="#events") Current Events
               li
-                a(href="#") Stashes
+                a(href="#stashes") Stashes
               li
-                a(href="#") Clients
+                a(href="#clients") Clients
     .container-fluid#content
       == yield
     footer
@@ -31,3 +29,9 @@ html(lang="en")
       a(href="http://www.sonian.com") Sonian, Inc. 
       | 2012 
       a(href="https://github.com/sonian/sensu-dashboard/blob/master/MIT-LICENSE.txt") License (MIT)
+
+script(type="text/javascript" src="js/jquery.min.js")
+/script(type="text/javascript" src="js/bootstrap-modal.js")
+script(type="text/javascript" src="js/underscore-debug.js")
+script(type="text/javascript" src="js/backbone-debug.js")
+script(type="text/javascript" src="js/main.js")

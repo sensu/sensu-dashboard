@@ -68,29 +68,26 @@ class Dashboard < Sinatra::Base
   end
 
   before do
-    content_type 'application/json'
+    content_type 'text/html'
   end
 
   aget '/' do
     redirect '/events'
   end
 
-  aget '/events' do
-    content_type 'text/html'
+  aget '/events', :provides => 'html' do
     @path = request.path_info
 #    @js = erb :event_templates, :layout => false
     body slim :events
   end
 
   aget '/clients' do
-    content_type 'text/html'
     @path = request.path_info
     @js = erb :client_templates
     body erb :clients
   end
-
+  
   aget '/stashes' do
-    content_type 'text/html'
     @path = request.path_info
     @js = erb :stash_templates
     body erb :stashes
@@ -101,7 +98,8 @@ class Dashboard < Sinatra::Base
     body sass :main
   end
   
-  apost '/events.json' do
+  apost '/events' do
+    content_type 'application/json'
     $logger.debug('[events] -- ' + request.ip + ' -- POST -- triggering dashboard refresh')
     unless $websocket_connections.empty?
       $websocket_connections.each do |websocket|
@@ -111,7 +109,8 @@ class Dashboard < Sinatra::Base
     body '{"success":"triggered dashboard refresh"}'
   end
 
-  aget '/autocomplete.json' do
+  aget '/events/autocomplete' do
+    content_type 'application/json'
     multi = EM::MultiRequest.new
 
     requests = [
@@ -189,7 +188,8 @@ class Dashboard < Sinatra::Base
     end
   end
 
-  aget '/clients/autocomplete.json' do
+  aget '/clients/autocomplete' do
+    content_type 'application/json'
     multi = EM::MultiRequest.new
 
     requests = [
@@ -242,19 +242,19 @@ class Dashboard < Sinatra::Base
   #
   # API Proxy
   #
-
-  aget '/events.json' do
+  aget '/*', :provides => 'json' do |path|
+    content_type 'application/json'
     begin
-      http = EM::HttpRequest.new($api_server + '/events').get
+      http = EM::HttpRequest.new($api_server + '/' + path).get :head => {'Accept' => 'application/json'}
     rescue => e
       $logger.warning(e)
       status 404
-      body '{"error":"could not retrieve events from the sensu api"}'
+      body '{"error":"could not retrieve /#{path} from the sensu api"}'
     end
 
     http.errback do
       status 404
-      body '{"error":"could not retrieve events from the sensu api"}'
+      body '{"error":"could not retrieve /#{path} from the sensu api"}'
     end
 
     http.callback do
@@ -262,205 +262,7 @@ class Dashboard < Sinatra::Base
       body http.response
     end
   end
-
-  aget '/clients.json' do
-    begin
-      http = EM::HttpRequest.new($api_server + '/clients').get
-    rescue => e
-      $logger.warning(e)
-      status 404
-      body '{"error":"could not retrieve clients from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve clients from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  aget '/client/:id.json' do |id|
-    begin
-      http = EM::HttpRequest.new($api_server + '/client/' + id).get
-    rescue => e
-      $logger.warning(e)
-      status 404
-      body '{"error":"could not retrieve client from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve client from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  adelete '/client/:id.json' do |id|
-    begin
-      http = EventMachine::HttpRequest.new($api_server + '/client/' + id).delete
-    rescue => e
-      $logger.warning(e)
-      status 404
-      body '{"error":"could not delete client from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not delete client from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  aget '/stash/*.json' do |path|
-    begin
-      http = EM::HttpRequest.new($api_server + '/stash/' + path).get
-    rescue => e
-      $logger.warning(e)
-      status 404
-      body '{"error":"could not retrieve a stash from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve a stash from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  apost '/stash/*.json' do |path|
-    begin
-      request_options = {
-        :body => {'timestamp' => Time.now.to_i}.to_json,
-        :head => {
-          'content-type' => 'application/json'
-        }
-      }
-      http = EM::HttpRequest.new($api_server + '/stash/' + path).post request_options
-    rescue => e
-      $logger.warning(e)
-      status 404
-      body '{"error":"could not create a stash with the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not create a stash with the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  adelete '/stash/*.json' do |path|
-    begin
-      http = EM::HttpRequest.new($api_server + '/stash/' + path).delete
-    rescue => e
-      $logger.warning(e)
-      status 404
-      body '{"error":"could not delete a stash with the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not delete a stash with the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  apost '/event/resolve.json' do
-    begin
-      request_options = {
-        :body => request.body.read,
-        :head => {
-          'content-type' => 'application/json'
-        }
-      }
-      http = EM::HttpRequest.new($api_server + '/event/resolve').post request_options
-    rescue => e
-      $logger.warning(e)
-      status 404
-      body '{"error":"could not resolve an event with the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not resolve an event with the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  aget '/stashes.json' do
-    begin
-      http = EM::HttpRequest.new($api_server + '/stashes').get
-    rescue => e
-      $logger.warning(e)
-      status 404
-      body '{"error":"could not retrieve a list of stashes from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve a list of stashes from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  apost '/stashes.json' do
-    begin
-      request_options = {
-        :body => request.body.read,
-        :head => {
-          'content-type' => 'application/json'
-        }
-      }
-      http = EM::HttpRequest.new($api_server + '/stashes').post request_options
-    rescue => e
-      $logger.warning(e)
-      status 404
-      body '{"error":"could not retrieve a list of stashes from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve a list of stashes from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
+  
   def self.stop(signal)
     $logger.warn('[stop] -- stopping sensu dashboard -- ' + signal)
     EM::Timer.new(1) do
