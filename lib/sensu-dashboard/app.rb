@@ -184,7 +184,7 @@ class Dashboard < Sinatra::Base
     multi = EM::MultiRequest.new
 
     requests = [
-     $api_server + '/clients'
+      $api_server + '/clients'
     ]
 
     requests.each do |url|
@@ -249,8 +249,18 @@ class Dashboard < Sinatra::Base
     end
 
     http.callback do
+      events = Hash.new
+      if http.response_header.status == '200'
+        api_events = JSON.parse(http.response)
+        api_events.each do |event|
+          client = event.delete('client')
+          check = event.delete('check')
+          events[client] ||= Hash.new
+          events[client][check] = event
+        end
+      end
       status http.response_header.status
-      body http.response
+      body events.to_json
     end
   end
 
