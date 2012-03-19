@@ -41,9 +41,9 @@ class Dashboard < Sinatra::Base
       Process.write_pid(options[:pid_file])
     end
     $api_server = 'http://' + $settings.api.host + ':' + $settings.api.port.to_s
-    $api_header = {}
+    $api_options = {}
     if $settings.api.user && $settings.api.password
-      $api_header.merge!(:head => {'authorization' => [$settings.api.user, $settings.api.password]})
+      $api_options.merge!(:head => {'authorization' => [$settings.api.user, $settings.api.password]})
     end
   end
 
@@ -108,24 +108,14 @@ class Dashboard < Sinatra::Base
 
   aget '/autocomplete.json' do
     multi = EM::MultiRequest.new
-    multi.add :events, EM::HttpRequest.new($api_server + '/events').get($api_header)
-    multi.add :clients, EM::HttpRequest.new($api_server + '/clients').get($api_header)
+    multi.add :events, EM::HttpRequest.new($api_server + '/events').get($api_options)
+    multi.add :clients, EM::HttpRequest.new($api_server + '/clients').get($api_options)
 
     multi.callback do
-      events = {}
-      clients = []
+      unless multi.responses[:errback].size > 0
+        events = JSON.parse(multi.responses[:callback][:events].response)
+        clients = JSON.parse(multi.responses[:callback][:clients].response)
 
-      multi.responses[:succeeded].each do |request|
-        body = JSON.parse(request.response)
-        case body
-        when Hash
-          events = body
-        when Array
-          clients = body
-        end
-      end
-
-      if events && clients
         autocomplete = []
         statuses = {:warning => [], :critical => [], :unknown => []}
         subscriptions = {}
@@ -134,23 +124,21 @@ class Dashboard < Sinatra::Base
         # searching by client
         clients.each do |client|
           client_name = client['name']
-          if events.include?(client_name)
-            autocomplete.push({:value => [client_name], :type => 'client', :name => client_name})
-            client['subscriptions'].each do |subscription|
-              subscriptions[subscription] ||= []
-              subscriptions[subscription].push(client_name)
+          autocomplete.push({:value => [client_name], :type => 'client', :name => client_name})
+          client['subscriptions'].each do |subscription|
+            subscriptions[subscription] ||= []
+            subscriptions[subscription].push(client_name)
+          end
+          events.each do |event|
+            case event['status']
+            when 1
+              statuses[:warning].push(event['status'])
+            when 2
+              statuses[:critical].push(event['status'])
+            else
+              statuses[:unknown].push(event['status'])
             end
-            events[client_name].each do |check, event|
-              case event['status']
-              when 1
-                statuses[:warning].push(event['status'])
-              when 2
-                statuses[:critical].push(event['status'])
-              else
-                statuses[:unknown].push(event['status'])
-              end
-              checks.push(check)
-            end
+            checks.push(event['check'])
           end
         end
 
@@ -178,29 +166,22 @@ class Dashboard < Sinatra::Base
   end
 
   aget '/clients/autocomplete.json' do
-    multi = EM::MultiRequest.new
-
-    requests = [
-      $api_server + '/clients'
-    ]
-
-    requests.each do |url|
-      multi.add EM::HttpRequest.new(url).get($api_header)
+    begin
+      http = EM::HttpRequest.new($api_server + '/clients').get($api_options)
+    rescue => e
+      $logger.warn(e)
+      status 404
+      body '{"error":"could not retrieve clients from the sensu api"}'
     end
 
-    multi.callback do
-      events = {}
-      clients = []
+    http.errback do
+      status 404
+      body '{"error":"could not retrieve clients from the sensu api"}'
+    end
 
-      multi.responses[:succeeded].each do |request|
-        body = JSON.parse(request.response)
-        case body
-        when Array
-          clients = body
-        end
-      end
-
-      if clients
+    http.callback do
+      if http.response_header.status == 200
+        clients = JSON.parse(http.response)
         autocomplete = []
         subscriptions = {}
 
@@ -233,7 +214,7 @@ class Dashboard < Sinatra::Base
 
   aget '/events.json' do
     begin
-      http = EM::HttpRequest.new($api_server + '/events').get($api_header)
+      http = EM::HttpRequest.new($api_server + '/events').get($api_options)
     rescue => e
       $logger.warn(e)
       status 404
@@ -247,7 +228,6 @@ class Dashboard < Sinatra::Base
 
     http.callback do
       events = Hash.new
-      puts http.response_header.status
       if http.response_header.status == 200
         api_events = JSON.parse(http.response)
         api_events.each do |event|
@@ -264,7 +244,7 @@ class Dashboard < Sinatra::Base
 
   aget '/clients.json' do
     begin
-      http = EM::HttpRequest.new($api_server + '/clients').get($api_header)
+      http = EM::HttpRequest.new($api_server + '/clients').get($api_options)
     rescue => e
       $logger.warn(e)
       status 404
@@ -284,7 +264,7 @@ class Dashboard < Sinatra::Base
 
   aget '/client/:id.json' do |id|
     begin
-      http = EM::HttpRequest.new($api_server + '/client/' + id).get($api_header)
+      http = EM::HttpRequest.new($api_server + '/client/' + id).get($api_options)
     rescue => e
       $logger.warn(e)
       status 404
@@ -304,7 +284,7 @@ class Dashboard < Sinatra::Base
 
   adelete '/client/:id.json' do |id|
     begin
-      http = EventMachine::HttpRequest.new($api_server + '/client/' + id).delete($api_header)
+      http = EventMachine::HttpRequest.new($api_server + '/client/' + id).delete($api_options)
     rescue => e
       $logger.warn(e)
       status 404
@@ -324,7 +304,7 @@ class Dashboard < Sinatra::Base
 
   aget '/stash/*.json' do |path|
     begin
-      http = EM::HttpRequest.new($api_server + '/stash/' + path).get($api_header)
+      http = EM::HttpRequest.new($api_server + '/stash/' + path).get($api_options)
     rescue => e
       $logger.warn(e)
       status 404
@@ -350,7 +330,7 @@ class Dashboard < Sinatra::Base
           'content-type' => 'application/json'
         }
       }
-      http = EM::HttpRequest.new($api_server + '/stash/' + path).post(request_options.merge($api_header))
+      http = EM::HttpRequest.new($api_server + '/stash/' + path).post(request_options.merge($api_options))
     rescue => e
       $logger.warn(e)
       status 404
@@ -370,7 +350,7 @@ class Dashboard < Sinatra::Base
 
   adelete '/stash/*.json' do |path|
     begin
-      http = EM::HttpRequest.new($api_server + '/stash/' + path).delete($api_header)
+      http = EM::HttpRequest.new($api_server + '/stash/' + path).delete($api_options)
     rescue => e
       $logger.warn(e)
       status 404
@@ -396,7 +376,7 @@ class Dashboard < Sinatra::Base
           'content-type' => 'application/json'
         }
       }
-      http = EM::HttpRequest.new($api_server + '/event/resolve').post(request_options.merge($api_header))
+      http = EM::HttpRequest.new($api_server + '/event/resolve').post(request_options.merge($api_options))
     rescue => e
       $logger.warn(e)
       status 404
@@ -416,7 +396,7 @@ class Dashboard < Sinatra::Base
 
   aget '/stashes.json' do
     begin
-      http = EM::HttpRequest.new($api_server + '/stashes').get($api_header)
+      http = EM::HttpRequest.new($api_server + '/stashes').get($api_options)
     rescue => e
       $logger.warn(e)
       status 404
@@ -442,7 +422,7 @@ class Dashboard < Sinatra::Base
           'content-type' => 'application/json'
         }
       }
-      http = EM::HttpRequest.new($api_server + '/stashes').post(request_options.merge($api_header))
+      http = EM::HttpRequest.new($api_server + '/stashes').post(request_options.merge($api_options))
     rescue => e
       $logger.warn(e)
       status 404
