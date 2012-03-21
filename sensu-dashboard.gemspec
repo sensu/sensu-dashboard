@@ -11,8 +11,8 @@ Gem::Specification.new do |s|
   s.summary     = %q{A web interface for sensu, a publish/subscribe server monitoring framework}
   s.description = %q{Display current events and clients in sensu via a simple web interface}
 
-  s.add_dependency("sensu", "~> 0.9.1")
-  s.add_dependency("em-http-request", "0.3.0")
+  s.add_dependency("sensu", "~> 0.9.4")
+  s.add_dependency("em-http-request", "1.0.1")
   s.add_dependency("em-websocket")
   s.add_dependency("sass")
 
