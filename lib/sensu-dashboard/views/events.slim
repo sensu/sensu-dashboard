@@ -1,12 +1,6 @@
 .form-stacked#other_info
   label Events Count
   ul#event_counts
-    li
-      span.label.important 3 critical
-    li
-      span.label.warning 12 warning
-    li
-      span.label 5 unknown
 
 br(style="clear: both;")
 
@@ -32,6 +26,16 @@ table.bordered-table.sensu-table#events
     p Testing
   .modal-footer
     | Meow
+
+script(type='text/template' id='tpl-event-count')
+  li
+    span(class="label success") <%= total %> total
+  li
+    span(class="label important") <%= critical %> critical
+  li
+    span(class="label warning") <%= warning %> warning
+  li
+    span(class="label unknown") <%= unknown %> unknown
 
 script(type='text/template' id='tpl-event-column')
   th <%= display_name %>
