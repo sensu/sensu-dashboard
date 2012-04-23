@@ -249,12 +249,12 @@ class Dashboard < Sinatra::Base
     rescue => e
       $logger.warning(e)
       status 404
-      body '{"error":"could not retrieve /#{path} from the sensu api"}'
+      body '{"error":"could not retrieve /'+path+' from the sensu api"}'
     end
 
     http.errback do
       status 404
-      body '{"error":"could not retrieve /#{path} from the sensu api"}'
+      body '{"error":"could not retrieve /'+path+' from the sensu api"}'
     end
 
     http.callback do
@@ -262,7 +262,7 @@ class Dashboard < Sinatra::Base
       body http.response
     end
   end
-  
+
   def self.stop(signal)
     $logger.warn('[stop] -- stopping sensu dashboard -- ' + signal)
     EM::Timer.new(1) do
