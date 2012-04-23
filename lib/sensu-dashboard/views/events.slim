@@ -42,6 +42,6 @@ script(type='text/template' id='tpl-event-column')
 
 script(type='text/template' id='tpl-event-row')
   tr(class="<%= status_name %>" data-controls-modal="event_modal")
-    td <%= client %>
-    td <%= check %>
+    td.client_col <%= client %>
+    td.check_col <%= check %>
     td.output_col <%= output %>
