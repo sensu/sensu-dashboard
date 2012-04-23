@@ -13,6 +13,7 @@ input#events_filter(type="text")
 table.bordered-table.sensu-table#events
   thead
     tr
+      th
       th Client
       th Check
       th Output
@@ -42,6 +43,8 @@ script(type='text/template' id='tpl-event-column')
 
 script(type='text/template' id='tpl-event-row')
   tr(class="<%= status_name %>" data-controls-modal="event_modal")
+    td.select_col
+      input(type='checkbox' name='<%= client %>')
     td.client_col <%= client %>
     td.check_col <%= check %>
     td.output_col <%= output %>
