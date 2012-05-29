@@ -1,16 +1,31 @@
 .form-stacked#other_info
-  label Events Count
+  h4 Events Count
   ul#event_counts
 
-br(style="clear: both;")
+br(style='clear: both;')
 
 #filter_unknown_container
-  input#filter_unknown(type="checkbox" checked="checked")
+  input#filter_unknown(type='checkbox' checked='checked')
   strong Filter Unknown Checks
 
 input#events_filter(type="text")
 
-table.bordered-table.sensu-table#events
+.btn-group
+  a.btn.btn-success#toggle-checkboxes(href='#')
+    i.icon-check.icon-white
+  a.btn.btn-success.dropdown-toggle(data-toggle='dropdown' href='#')
+    span.caret
+  ul.dropdown-menu
+    li
+      a#select-all(href='#')
+        i.icon-check
+        | &nbsp;All
+    li
+      a#select-none(href='#')
+        i.icon-ban-circle
+        | &nbsp;None
+
+table.table.table-bordered.sensu-table#events
   thead
     tr
       th
@@ -30,21 +45,21 @@ table.bordered-table.sensu-table#events
 
 script(type='text/template' id='tpl-event-count')
   li
-    span(class="label success") <%= total %> total
+    span(class="label label-success") <%= total %> total
   li
-    span(class="label important") <%= critical %> critical
+    span(class="label label-important") <%= critical %> critical
   li
-    span(class="label warning") <%= warning %> warning
+    span(class="label label-warning") <%= warning %> warning
   li
-    span(class="label unknown") <%= unknown %> unknown
+    span(class="label label-unknown") <%= unknown %> unknown
 
 script(type='text/template' id='tpl-event-column')
   th <%= display_name %>
 
 script(type='text/template' id='tpl-event-row')
-  tr(class="<%= status_name %>" data-controls-modal="event_modal")
+  tr(class="<%= status_name %>")
     td.select_col
       input(type='checkbox' name='<%= client %>')
-    td.client_col <%= client %>
-    td.check_col <%= check %>
-    td.output_col <%= output %>
+    td.client_col(data-controls-modal="event_modal") <%= client %>
+    td.check_col(data-controls-modal="event_modal") <%= check %>
+    td.output_col(data-controls-modal="event_modal") <%= output %>

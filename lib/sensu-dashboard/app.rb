@@ -83,13 +83,13 @@ class Dashboard < Sinatra::Base
 
   aget '/clients' do
     @path = request.path_info
-    @js = erb :client_templates
+#    @js = erb :client_templates
     body erb :clients
   end
   
   aget '/stashes' do
     @path = request.path_info
-    @js = erb :stash_templates
+#    @js = erb :stash_templates
     body erb :stashes
   end
 

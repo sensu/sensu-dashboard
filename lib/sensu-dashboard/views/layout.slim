@@ -9,19 +9,17 @@ html(lang="en")
     link(rel="stylesheet" type="text/css" href="css/bootstrap.min.css")
     link(rel="stylesheet" type="text/css" href="css/main.css")
   body
-    .topbar-wrapper
-      .topbar
-        .topbar-inner
-          .container-fluid
-            h3
-              a(href="#") Sensu Dashboard
-            ul.nav.secondary-nav
-              li.active
-                a(href="#events") Current Events
-              li
-                a(href="#stashes") Stashes
-              li
-                a(href="#clients") Clients
+    .navbar
+      .navbar-inner
+        .container
+          a.brand(href="#") Sensu Dashboard
+          ul.nav.pull-right
+            li.active
+              a(href="#events") Current Events
+            li
+              a(href="#stashes") Stashes
+            li
+              a(href="#clients") Clients
     .container-fluid#content
       == yield
     footer
@@ -31,7 +29,7 @@ html(lang="en")
       a(href="https://github.com/sonian/sensu-dashboard/blob/master/MIT-LICENSE.txt") License (MIT)
 
 script(type="text/javascript" src="js/jquery.min.js")
-script(type="text/javascript" src="js/bootstrap-modal.js")
+script(type="text/javascript" src="js/bootstrap.min.js")
 script(type="text/javascript" src="js/json2.js")
 script(type="text/javascript" src="js/underscore.min.js")
 script(type="text/javascript" src="js/backbone.min.js")

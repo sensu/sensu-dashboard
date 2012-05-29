@@ -1,10 +1,15 @@
 body
   background-color: #eee
 
+.navbar-inner
+  -webkit-border-radius: 0px
+  -moz-border-radius: 0px
+  border-radius: 0px
+
 div#content
   background-color: white
   padding: 20px
-  margin: 40px 20px 0px 20px
+  margin: -18px 20px 20px 20px
   -webkit-border-radius: 0 0 6px 6px
   -moz-border-radius: 0 0 6px 6px
   border-radius: 0 0 6px 6px
@@ -60,7 +65,17 @@ table.sensu-table
         -moz-border-radius-topright: 4px
         border-top-right-radius: 4px
 
-table#events
+.table tbody tr:hover td, .table tbody tr:hover th
+
+.table
+  tbody
+    tr:hover
+      td
+        background-color: transparent
+      th
+        background-color: transparent
+
+table.table#events
   tbody
     tr
       cursor: pointer
