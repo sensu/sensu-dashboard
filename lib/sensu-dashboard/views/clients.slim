@@ -57,8 +57,9 @@ script(type='text/template' id='tpl-event-column')
   th <%= display_name %>
 
 script(type='text/template' id='tpl-event-row')
-  td.select_col
-    input(type='checkbox' name='<%= client %>' checked='<%= selected ? "checked" : "" %>')
-  td.client_col(data-controls-modal="event_modal") <%= client %>
-  td.check_col(data-controls-modal="event_modal") <%= check %>
-  td.output_col(data-controls-modal="event_modal") <%= output %>
+  tr(class="<%= status_name %>")
+    td.select_col
+      input(type='checkbox' name='<%= client %>')
+    td.client_col(data-controls-modal="event_modal") <%= client %>
+    td.check_col(data-controls-modal="event_modal") <%= check %>
+    td.output_col(data-controls-modal="event_modal") <%= output %>
