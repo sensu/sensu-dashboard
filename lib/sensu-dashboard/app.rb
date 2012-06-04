@@ -22,9 +22,9 @@ class Dashboard < Sinatra::Base
   end
 
   def self.setup(options={})
+    $logger = Cabin::Channel.get
     base = Sensu::Base.new(options)
     $settings = base.settings
-    $logger = base.logger
     unless $settings[:dashboard].is_a?(Hash)
       raise('missing dashboard configuration')
     end
