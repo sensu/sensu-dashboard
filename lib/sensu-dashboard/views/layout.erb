@@ -53,9 +53,9 @@
 	<!-- all our JS is at the bottom of the page, except for Modernizr. -->
 	<script src="js/modernizr-1.7.min.js"></script>
 
-  <% if $settings.dashboard.autorefresh %>
+  <% if $settings['dashboard']['autorefresh'] %>
   <!-- page autorefresh -->
-  <meta http-equiv="refresh" content="<%= $settings.dashboard.autorefresh %>">
+  <meta http-equiv="refresh" content="<%= $settings['dashboard']['autorefresh'] %>">
   <% end %>
 </head>
 
