@@ -34,6 +34,9 @@ class Dashboard < Sinatra::Base
     unless $settings[:dashboard][:user].is_a?(String) && $settings[:dashboard][:password].is_a?(String)
       raise('dashboard must have a user and password')
     end
+    unless $settings[:api][:host].is_a?(String) && !$settings[:api][:port].to_i.zero?
+      raise('dashboard must have an api host and api port')
+    end    
     $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
     $api_options = {}
     if $settings[:api][:user] && $settings[:api][:password]
