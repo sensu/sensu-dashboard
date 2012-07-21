@@ -1,7 +1,8 @@
 require 'sensu/base'
+require 'thin'
+require 'sinatra/async'
 require 'em-http-request'
 require 'em-websocket'
-require 'sinatra/async'
 require 'sass'
 
 class Dashboard < Sinatra::Base
@@ -11,7 +12,9 @@ class Dashboard < Sinatra::Base
     EM::run do
       self.setup(options)
       self.websocket_server
-      self.run!(:port => $settings[:dashboard][:port])
+
+      Thin::Logging.silent = true
+      Thin::Server.start(self, $settings[:dashboard][:port])
 
       %w[INT TERM].each do |signal|
         Signal.trap(signal) do
