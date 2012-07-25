@@ -73,11 +73,6 @@
 <script type="text/javascript">
 fetchEvents();
 
-ws = new WebSocket("ws://" + location.hostname + ":9000");
-ws.onmessage = function(evt) {
-  fetchEvents();
-}
-
 $("#disable_client_alerts").click(function() {
   var client_id = $("#client_id_value").html();
   var alert_img = $("#disable_client_alerts").children().first();

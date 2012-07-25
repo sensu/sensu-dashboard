@@ -6,14 +6,13 @@ Gem::Specification.new do |s|
   s.name        = "sensu-dashboard"
   s.version     = Sensu::Dashboard::VERSION
   s.authors     = ["Justin Kolberg", "Sean Porter"]
-  s.email       = ["justin.kolberg@sonian.net", "sean.porter@sonian.net"]
+  s.email       = ["justin.kolberg@sonian.net", "portertech@gmail.com"]
   s.homepage    = "https://github.com/sonian/sensu-dashboard"
   s.summary     = %q{A web interface for sensu, a publish/subscribe server monitoring framework}
   s.description = %q{Display current events and clients in sensu via a simple web interface}
 
-  s.add_dependency("sensu", "~> 0.9.6.beta.3")
+  s.add_dependency("sensu", "~> 0.9.6")
   s.add_dependency("em-http-request", "1.0.1")
-  s.add_dependency("em-websocket", "0.3.6")
   s.add_dependency("sass")
 
   s.files         = `git ls-files`.split("\n")
