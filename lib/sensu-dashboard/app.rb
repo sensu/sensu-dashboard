@@ -2,7 +2,6 @@ require 'sensu/base'
 require 'thin'
 require 'sinatra/async'
 require 'em-http-request'
-require 'em-websocket'
 require 'sass'
 
 class Dashboard < Sinatra::Base
@@ -11,7 +10,6 @@ class Dashboard < Sinatra::Base
   def self.run(options={})
     EM::run do
       self.setup(options)
-      self.websocket_server
 
       Thin::Logging.silent = true
       Thin::Server.start(self, $settings[:dashboard][:port])
@@ -41,20 +39,6 @@ class Dashboard < Sinatra::Base
     $api_options = {}
     if $settings[:api][:user] && $settings[:api][:password]
       $api_options.merge!(:head => {:authorization => [$settings[:api][:user], $settings[:api][:password]]})
-    end
-  end
-
-  def self.websocket_server
-    $websocket_connections = []
-    EM::WebSocket.start(:host => '0.0.0.0', :port => 9000) do |websocket|
-      websocket.onopen do
-        $logger.debug('client connected to websocket')
-        $websocket_connections.push(websocket)
-      end
-      websocket.onclose do
-        $logger.debug('client disconnected from websocket')
-        $websocket_connections.delete(websocket)
-      end
     end
   end
 
@@ -106,12 +90,7 @@ class Dashboard < Sinatra::Base
   end
 
   apost '/events.json' do
-    unless $websocket_connections.empty?
-      $websocket_connections.each do |websocket|
-        websocket.send '{"update":"true"}'
-      end
-    end
-    body '{"success":"triggered dashboard refresh"}'
+    body '{"error": "this feature has been removed"}'
   end
 
   aget '/autocomplete.json' do
