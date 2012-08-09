@@ -1,6 +1,14 @@
 .form-stacked#other_info
   h4 Events Count
   ul#event_counts
+    li
+      span(class="label label-success") 0 total
+    li
+      span(class="label label-important") 0 critical
+    li
+      span(class="label label-warning") 0 warning
+    li
+      span(class="label label-unknown") 0 unknown
 
 br(style='clear: both;')
 
@@ -33,6 +41,9 @@ table.table.table-bordered.sensu-table#events
       th Check
       th Output
   tbody
+    tr
+      td
+        img(src='/img/loading.gif' alt='loading...' title='loading...')
 
 #event_modal.modal.fade(data-backdrop="true" data-keyboard="true" style="display: block")
   .modal-header
@@ -56,9 +67,9 @@ script(type='text/template' id='tpl-event-count')
 script(type='text/template' id='tpl-event-column')
   th <%= display_name %>
 
-script(type='text/template' id='tpl-event-row')
+script(type='text/template' id='tpl-event-list-item')
   td.select_col
-    input(type='checkbox' name='<%= client %>' checked='<%= selected ? "checked" : "" %>')
+    input(type='checkbox' name='<%= client %>')
   td.client_col(data-controls-modal="event_modal") <%= client %>
   td.check_col(data-controls-modal="event_modal") <%= check %>
   td.output_col(data-controls-modal="event_modal") <%= output %>
