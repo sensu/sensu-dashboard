@@ -6,9 +6,9 @@
     li
       span(class="label label-important") 0 critical
     li
-      span(class="label label-warning") 0 warning
+      span(class="label label-warning") 0 unknown
     li
-      span(class="label label-unknown") 0 unknown
+      span(class="label label-unknown") 0 warning
 
 br(style='clear: both;')
 
@@ -87,9 +87,9 @@ script(type='text/template' id='tpl-event-count')
   li
     span(class="label label-important") <%= critical %> critical
   li
-    span(class="label label-warning") <%= warning %> warning
+    span(class="label label-warning") <%= unknown %> unknown
   li
-    span(class="label label-unknown") <%= unknown %> unknown
+    span(class="label label-unknown") <%= warning %> warning
 
 script(type='text/template' id='tpl-event-column')
   th <%= display_name %>
