@@ -1,38 +1,72 @@
 doctype 5
-html(lang="en")
+html(lang='en')
   head
-    meta(charset="utf-8")
-    meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge,chrome=1')
     title Sensu Dashboard
-    meta(name="author" content="Justin Kolberg")
-    meta(name="Copyright" content="Copyright Sonian, Inc. 2012. MIT License.")
-    link(rel="stylesheet" type="text/css" href="css/bootstrap.min.css")
-    link(rel="stylesheet" type="text/css" href="css/main.css")
+    meta(name='author' content='Justin Kolberg')
+    meta(name='Copyright' content='Copyright Sonian, Inc. 2012. MIT License.')
+    link(rel='stylesheet' type='text/css' href='css/bootstrap.min.css')
+    link(rel='stylesheet' type='text/css' href='css/main.css')
   body
     .navbar
       .navbar-inner
         .container
-          a.brand(href="#") Sensu Dashboard
+          a.brand(href='#') Sensu Dashboard
           ul.nav.pull-right
             li.active
-              a(href="#events") Current Events
+              a(href='#events') Current Events
             li
-              a(href="#stashes") Stashes
+              a(href='#stashes') Stashes
             li
-              a(href="#clients") Clients
+              a(href='#clients') Clients
             li
-              a(href="#settings") Settings
+              a(href='#settingsModal' data-toggle='modal') Settings
     .container-fluid#content
       == yield
     footer
       | &copy; Copyright 
-      a(href="http://www.sonian.com") Sonian, Inc. 
+      a(href='http://www.sonian.com') Sonian, Inc. 
       | 2012 
-      a(href="https://github.com/sonian/sensu-dashboard/blob/master/MIT-LICENSE.txt") License (MIT)
+      a(href='https://github.com/sonian/sensu-dashboard/blob/master/MIT-LICENSE.txt') License (MIT)
 
-script(type="text/javascript" src="js/jquery.min.js")
-script(type="text/javascript" src="js/bootstrap.min.js")
-script(type="text/javascript" src="js/json2.js")
-script(type="text/javascript" src="js/underscore.min.js")
-script(type="text/javascript" src="js/backbone.min.js")
-script(type="text/javascript" src="js/events.js")
+    .modal.hide.fade#settingsModal
+      .modal-header
+        button.close(type='button' data-dismiss='modal') x
+        h3 Settings
+      .modal-body
+        form.form-horizontal
+          fieldset
+            .control-group
+              label.control-label(for='columnsList') Event Columns
+              .controls
+                select#eventColumnsList.span3(multiple='multiple')
+                div(style='margin-top: 7px')
+                  button.btn.btn-info#eventColumnBtnUp(type='button')
+                    i.icon-arrow-up.icon-white
+                  button.btn.btn-info#eventColumnBtnDown(type='button' style='margin-left: 4px; margin-right: 4px;')
+                    i.icon-arrow-down.icon-white
+                  button.btn.btn-danger#eventColumnBtnRemove(type='button') Remove
+          fieldset
+            .control-group
+              .controls
+                .input-append
+                  input.span3#eventColumnName(size='16' type='text')
+                  button.btn.btn-success#eventColumnBtnAdd(type='button') Add
+                p.help-block
+      
+      .modal-footer
+        a.btn(href='#' data-dismiss='modal') Close
+        a.btn.btn-primary(href='#') Save changes
+
+script(type='text/template' id='tpl-event-column-list-item')
+  option <%= name %>
+
+script(type='text/javascript' src='js/jquery.min.js')
+script(type='text/javascript' src='js/bootstrap.min.js')
+script(type='text/javascript' src='js/json2.js')
+script(type='text/javascript' src='js/underscore.min.js')
+script(type='text/javascript' src='js/backbone.min.js')
+script(type='text/javascript' src='js/backbone.localStorage.min.js')
+script(type='text/javascript' src='js/main.js')
+script(type='text/javascript' src='js/events.js')
