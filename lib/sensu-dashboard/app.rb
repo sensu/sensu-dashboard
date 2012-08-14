@@ -71,34 +71,20 @@ class Dashboard < Sinatra::Base
     content_type 'text/html'
   end
 
-  aget '/' do
-    redirect '/events'
-  end
-
-  aget '/events', :provides => 'html' do
-    @path = request.path_info
-#    @js = erb :event_templates, :layout => false
+  aget '/', :provides => 'html' do
     body slim :events
   end
 
-  aget '/clients' do
-    @path = request.path_info
-#    @js = erb :client_templates
-    body erb :clients
-  end
-  
-  aget '/stashes' do
-    @path = request.path_info
-#    @js = erb :stash_templates
-    body erb :stashes
+  aget '/js/templates/*.tmpl' do |template|
+    body slim template.to_sym, :layout => false
   end
 
-  aget '/css/main.css' do
+  aget '/css/*.css' do |stylesheet|
     content_type 'text/css'
-    body sass :main
+    body sass stylesheet.to_sym
   end
-  
-  apost '/events' do
+
+  apost '/' do
     content_type 'application/json'
     $logger.debug('[events] -- ' + request.ip + ' -- POST -- triggering dashboard refresh')
     unless $websocket_connections.empty?
@@ -107,136 +93,6 @@ class Dashboard < Sinatra::Base
       end
     end
     body '{"success":"triggered dashboard refresh"}'
-  end
-
-  aget '/events/autocomplete' do
-    content_type 'application/json'
-    multi = EM::MultiRequest.new
-
-    requests = [
-      $api_server + '/events',
-      $api_server + '/clients'
-    ]
-
-    requests.each do |url|
-      multi.add EM::HttpRequest.new(url).get
-    end
-
-    multi.callback do
-      events = {}
-      clients = []
-
-      multi.responses[:succeeded].each do |request|
-        body = JSON.parse(request.response)
-        case body
-        when Hash
-          events = body
-        when Array
-          clients = body
-        end
-      end
-
-      if events && clients
-        autocomplete = []
-        statuses = {:warning => [], :critical => [], :unknown => []}
-        subscriptions = {}
-        checks = []
-
-        # searching by client
-        clients.each do |client|
-          client_name = client['name']
-          if events.include?(client_name)
-            autocomplete.push({:value => [client_name], :type => 'client', :name => client_name})
-            client['subscriptions'].each do |subscription|
-              subscriptions[subscription] ||= []
-              subscriptions[subscription].push(client_name)
-            end
-            events[client_name].each do |check, event|
-              case event['status']
-              when 1
-                statuses[:warning].push(event['status'])
-              when 2
-                statuses[:critical].push(event['status'])
-              else
-                statuses[:unknown].push(event['status'])
-              end
-              checks.push(check)
-            end
-          end
-        end
-
-        # searching by subscription
-        subscriptions.each do |k, v|
-          autocomplete.push({:value => v.uniq, :type => 'subscription', :name => k})
-        end
-
-        # searching by status
-        statuses.each do |k, v|
-          autocomplete.push({:value => v.uniq, :type => 'status', :name => k})
-        end
-
-        # searching by check
-        checks.uniq.each do |v|
-          autocomplete.push({:value => [v], :type => 'check', :name => v})
-        end
-
-        body autocomplete.to_json
-      else
-        status 404
-        body '{"error":"could not retrieve events and/or clients from the sensu api"}'
-      end
-    end
-  end
-
-  aget '/clients/autocomplete' do
-    content_type 'application/json'
-    multi = EM::MultiRequest.new
-
-    requests = [
-     $api_server + '/clients'
-    ]
-
-    requests.each do |url|
-      multi.add EM::HttpRequest.new(url).get
-    end
-
-    multi.callback do
-      events = {}
-      clients = []
-
-      multi.responses[:succeeded].each do |request|
-        body = JSON.parse(request.response)
-        case body
-        when Array
-          clients = body
-        end
-      end
-
-      if clients
-        autocomplete = []
-        subscriptions = {}
-
-        # searching by client
-        clients.each do |client|
-          client_name = client['name']
-          autocomplete.push({:value => [client_name], :type => 'client', :name => client_name})
-          client['subscriptions'].each do |subscription|
-            subscriptions[subscription] ||= []
-            subscriptions[subscription].push(client_name)
-          end
-        end
-
-        # searching by subscription
-        subscriptions.each do |k, v|
-          autocomplete.push({:value => v.uniq, :type => 'subscription', :name => k})
-        end
-
-        body autocomplete.to_json
-      else
-        status 404
-        body '{"error":"could not retrieve clients from the sensu api"}'
-      end
-    end
   end
 
   #

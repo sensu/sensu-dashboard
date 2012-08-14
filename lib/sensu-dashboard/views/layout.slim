@@ -23,7 +23,7 @@ html(lang='en')
             li
               a(href='#settingsModal' data-toggle='modal') Settings
     .container-fluid#content
-      == yield
+      #main
     footer
       | &copy; Copyright 
       a(href='http://www.sonian.com') Sonian, Inc. 
@@ -62,11 +62,4 @@ html(lang='en')
 script(type='text/template' id='tpl-event-column-list-item')
   option <%= name %>
 
-script(type='text/javascript' src='js/jquery.min.js')
-script(type='text/javascript' src='js/bootstrap.min.js')
-script(type='text/javascript' src='js/json2.js')
-script(type='text/javascript' src='js/underscore.min.js')
-script(type='text/javascript' src='js/backbone.min.js')
-script(type='text/javascript' src='js/backbone.localStorage.min.js')
-script(type='text/javascript' src='js/main.js')
-script(type='text/javascript' src='js/events.js')
+script(data-main='js/main' src='js/libs/require/require.min.js')
