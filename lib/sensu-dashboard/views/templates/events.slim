@@ -80,23 +80,3 @@ table.table.table-bordered.sensu-table#events
     p Testing
   .modal-footer
     | Meow
-
-script(type='text/template' id='tpl-event-count')
-  li
-    span(class="label label-success") <%= total %> total
-  li
-    span(class="label label-important") <%= critical %> critical
-  li
-    span(class="label label-warning") <%= unknown %> unknown
-  li
-    span(class="label label-unknown") <%= warning %> warning
-
-script(type='text/template' id='tpl-event-column')
-  th <%= display_name %>
-
-script(type='text/template' id='tpl-event-list-item')
-  td.select_col
-    input(type='checkbox' name='<%= client %>')
-  td.client_col(data-controls-modal="event_modal") <%= client %>
-  td.check_col(data-controls-modal="event_modal") <%= check %>
-  td.output_col(data-controls-modal="event_modal") <%= output %>

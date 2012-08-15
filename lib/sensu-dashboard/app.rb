@@ -72,11 +72,11 @@ class Dashboard < Sinatra::Base
   end
 
   aget '/', :provides => 'html' do
-    body slim :events
+    body slim :main
   end
 
   aget '/js/templates/*.tmpl' do |template|
-    body slim template.to_sym, :layout => false
+    body slim "templates/#{template}".to_sym, :layout => false
   end
 
   aget '/css/*.css' do |stylesheet|

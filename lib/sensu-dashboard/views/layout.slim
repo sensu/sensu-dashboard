@@ -13,17 +13,17 @@ html(lang='en')
       .navbar-inner
         .container
           a.brand(href='#') Sensu Dashboard
-          ul.nav.pull-right
-            li.active
+          ul.nav.pull-right#navigation
+            li#nav_events
               a(href='#events') Current Events
-            li
+            li#nav_stashes
               a(href='#stashes') Stashes
-            li
+            li#nav_clients
               a(href='#clients') Clients
             li
               a(href='#settingsModal' data-toggle='modal') Settings
     .container-fluid#content
-      #main
+      == yield
     footer
       | &copy; Copyright 
       a(href='http://www.sonian.com') Sonian, Inc. 
