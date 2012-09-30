@@ -41,7 +41,11 @@ class Dashboard < Sinatra::Base
     if options[:pid_file]
       Process.write_pid(options[:pid_file])
     end
-    $api_server = 'http://' + $settings.api.host + ':' + $settings.api.port.to_s
+    $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
+    $api_options = {}
+    if $settings[:api][:user] && $settings[:api][:password]
+      $api_options.merge!(:head => {:authorization => [$settings[:api][:user], $settings[:api][:password]]})
+          end
   end
 
   def self.websocket_server
@@ -101,7 +105,8 @@ class Dashboard < Sinatra::Base
   aget '/*', :provides => 'json' do |path|
     content_type 'application/json'
     begin
-      http = EM::HttpRequest.new($api_server + '/' + path).get :head => {'Accept' => 'application/json'}
+      $api_options[:head]['Accept'] = 'application/json'
+      http = EM::HttpRequest.new($api_url + '/' + path).get($api_options)
     rescue => e
       $logger.warning(e)
       status 404

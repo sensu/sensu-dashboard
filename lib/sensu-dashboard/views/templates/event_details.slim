@@ -10,8 +10,10 @@ a.btn.btn-danger#silence_event
 a.btn.btn-danger#resolve_event
   i.icon-ok-sign.icon-white
   | &nbsp;Resolve Event
+
 br
 br
+
 h3 Event Data
 == '<% _.each(_.pairs(this.model.attributes), function(i) { %>'
 .well.well-small
@@ -19,3 +21,8 @@ h3 Event Data
   == '<%= i[1] %>'
 == '<% }); %>'
 
+br
+br
+
+h3 Client Data
+== ''
