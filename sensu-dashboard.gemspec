@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.add_dependency("sensu", "~> 0.9.6")
   s.add_dependency("em-http-request", "1.0.1")
   s.add_dependency("sass")
+  s.add_dependency("slim")
 
   s.files         = `git ls-files`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }

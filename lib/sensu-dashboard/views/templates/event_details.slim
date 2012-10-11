@@ -1,0 +1,28 @@
+h3 Actions
+a.btn.btn-danger#silence_client
+  i.icon-volume-off.icon-white
+  | &nbsp;Silence Client
+| &nbsp;
+a.btn.btn-danger#silence_event
+  i.icon-volume-up.icon-white
+  | &nbsp;Silence Check
+| &nbsp;
+a.btn.btn-danger#resolve_event
+  i.icon-ok-sign.icon-white
+  | &nbsp;Resolve Event
+
+br
+br
+
+h3 Event Data
+== '<% _.each(_.pairs(this.model.attributes), function(i) { %>'
+.well.well-small
+  h6 <%= i[0] %>
+  == '<%= i[1] %>'
+== '<% }); %>'
+
+br
+br
+
+h3 Client Data
+== ''

@@ -2,6 +2,7 @@ require 'sensu/base'
 require 'thin'
 require 'sinatra/async'
 require 'em-http-request'
+require 'slim'
 require 'sass'
 
 class Dashboard < Sinatra::Base
@@ -56,369 +57,58 @@ class Dashboard < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :static, true
   set :public_folder, Proc.new { File.join(root, 'public') }
+  set :haml, { :format => :html5 }
 
   use Rack::Auth::Basic do |user, password|
     user == $settings[:dashboard][:user] && password == $settings[:dashboard][:password]
   end
 
   before do
-    content_type 'application/json'
+    content_type 'text/html'
     request_log(env)
   end
 
-  aget '/' do
-    content_type 'text/html'
-    @js = erb :event_templates, :layout => false
-    body erb :index
+  aget '/', :provides => 'html' do
+    body slim :main
   end
 
-  aget '/clients' do
-    content_type 'text/html'
-    @js = erb :client_templates, :layout => false
-    body erb :clients
+  aget '/js/templates/*.tmpl' do |template|
+    body slim "templates/#{template}".to_sym, :layout => false
   end
 
-  aget '/stashes' do
-    content_type 'text/html'
-    @js = erb :stash_templates, :layout => false
-    body erb :stashes
-  end
-
-  aget '/css/sonian.css' do
+  aget '/css/*.css' do |stylesheet|
     content_type 'text/css'
-    body sass :sonian
+    body sass stylesheet.to_sym
   end
 
-  apost '/events.json' do
-    body '{"error": "this feature has been removed"}'
-  end
-
-  aget '/autocomplete.json' do
-    multi = EM::MultiRequest.new
-    multi.add :events, EM::HttpRequest.new($api_url + '/events').get($api_options)
-    multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
-
-    multi.callback do
-      unless multi.responses[:errback].size > 0
-        events = JSON.parse(multi.responses[:callback][:events].response)
-        clients = JSON.parse(multi.responses[:callback][:clients].response)
-
-        autocomplete = []
-        statuses = {:warning => [], :critical => [], :unknown => []}
-        subscriptions = {}
-        checks = []
-
-        # searching by client
-        clients.each do |client|
-          client_name = client['name']
-          autocomplete.push({:value => [client_name], :type => 'client', :name => client_name})
-          client['subscriptions'].each do |subscription|
-            subscriptions[subscription] ||= []
-            subscriptions[subscription].push(client_name)
-          end
-          events.each do |event|
-            case event['status']
-            when 1
-              statuses[:warning].push(event['status'])
-            when 2
-              statuses[:critical].push(event['status'])
-            else
-              statuses[:unknown].push(event['status'])
-            end
-            checks.push(event['check'])
-          end
-        end
-
-        # searching by subscription
-        subscriptions.each do |k, v|
-          autocomplete.push({:value => v.uniq, :type => 'subscription', :name => k})
-        end
-
-        # searching by status
-        statuses.each do |k, v|
-          autocomplete.push({:value => v.uniq, :type => 'status', :name => k})
-        end
-
-        # searching by check
-        checks.uniq.each do |v|
-          autocomplete.push({:value => [v], :type => 'check', :name => v})
-        end
-
-        body autocomplete.to_json
-      else
-        status 404
-        body '{"error":"could not retrieve events and/or clients from the sensu api"}'
+  apost '/' do
+    content_type 'application/json'
+    $logger.debug('[events] -- ' + request.ip + ' -- POST -- triggering dashboard refresh')
+    unless $websocket_connections.empty?
+      $websocket_connections.each do |websocket|
+        websocket.send '{"update":"true"}'
       end
     end
-  end
-
-  aget '/clients/autocomplete.json' do
-    begin
-      http = EM::HttpRequest.new($api_url + '/clients').get($api_options)
-    rescue => e
-      $logger.warn(e.to_s)
-      status 404
-      body '{"error":"could not retrieve clients from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve clients from the sensu api"}'
-    end
-
-    http.callback do
-      if http.response_header.status == 200
-        clients = JSON.parse(http.response)
-        autocomplete = []
-        subscriptions = {}
-
-        # searching by client
-        clients.each do |client|
-          client_name = client['name']
-          autocomplete.push({:value => [client_name], :type => 'client', :name => client_name})
-          client['subscriptions'].each do |subscription|
-            subscriptions[subscription] ||= []
-            subscriptions[subscription].push(client_name)
-          end
-        end
-
-        # searching by subscription
-        subscriptions.each do |k, v|
-          autocomplete.push({:value => v.uniq, :type => 'subscription', :name => k})
-        end
-
-        body autocomplete.to_json
-      else
-        status 404
-        body '{"error":"could not retrieve clients from the sensu api"}'
-      end
-    end
+    body '{"success":"triggered dashboard refresh"}'
   end
 
   #
   # API Proxy
   #
-
-  aget '/events.json' do
+  aget '/*', :provides => 'json' do |path|
+    content_type 'application/json'
     begin
-      http = EM::HttpRequest.new($api_url + '/events').get($api_options)
+      $api_options[:head]['Accept'] = 'application/json'
+      http = EM::HttpRequest.new($api_url + '/' + path).get($api_options)
     rescue => e
       $logger.warn(e.to_s)
       status 404
-      body '{"error":"could not retrieve events from the sensu api"}'
+      body '{"error":"could not retrieve /'+path+' from the sensu api"}'
     end
 
     http.errback do
       status 404
-      body '{"error":"could not retrieve events from the sensu api"}'
-    end
-
-    http.callback do
-      events = Hash.new
-      if http.response_header.status == 200
-        api_events = JSON.parse(http.response)
-        api_events.each do |event|
-          client = event.delete('client')
-          check = event.delete('check')
-          events[client] ||= Hash.new
-          events[client][check] = event
-        end
-      end
-      status http.response_header.status
-      body events.to_json
-    end
-  end
-
-  aget '/clients.json' do
-    begin
-      http = EM::HttpRequest.new($api_url + '/clients').get($api_options)
-    rescue => e
-      $logger.warn(e.to_s)
-      status 404
-      body '{"error":"could not retrieve clients from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve clients from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  aget '/client/:id.json' do |id|
-    begin
-      http = EM::HttpRequest.new($api_url + '/client/' + id).get($api_options)
-    rescue => e
-      $logger.warn(e.to_s)
-      status 404
-      body '{"error":"could not retrieve client from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve client from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  adelete '/client/:id.json' do |id|
-    begin
-      http = EventMachine::HttpRequest.new($api_url + '/client/' + id).delete($api_options)
-    rescue => e
-      $logger.warn(e.to_s)
-      status 404
-      body '{"error":"could not delete client from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not delete client from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  aget '/stash/*.json' do |path|
-    begin
-      http = EM::HttpRequest.new($api_url + '/stash/' + path).get($api_options)
-    rescue => e
-      $logger.warn(e.to_s)
-      status 404
-      body '{"error":"could not retrieve a stash from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve a stash from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  apost '/stash/*.json' do |path|
-    begin
-      request_options = {
-        :body => {'timestamp' => Time.now.to_i}.to_json,
-        :head => {
-          'content-type' => 'application/json'
-        }
-      }
-      http = EM::HttpRequest.new($api_url + '/stash/' + path).post(request_options.merge($api_options))
-    rescue => e
-      $logger.warn(e.to_s)
-      status 404
-      body '{"error":"could not create a stash with the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not create a stash with the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  adelete '/stash/*.json' do |path|
-    begin
-      http = EM::HttpRequest.new($api_url + '/stash/' + path).delete($api_options)
-    rescue => e
-      $logger.warn(e.to_s)
-      status 404
-      body '{"error":"could not delete a stash with the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not delete a stash with the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  apost '/event/resolve.json' do
-    begin
-      request_options = {
-        :body => request.body.read,
-        :head => {
-          'content-type' => 'application/json'
-        }
-      }
-      http = EM::HttpRequest.new($api_url + '/event/resolve').post(request_options.merge($api_options))
-    rescue => e
-      $logger.warn(e.to_s)
-      status 404
-      body '{"error":"could not resolve an event with the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not resolve an event with the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  aget '/stashes.json' do
-    begin
-      http = EM::HttpRequest.new($api_url + '/stashes').get($api_options)
-    rescue => e
-      $logger.warn(e.to_s)
-      status 404
-      body '{"error":"could not retrieve a list of stashes from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve a list of stashes from the sensu api"}'
-    end
-
-    http.callback do
-      status http.response_header.status
-      body http.response
-    end
-  end
-
-  apost '/stashes.json' do
-    begin
-      request_options = {
-        :body => request.body.read,
-        :head => {
-          'content-type' => 'application/json'
-        }
-      }
-      http = EM::HttpRequest.new($api_url + '/stashes').post(request_options.merge($api_options))
-    rescue => e
-      $logger.warn(e.to_s)
-      status 404
-      body '{"error":"could not retrieve a list of stashes from the sensu api"}'
-    end
-
-    http.errback do
-      status 404
-      body '{"error":"could not retrieve a list of stashes from the sensu api"}'
+      body '{"error":"could not retrieve /'+path+' from the sensu api"}'
     end
 
     http.callback do
