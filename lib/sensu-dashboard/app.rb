@@ -35,12 +35,12 @@ module Sensu
         end
         unless $settings[:dashboard][:port].is_a?(Integer)
           invalid_settings('dashboard must have a port', {
-            :dashboard => $settings[:dashboard]
+            :settings => $settings[:dashboard]
           })
         end
         unless $settings[:dashboard][:user].is_a?(String) && $settings[:dashboard][:password].is_a?(String)
           invalid_settings('dashboard must have a user and password', {
-            :dashboard => $settings[:dashboard]
+            :settings => $settings[:dashboard]
           })
         end
         $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
