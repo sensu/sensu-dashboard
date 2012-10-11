@@ -72,7 +72,7 @@ module Sensu
       end
     end
 
-    def request_log(env)
+    def request_log_line
       $logger.info([env['REQUEST_METHOD'], env['REQUEST_PATH']].join(' '), {
         :remote_address => env['REMOTE_ADDR'],
         :user_agent => env['HTTP_USER_AGENT'],
@@ -93,7 +93,7 @@ module Sensu
 
     before do
       content_type 'text/html'
-      request_log(env)
+      request_log_line
     end
 
     aget '/', :provides => 'html' do
