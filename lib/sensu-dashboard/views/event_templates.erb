@@ -7,7 +7,13 @@
   {{/if}}
     <td id="client">${client}</td>
     <td id="check">${check}</td>
-    <td id="output">${output}</td>
+    <td id="output">
+    {{if parsed_output.message}}
+      ${parsed_output.message}
+    {{else}}
+      ${output}
+    {{/if}}
+    </td>
     <td id="status" style="display: none;">${status}</td>
   </tr>
 </script>
@@ -46,6 +52,16 @@
   <!--<div class="copy">Copy</div>-->
   <div style="clear: both;"></div>
 </div>
+{{if parsed_output.url}}
+<div class="event_detail_group">
+  <div class="event_detail">
+    <h1>URL</h1>
+    <p><a target="_blank" href="${parsed_output.url}">${parsed_output.url}</a></p>
+  </div>
+  <!--<div class="copy">Copy</div>-->
+  <div style="clear: both;"></div>
+</div>
+{{/if}}
 <div class="event_detail_group">
   <div class="event_detail">
     <h1>Occurrences</h1>
