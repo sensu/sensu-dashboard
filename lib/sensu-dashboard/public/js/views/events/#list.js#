@@ -45,7 +45,7 @@ define([
             + 'Error ' + response['status'] + ': '
             + response['statusText']);
         }
-      });
+      }); // TODO: display notifications when receiving errors from API
     },
     render: function() {
       $(this.el).html(this.template);
