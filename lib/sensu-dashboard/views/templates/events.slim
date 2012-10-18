@@ -74,19 +74,7 @@ table.table.table-bordered.sensu-table#events
 
 #event_modal.modal.fade(data-backdrop="true" data-keyboard="true" style="display: block")
   .modal-body
-    #actions
-      h3 Actions
-      a.btn.btn-danger#silence_client
-        i.icon-volume-off.icon-white
-        | &nbsp;Silence Client
-      | &nbsp;
-      a.btn.btn-danger#silence_event
-        i.icon-volume-up.icon-white
-        | &nbsp;Silence Check
-      | &nbsp;
-      a.btn.btn-danger#resolve-event
-        i.icon-ok-sign.icon-white
-        | &nbsp;Resolve Event
-      br
-      br
     #details
+      #actions
+      #event_details
+      #client_details
