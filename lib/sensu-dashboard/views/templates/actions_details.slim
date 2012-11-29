@@ -1,0 +1,30 @@
+h3 Actions
+
+a.btn.btn-danger#silence-client
+  == '<% if (clientStash.get("timestamp")) { %>'
+  i.icon-volume-off.icon-white
+  | &nbsp;Unsilence Client
+  == '<% } else { %>'
+  i.icon-volume-up.icon-white
+  | &nbsp;Silence Client
+  == '<% } %>'
+
+| &nbsp;
+
+a.btn.btn-danger#silence-check
+  == '<% if (eventStash.get("timestamp")) { %>'
+  i.icon-volume-up.icon-white
+  | &nbsp;Silence Check
+  == '<% } else { %>'
+  i.icon-volume-off.icon-white
+  |&nbsp;Unsilence Check
+  == '<% } %>'
+
+| &nbsp;
+
+a.btn.btn-danger#resolve-event
+  i.icon-ok-sign.icon-white
+  | &nbsp;Resolve Event
+
+br
+br

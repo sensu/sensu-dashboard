@@ -4,6 +4,7 @@ require 'sinatra/async'
 require 'em-http-request'
 require 'slim'
 require 'sass'
+require 'uri'
 
 module Sensu
   class Dashboard < Sinatra::Base
@@ -117,6 +118,56 @@ module Sensu
       begin
         $api_options[:head]['Accept'] = 'application/json'
         http = EM::HttpRequest.new($api_url + '/' + path).get($api_options)
+      rescue => error
+        $logger.error('failed to query the sensu api', {
+          :error => error
+        })
+        status 404
+        body '{"error":"could not retrieve /'+path+' from the sensu api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not retrieve /'+path+' from the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        body http.response
+      end
+    end
+
+    apost '/*', :provides => 'json' do |path|
+      content_type 'application/json'
+      begin
+        $api_options[:head]['Accept'] = 'application/json'
+        $api_options[:body] = request.body.read
+        http = EM::HttpRequest.new($api_url + '/' + path).post($api_options)
+      rescue => error
+        $logger.error('failed to query the sensu api', {
+          :error => error
+        })
+        status 404
+        body '{"error":"could not retrieve /'+path+' from the sensu api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not retrieve /'+path+' from the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        body http.response
+      end
+    end
+
+    aput '/*', :provides => 'json' do |path|
+      content_type 'application/json'
+      begin
+        $api_options[:head]['Accept'] = 'application/json'
+        $api_options[:body] = request.body.read
+        http = EM::HttpRequest.new($api_url + '/' + path).put($api_options)
       rescue => error
         $logger.error('failed to query the sensu api', {
           :error => error
