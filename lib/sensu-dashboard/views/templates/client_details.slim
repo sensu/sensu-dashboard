@@ -8,6 +8,8 @@ h3 Client Data
     li
       == '<%= j %>'
     == '<% }); %>'
+  == '<% } else if (_.isObject(i[1])) { %>'
+  == '<%= JSON.stringify(i[1]) %>'
   == '<% } else { %>'
   == '<%= i[1] %>'
   == '<% } %>'
