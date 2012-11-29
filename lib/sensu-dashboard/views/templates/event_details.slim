@@ -1,5 +1,5 @@
 h3 Event Data
-== '<% _.each(_.pairs(this.model.attributes), function(i) { %>'
+== '<% _.each(_.reject(_.pairs(this.model.attributes), function(j) { return _.contains(["selected", "status_name"], j[0]) }), function(i) { %>'
 .well.well-small
   h6 <%= i[0] %>
   == '<% if (_.isArray(i[1])) { %>'
