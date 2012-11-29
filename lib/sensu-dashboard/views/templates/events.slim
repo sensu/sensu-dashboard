@@ -78,3 +78,10 @@ table.table.table-bordered.sensu-table#events
       #actions
       #event_details
       #client_details
+
+javascript:
+  function filtered_event_attributes(attributes) {
+    return _.reject(_.pairs(attributes), function(attribute) {
+      return _.contains(["selected", "status_name"], attribute[0])
+    })
+  }
