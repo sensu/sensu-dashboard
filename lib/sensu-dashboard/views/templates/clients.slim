@@ -1,1 +1,60 @@
-| Clients
+.btn-group
+  a.btn.btn-success#toggle-checkboxes(href='#')
+    i.icon-check.icon-white
+  a.btn.btn-success.dropdown-toggle(data-toggle='dropdown' href='#')
+    span.caret
+  ul.dropdown-menu
+    li.dropdown-header Select
+    li
+      a#select-all(href='#')
+        i.icon-check
+        | &nbsp;All
+    li
+      a#select-none(href='#')
+        i.icon-ban-circle
+        | &nbsp;None
+    li
+      a#select-critical(href='#')
+        i.icon-fire
+        | &nbsp;Critical
+    li
+      a#select-unknown(href='#')
+        i.icon-question-sign
+        | &nbsp;Unknown
+    li
+      a#select-warning(href='#')
+        i.icon-warning-sign
+        | &nbsp;Warning
+    li.divider
+    li.dropdown-header Actions
+    li
+      a#resolve-selected(href='#')
+        i.icon-ok-sign
+        | &nbsp;Resolve
+    li
+      a#silence-selected(href='#')
+        i.icon-volume-off
+        | &nbsp;Silence
+    li
+      a#unsilence-selected(href='#')
+        i.icon-volume-up
+        | &nbsp;Unsilence
+
+table.table.table-bordered.sensu-table#clients
+  thead
+    tr
+      th
+      th Client
+      th Address
+      th Timestamp
+      th Subscriptions
+  tbody
+    tr
+      td
+        img(src='/img/loading.gif' alt='loading...' title='loading...')
+
+#event_modal.modal.fade(data-backdrop="true" data-keyboard="true" style="display: block")
+  .modal-body
+    #details
+      #actions
+      #client_details
