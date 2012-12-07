@@ -110,6 +110,19 @@ module Sensu
       body sass stylesheet.to_sym
     end
 
+#    aget '/fonts/*' do |font|
+#      content_type 'application/x-font-woff'
+#      valid_extension = false
+#      %w['.eot', '.svg', '.ttf', '.woff'].each do |extension|
+#        valid_extension = true && break if font.end_with?(extension)
+#      end
+#      if valid_extension
+#        File.read(File.join('public/fonts', font))
+#      else
+#        status 404
+#      end
+#    end
+
     #
     # API Proxy
     #
