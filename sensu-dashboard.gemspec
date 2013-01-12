@@ -7,11 +7,11 @@ Gem::Specification.new do |s|
   s.version     = Sensu::Dashboard::VERSION
   s.authors     = ["Justin Kolberg", "Sean Porter"]
   s.email       = ["justin.kolberg@sonian.net", "portertech@gmail.com"]
-  s.homepage    = "https://github.com/sonian/sensu-dashboard"
+  s.homepage    = "https://github.com/sensu/sensu-dashboard"
   s.summary     = %q{A web interface for sensu, a publish/subscribe server monitoring framework}
   s.description = %q{Display current events and clients in sensu via a simple web interface}
 
-  s.add_dependency("sensu", "~> 0.9.6")
+  s.add_dependency("sensu", ">= 0.9.8")
   s.add_dependency("em-http-request", "1.0.1")
   s.add_dependency("sass")
 
