@@ -23,8 +23,8 @@ class Dashboard < Sinatra::Base
   end
 
   def self.setup(options={})
-    $logger = Cabin::Channel.get
     base = Sensu::Base.new(options)
+    $logger = base.logger
     $settings = base.settings
     unless $settings[:dashboard].is_a?(Hash)
       raise('missing dashboard configuration')
@@ -35,6 +35,7 @@ class Dashboard < Sinatra::Base
     unless $settings[:dashboard][:user].is_a?(String) && $settings[:dashboard][:password].is_a?(String)
       raise('dashboard must have a user and password')
     end
+    base.setup_process
     $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
     $api_options = {}
     if $settings[:api][:user] && $settings[:api][:password]
