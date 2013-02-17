@@ -8,15 +8,17 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
 
     initialize: ->
       @template = HandlebarsTemplates[@name]
-      @listenTo(@collection, 'all', @render)
+      @listenTo(SensuDashboard.Events, 'all', @render)
 
     addOne: (item) ->
 
 
     addAll: ->
       @$el.empty()
-      @$el.html(@template(events: @collection.toJSON()))
+      @$el.html(@template(SensuDashboard.EventsMetadata.toJSON()))
 
     render: ->
+      console.log 'render'
+      console.log SensuDashboard.EventsMetadata.toJSON()
       @addAll()
       return this

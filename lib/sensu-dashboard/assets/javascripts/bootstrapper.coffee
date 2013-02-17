@@ -6,12 +6,11 @@ namespace 'SensuDashboard', (exports) ->
       @successCallback = options.success
       @errorCallback = options.error
 
-      @events = new SensuDashboard.Collections.Events
-      @events.fetch
-        success: (collection, response) ->
-          SensuDashboard.EventsView = new SensuDashboard.Views.Events.Index(collection: collection)
-        error: (collection, response) ->
-          console.log("Failed to fetch events collection " + response)
+      SensuDashboard.Events = new SensuDashboard.Collections.Events
+      SensuDashboard.EventsMetadata = new SensuDashboard.Models.Metadata.Events
+      SensuDashboard.EventsView = new SensuDashboard.Views.Events.Index
+
+      SensuDashboard.Events.fetch()
 
       @successCallback.call(this)
       #@errorCallback.call(this)
