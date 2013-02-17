@@ -30,8 +30,8 @@ namespace 'SensuDashboard', (exports) ->
 
       #match = Backbone.history.start { pushState: true }
 
-      # Show "Expenses" if no route already
-      #SensuDashboard.stateManager.transitionTo("expenses") unless match
+      # Show "Events" if no route already
+      #SensuDashboard.stateManager.transitionTo("events") unless match
 
   exports.App = new Application() # Initialize app
 

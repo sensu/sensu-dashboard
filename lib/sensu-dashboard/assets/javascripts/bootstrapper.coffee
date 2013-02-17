@@ -11,7 +11,7 @@ namespace 'SensuDashboard', (exports) ->
         success: (collection, response) ->
           SensuDashboard.EventsView = new SensuDashboard.Views.Events.Index(collection: collection)
         error: (collection, response) ->
-          console.log("Failed to fetch expenses collection " + response)
+          console.log("Failed to fetch events collection " + response)
 
       @successCallback.call(this)
       #@errorCallback.call(this)

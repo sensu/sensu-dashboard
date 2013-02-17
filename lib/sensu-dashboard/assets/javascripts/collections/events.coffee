@@ -4,9 +4,6 @@ namespace 'SensuDashboard.Collections', (exports) ->
     model: SensuDashboard.Models.Event,
     url: '/events'
 
-    initialize: ->
-      console.log("Initialized events collection")
-
     comparator: (event) ->
       event.get 'status_name'
 
