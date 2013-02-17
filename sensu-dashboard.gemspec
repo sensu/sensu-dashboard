@@ -14,6 +14,10 @@ Gem::Specification.new do |s|
   s.add_dependency("em-http-request", "~> 1.0.1")
   s.add_dependency("sass")
   s.add_dependency("slim")
+  s.add_dependency("sprockets")
+  s.add_dependency("yui-compressor")
+  s.add_dependency("coffee-script")
+  s.add_dependency("handlebars_assets")
 
   s.files         = `git ls-files`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }

@@ -5,10 +5,25 @@ require 'em-http-request'
 require 'slim'
 require 'sass'
 require 'uri'
+require 'sprockets'
+require 'yui/compressor'
+require 'handlebars_assets'
 
 module Sensu
   class Dashboard < Sinatra::Base
     register Sinatra::Async
+
+    configure do
+      set :assets, (Sprockets::Environment.new { |env|
+          env.append_path(settings.root + "/assets/javascripts")
+          env.append_path(settings.root + "/assets/stylesheets")
+          env.append_path HandlebarsAssets.path
+          if ENV['RACK_ENV'] == 'production'
+            env.js_compressor  = YUI::JavaScriptCompressor.new
+            env.css_compressor = YUI::CssCompressor.new
+          end
+        })
+    end
 
     class << self
       def run(options={})
@@ -99,6 +114,16 @@ module Sensu
 
     aget '/', :provides => 'html' do
       body slim :main
+    end
+
+    aget '/assets/app.js' do
+      content_type 'application/javascript'
+      body settings.assets['app.js']
+    end
+
+    aget '/assets/app.css' do
+      content_type 'text/css'
+      body settings.assets['app.css']
     end
 
     aget '/js/templates/*.tmpl' do |template|
