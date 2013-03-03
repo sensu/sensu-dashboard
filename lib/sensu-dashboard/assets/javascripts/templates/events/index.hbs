@@ -1,0 +1,22 @@
+<table id="events" class="table table-bordered sensu-table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Client</th>
+      <th>Check</th>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each events}}
+      <tr class="{{status_name}}" data-id="{{cid}}">
+        <td class="select_col">
+          <input type="checkbox" name="{{client}}" />
+        </td>
+        <td class="client_col" data-controls-modal="event_modal">{{client}}</td>
+        <td class="check_col" data-controls-modal="event_modal">{{check}}</td>
+        <td class="output_col" data-controls-modal="event_modal">{{output}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
