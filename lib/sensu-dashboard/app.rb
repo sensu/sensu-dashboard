@@ -43,8 +43,8 @@ module Sensu
       end
 
       def setup(options={})
-        $logger = Sensu::Logger.get
         base = Sensu::Base.new(options)
+        $logger = base.logger
         $settings = base.settings
         unless $settings[:dashboard].is_a?(Hash)
           invalid_settings('missing dashboard configuration')
@@ -59,6 +59,7 @@ module Sensu
             :settings => $settings[:dashboard]
           })
         end
+        base.setup_process
         $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
         $api_options = {}
         if $settings[:api][:user] && $settings[:api][:password]
