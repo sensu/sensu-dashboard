@@ -21,8 +21,9 @@ html(lang='en')
               a(href='#stashes') Stashes
             li#nav_clients
               a(href='#clients') Clients
-            li
-              a(href='#settingsModal' data-toggle='modal') Settings
+            li#nav_settings
+              a(href='#settingsModal' data-toggle='modal')
+                i.icon-cog.icon-white
     .container-fluid#content
       == yield
     footer
