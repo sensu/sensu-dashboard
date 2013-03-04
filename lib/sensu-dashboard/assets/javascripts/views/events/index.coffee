@@ -6,9 +6,13 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
 
     name: 'events/index'
 
+    events:
+      'click td[data-controls-modal]': 'showEventDetails'
+
     initialize: ->
       @template = HandlebarsTemplates[@name]
-      @listenTo(SensuDashboard.Events, 'reset', @render)
+      @listenTo(SensuDashboard.EventsMetadata, 'reset', @render)
+      @listenTo(SensuDashboard.EventsMetadata, 'change', @render)
 
     addOne: (item) ->
 
@@ -20,3 +24,9 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
     render: ->
       @addAll()
       return this
+
+    showEventDetails: (ev) ->
+      data_id = $(ev.target).parent().attr('data-id')
+      SensuDashboard.EventsMetadata.set
+        current_model: SensuDashboard.Events.get(data_id).toJSON()
+      $('#event_modal').modal()
