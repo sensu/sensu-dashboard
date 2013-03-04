@@ -1,0 +1,66 @@
+<div id="other_info" class="form-stacked">
+  <h4>Events Count</h4>
+  <ul id="event_counts">
+    <li><span class="label label-success">{{total}} total</span></li>
+    <li><span class="label label-important">{{critical}} critical</span></li>
+    <li><span class="label label-warning">{{unknown}} unknown</span></li>
+    <li><span class="label label-unknown">{{warning}} warning</span></li>
+  </ul>
+</div>
+
+<table id="events" class="table table-bordered sensu-table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Client</th>
+      <th>Check</th>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each events.models}}
+      <tr class="{{attributes.status_name}}" data-id="{{cid}}">
+        <td class="select_col">
+          <input type="checkbox" name="{{cid}}" />
+        </td>
+        <td class="client_col" data-controls-modal="event_modal">{{attributes.client}}</td>
+        <td class="check_col" data-controls-modal="event_modal">{{attributes.check}}</td>
+        <td class="output_col" data-controls-modal="event_modal">{{attributes.output}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+{{#if current_model}}
+<div id="event_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 id="modal_label">
+      {{current_model.client}}<br />
+      <small>{{current_model.check}}</small>
+    </h4>
+  </div>
+  <div class="modal-body">
+    {{#each current_model}}
+    <div style="background-color: #f5f5f5; border: 1px solid rgba(0, 0, 0, 0.15); border-radius: 4px; padding: 7px; margin-bottom: 7px;">
+      <h5>{{@key}}</h5>
+      <span>{{this}}</span>
+    </div>
+    {{/each}}
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger">
+      <i class="icon-volume-up icon-white" />
+      &nbsp;Silence Client
+    </button>
+    <button class="btn btn-danger">
+      <i class="icon-volume-off icon-white" />
+      &nbsp;Unsilence Check
+    </button>
+    <button class="btn btn-danger">
+      <i class="icon-ok icon-white" />
+      &nbsp;Resolve
+    </button>
+  </div>
+</div>
+{{/if}}

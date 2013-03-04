@@ -6,14 +6,26 @@ html(lang='en')
     title Sensu Dashboard
     meta(name='author' content='Justin Kolberg')
     meta(name='Copyright' content='Copyright Sonian, Inc. 2012. MIT License.')
-    link(rel='stylesheet' type='text/css' href='css/bootstrap.min.css')
-    link(rel='stylesheet' type='text/css' href='css/main.css')
-    link(rel='stylesheet' type='text/css' href='css/font-awesome.css')
+    / standard favicon
+    link(rel="icon" type="image/png" href="img/favicon_64.png")
+    / favicon for iPhone
+    link(rel="apple-touch-icon" type="image/png" href="img/favicon_57.png")
+    / favicon for Retina iPhone
+    link(rel="apple-touch-icon" type="image/png" href="img/favicon_114.png" sizes="114x114")
+    / favicon for iPad
+    link(rel="apple-touch-icon" type="image/png" href="img/favicon_72.png" sizes="72x72")
+    / favicon for Retina iPad
+    link(rel="apple-touch-icon" type="image/png" href="img/favicon_144.png" sizes="144x144")
+    / multi resolution favicon for IE
+    link(rel="shortcut icon" href="favicon.ico")
+    link(rel='stylesheet' type='text/css' href='assets/app.css')
   body
     .navbar.navbar-inverse
       .navbar-inner
         .container
-          a.brand(href='#') Sensu Dashboard
+          a.brand(href='#')
+            img(src='img/logo.png' alt='')
+            span Sensu Dashboard
           ul.nav.pull-right#navigation
             li#nav_events
               a(href='#events') Current Events
@@ -21,14 +33,16 @@ html(lang='en')
               a(href='#stashes') Stashes
             li#nav_clients
               a(href='#clients') Clients
-            li
-              a(href='#settingsModal' data-toggle='modal') Settings
+            li#nav_settings
+              a(href='#settingsModal' data-toggle='modal')
+                i.icon-cog.icon-white
     .container-fluid#content
       == yield
     footer
-      | &copy; Copyright 
-      a(href='http://www.sonian.com') Sonian, Inc. 
-      | 2012 
+      ' &copy; Copyright
+      a(href='http://www.sonian.com')
+        ' Sonian, Inc.
+      ' 2013
       a(href='https://github.com/sonian/sensu-dashboard/blob/master/MIT-LICENSE.txt') License (MIT)
 
     .modal.hide.fade#settingsModal
@@ -55,12 +69,9 @@ html(lang='en')
                   input.span3#eventColumnName(size='16' type='text')
                   button.btn.btn-success#eventColumnBtnAdd(type='button') Add
                 p.help-block
-      
+
       .modal-footer
         a.btn(href='#' data-dismiss='modal') Close
         a.btn.btn-primary(href='#') Save changes
 
-script(type='text/template' id='tpl-event-column-list-item')
-  option <%= name %>
-
-script(data-main='js/main' src='js/libs/require/require.min.js')
+script(src='assets/app.js')
