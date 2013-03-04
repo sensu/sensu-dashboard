@@ -13,7 +13,7 @@ namespace 'SensuDashboard.Models.Metadata', (exports) ->
 
     updateCounts: (events) ->
       @set
-        events: SensuDashboard.Events.toJSON()
+        events: SensuDashboard.Events
         total: events.length
         warning: events.where({status: 1}).length
         critical: events.where({status: 2}).length
