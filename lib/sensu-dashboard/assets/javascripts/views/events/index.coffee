@@ -24,7 +24,6 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       @$el.html(@template(SensuDashboard.EventsMetadata.toJSON()))
 
     render: ->
-      console.log SensuDashboard.EventsMetadata.toJSON()
       @addAll()
       return this
 

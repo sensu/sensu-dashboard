@@ -13,7 +13,6 @@ namespace 'SensuDashboard', (exports) ->
           context: this
           dataType: 'json'
           success: (data, textStatus, jqXHR) ->
-            console.log data
             SensuDashboard.Stashes = new SensuDashboard.Collections.Stashes(data['stashes'])
             SensuDashboard.Events = new SensuDashboard.Collections.Events(data['events'])
             SensuDashboard.EventsMetadata = new SensuDashboard.Models.Metadata.Events
