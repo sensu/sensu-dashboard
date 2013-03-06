@@ -45,31 +45,42 @@ module Sensu
       def setup(options={})
         base = Sensu::Base.new(options)
         $logger = base.logger
-        $settings = base.settings
-        unless $settings[:dashboard].is_a?(Hash)
-          invalid_settings('missing dashboard configuration')
+        settings = base.settings
+        $dashboard_settings = settings[:dashboard] || {
+          :port => 8080,
+          :user => 'admin',
+          :password => 'secret'
+        }
+        $api_settings = settings[:api] || {
+          :host => 'localhost',
+          :port => 4567,
+          :user => nil,
+          :password => nil
+        }
+        unless $dashboard_settings.is_a?(Hash)
+          invalid_settings('misconfigured dashboard configuration')
         end
-        unless $settings[:dashboard][:port].is_a?(Integer)
-          invalid_settings('dashboard must have a port', {
-            :settings => $settings[:dashboard]
+        unless $dashboard_settings[:port].is_a?(Integer)
+          invalid_settings('dashboard port must be an integer', {
+            :settings => $dashboard_settings
           })
         end
-        unless $settings[:dashboard][:user].is_a?(String) && $settings[:dashboard][:password].is_a?(String)
-          invalid_settings('dashboard must have a user and password', {
-            :settings => $settings[:dashboard]
+        unless $dashboard_settings[:user].is_a?(String) && $dashboard_settings[:password].is_a?(String)
+          invalid_settings('dashboard user and password must be strings', {
+            :settings => $dashboard_settings
           })
         end
         base.setup_process
-        $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
+        $api_url = 'http://' + $api_settings[:host] + ':' + $api_settings[:port].to_s
         $api_options = {:head => {}}
-        if $settings[:api][:user] && $settings[:api][:password]
-          $api_options.merge!(:head => {:authorization => [$settings[:api][:user], $settings[:api][:password]]})
+        if $api_settings[:user] && $api_settings[:password]
+          $api_options.merge!(:head => {:authorization => [$api_settings[:user], $api_settings[:password]]})
         end
       end
 
       def start
         Thin::Logging.silent = true
-        Thin::Server.start(self, $settings[:dashboard][:port])
+        Thin::Server.start(self, $dashboard_settings[:port])
       end
 
       def stop
@@ -105,7 +116,7 @@ module Sensu
     set :public_folder, Proc.new { File.join(root, 'public') }
 
     use Rack::Auth::Basic do |user, password|
-      user == $settings[:dashboard][:user] && password == $settings[:dashboard][:password]
+      user == $dashboard_settings[:user] && password == $dashboard_settings[:password]
     end
 
     before do
