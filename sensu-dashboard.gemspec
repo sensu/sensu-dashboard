@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
   s.add_dependency("handlebars_assets")
   s.add_dependency("therubyracer")
   s.add_dependency("less")
-  s.add_dependency('oj', '2.0.9')
 
   s.files         = `git ls-files`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
