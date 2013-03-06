@@ -11,7 +11,7 @@ namespace 'SensuDashboard', (exports) ->
 
         error: =>
           console.log("Bootstrap Error")
-          # $(".initial-loading-indicator").remove()
+          $("#initial-loading-indicator").remove()
           # @errorView.render()
 
       #bootstrapper.fetch()
@@ -19,7 +19,7 @@ namespace 'SensuDashboard', (exports) ->
     boot: ->
       #SensuDashboard.keyboardManager = new KeyboardManager()
 
-      #$(".inital-loading-indicator").remove()
+      $("#initial-loading-indicator").remove()
       #@errorView.destroy()
       #$("#app-content").css({display: "block"})
 

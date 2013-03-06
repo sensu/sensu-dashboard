@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.summary     = "A web interface for Sensu, a monitoring framework that aims to be simple, malleable, and scalable."
   s.description = "A web interface for Sensu, a monitoring framework that aims to be simple, malleable, and scalable."
 
-  s.add_dependency("sensu", "~> 0.9.7")
+  s.add_dependency("sensu", "~> 0.9.12.beta2")
   s.add_dependency("em-http-request", "~> 1.0.1")
   s.add_dependency("sass")
   s.add_dependency("slim")
