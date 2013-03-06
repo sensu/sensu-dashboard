@@ -179,7 +179,11 @@ module Sensu
           end
 
           http.callback do
-            response[:stashes] = Oj.load(http.response.empty? ? '{}' : http.response)
+            stashes = {}
+            stashes = Oj.load(http.response).map do |path, keys|
+              { :path => path, :keys => keys }
+            end unless http.response.empty?
+            response[:stashes] = stashes
             status 200
             body Oj.dump(response)
           end
