@@ -1,1 +1,4 @@
-//= require_tree
+//= require ./libs/bootstrap.min.css
+//= require ./libs/font-awesome.less
+
+//= require ./main.sass
