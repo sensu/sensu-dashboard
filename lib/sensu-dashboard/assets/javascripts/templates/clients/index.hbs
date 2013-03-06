@@ -1,0 +1,20 @@
+<table id="clients" class="table table-bordered sensu-table">
+  <thead>
+    <tr>
+      <th class="col_clients">Client</th>
+      <th class="col_public_ip">Public IP</th>
+      <th class="col_timestamp">Timestamp</th>
+      <th class="col_output">Subscriptions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each clients}}
+      <tr rel="leanModal" href="#event_details_modal">
+        <td id="client_id">{{name}}</td>
+        <td id="public_ip">{{address}}</td>
+        <td id="timestamp">{{timestamp}}</td>
+        <td id="subscriptions">{{subscriptions}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

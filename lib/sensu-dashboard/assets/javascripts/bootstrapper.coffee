@@ -15,8 +15,12 @@ namespace 'SensuDashboard', (exports) ->
           success: (data, textStatus, jqXHR) ->
             SensuDashboard.Stashes = new SensuDashboard.Collections.Stashes(data['stashes'])
             SensuDashboard.Events = new SensuDashboard.Collections.Events(data['events'])
+            SensuDashboard.Clients = new SensuDashboard.Collections.Clients(data.clients)
             SensuDashboard.EventsMetadata = new SensuDashboard.Models.Metadata.Events
-            SensuDashboard.EventsView = new SensuDashboard.Views.Events.Index
+
+            console.log "test"
+            SensuDashboard.Routes = new SensuDashboard.Router
+            Backbone.history.start()
 
             @successCallback.call(this)
           error: (jqXHR, textStatus, errorThrown) ->

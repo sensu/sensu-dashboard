@@ -19,7 +19,7 @@ namespace 'SensuDashboard', (exports) ->
     boot: ->
       #SensuDashboard.keyboardManager = new KeyboardManager()
 
-      $("#inital-loading-indicator").remove()
+      $("#initial-loading-indicator").remove()
       #@errorView.destroy()
       #$("#app-content").css({display: "block"})
 
