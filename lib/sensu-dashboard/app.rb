@@ -61,7 +61,7 @@ module Sensu
         end
         base.setup_process
         $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
-        $api_options = {}
+        $api_options = {:head => {}}
         if $settings[:api][:user] && $settings[:api][:password]
           $api_options.merge!(:head => {:authorization => [$settings[:api][:user], $settings[:api][:password]]})
         end
