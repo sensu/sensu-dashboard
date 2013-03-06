@@ -61,7 +61,7 @@ module Sensu
         end
         base.setup_process
         $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
-        $api_options = {}
+        $api_options = {:head => {}}
         if $settings[:api][:user] && $settings[:api][:password]
           $api_options.merge!(:head => {:authorization => [$settings[:api][:user], $settings[:api][:password]]})
         end
@@ -139,6 +139,60 @@ module Sensu
     #
     # API Proxy
     #
+    aget '/all', :provides => 'json' do
+      content_type 'application/json'
+      begin
+        $api_options[:head]['Accept'] = 'application/json'
+        multi = EM::MultiRequest.new
+        multi.add :events, EM::HttpRequest.new($api_url + '/events').get($api_options)
+        multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
+        multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
+      rescue => error
+        $logger.error('failed to query the sensu api', {
+          :error => error
+        })
+        status 404
+        body '{"error":"could not retrieve /events, /clients, and/or /stashes from the sensu api"}'
+      end
+
+      multi.callback do
+        unless multi.responses[:errback].keys.count > 0
+          response = {
+            :events => Oj.load(multi.responses[:callback][:events].response),
+            :clients => Oj.load(multi.responses[:callback][:clients].response)
+          }
+          begin
+            $api_options[:head]['Accept'] = 'application/json'
+            $api_options[:body] = multi.responses[:callback][:stashes].response
+            http = EM::HttpRequest.new($api_url + '/stashes').post($api_options)
+          rescue => error
+            $logger.error('failed to query the sensu api', {
+              :error => error
+            })
+            status 404
+            body '{"error":"could not retrieve /stashes from the sensu api"}'
+          end
+
+          http.errback do
+            status 404
+            body '{"error":"could not retrieve /stashes from the sensu api"}'
+          end
+
+          http.callback do
+            response[:stashes] = Oj.load(http.response.empty? ? '{}' : http.response)
+            status 200
+            body Oj.dump(response)
+          end
+        else
+          $logger.error('sensu api returned an error', {
+            :error => multi.responses[:errback]
+          })
+          status 500
+          body '{"error":"sensu api returned an error while retrieving /events, /clients, and/or /stashes from the sensu api"}'
+        end
+      end
+    end
+
     aget '/*', :provides => 'json' do |path|
       content_type 'application/json'
       begin
