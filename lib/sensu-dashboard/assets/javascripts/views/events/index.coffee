@@ -8,11 +8,13 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
 
     events:
       'click td[data-controls-modal]': 'showEventDetails'
+      'click button#resolve_check': 'resolveEvent'
 
     initialize: ->
       @template = HandlebarsTemplates[@name]
       @listenTo(SensuDashboard.EventsMetadata, 'reset', @render)
       @listenTo(SensuDashboard.EventsMetadata, 'change', @render)
+      @render()
 
     addOne: (item) ->
 
@@ -22,11 +24,16 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       @$el.html(@template(SensuDashboard.EventsMetadata.toJSON()))
 
     render: ->
+      console.log SensuDashboard.EventsMetadata.toJSON()
       @addAll()
       return this
 
     showEventDetails: (ev) ->
       data_id = $(ev.target).parent().attr('data-id')
       SensuDashboard.EventsMetadata.set
-        current_model: SensuDashboard.Events.get(data_id).toJSON()
+        current_model: SensuDashboard.Events.get(data_id)
       $('#event_modal').modal()
+
+    resolveEvent: (ev) ->
+      data_id = $(ev.target).attr('data-id')
+
