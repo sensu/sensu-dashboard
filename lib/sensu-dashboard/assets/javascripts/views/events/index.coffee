@@ -10,10 +10,11 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       'click td[data-controls-modal]': 'showEventDetails'
       'click button#resolve_check': 'resolveEvent'
 
-    initialize: ->
+    initialize: (collection) ->
       @template = HandlebarsTemplates[@name]
-      @listenTo(SensuDashboard.EventsMetadata, 'reset', @render)
-      @listenTo(SensuDashboard.EventsMetadata, 'change', @render)
+      @collection = collection
+      @listenTo(collection, 'reset', @render)
+      @listenTo(collection, 'change', @render)
       @render()
 
     addOne: (item) ->
@@ -21,7 +22,7 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
 
     addAll: ->
       @$el.empty()
-      @$el.html(@template(SensuDashboard.EventsMetadata.toJSON()))
+      @$el.html(@template(@collection.toJSON()))
 
     render: ->
       @addAll()
