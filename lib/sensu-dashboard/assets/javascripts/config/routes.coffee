@@ -11,7 +11,7 @@ namespace 'SensuDashboard', (exports) ->
     events: ->
       new SensuDashboard.Views.Events.Index(SensuDashboard.EventsMetadata)
 
-    stahes: ->
+    stashes: ->
       new SensuDashboard.Views.Stashes.Index(SensuDashboard.Stashes)
 
     clients: ->
