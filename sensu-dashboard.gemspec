@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency("yui-compressor")
   s.add_dependency("coffee-script")
   s.add_dependency("handlebars_assets")
+  s.add_dependency("therubyracer")
   s.add_dependency("less")
 
   s.files         = `git ls-files`.split("\n")
