@@ -3,7 +3,7 @@ namespace 'SensuDashboard', (exports) ->
   class Application
 
     constructor: ->
-      #@errorView = new SensuDashboard.Views.AppStateView("error")
+      SensuDashboard.Routes = new SensuDashboard.Router
 
       bootstrapper = new SensuDashboard.Bootstrapper
         success: =>
@@ -12,26 +12,11 @@ namespace 'SensuDashboard', (exports) ->
         error: =>
           console.log("Bootstrap Error")
           $("#initial-loading-indicator").remove()
-          # @errorView.render()
-
-      #bootstrapper.fetch()
 
     boot: ->
-      #SensuDashboard.keyboardManager = new KeyboardManager()
-
       $("#initial-loading-indicator").remove()
-      #@errorView.destroy()
-      #$("#app-content").css({display: "block"})
 
-      #@appNavigation = new SensuDashboard.Views.AppNavigationView({
-      #  el: document.getElementById("app-navigation")
-      #})
-      #@appNavigation.render()
-
-      #match = Backbone.history.start { pushState: true }
-
-      # Show "Events" if no route already
-      #SensuDashboard.stateManager.transitionTo("events") unless match
+      Backbone.history.start()
 
   exports.App = new Application() # Initialize app
 

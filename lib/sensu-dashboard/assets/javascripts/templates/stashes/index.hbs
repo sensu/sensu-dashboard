@@ -1,0 +1,16 @@
+<table id="stashes" class="table table-bordered sensu-table">
+  <thead>
+    <tr>
+      <th class="col_path">Path</th>
+      <th class="col_keys">Keys</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each stashes}}
+      <tr rel="leanModal" href="#event_details_modal">
+        <td class="path">{{path}}</td>
+        <td class="keys">{{keys}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
