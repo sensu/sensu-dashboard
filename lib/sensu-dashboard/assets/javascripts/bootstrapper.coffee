@@ -6,11 +6,32 @@ namespace 'SensuDashboard', (exports) ->
       @successCallback = options.success
       @errorCallback = options.error
 
-      SensuDashboard.Events = new SensuDashboard.Collections.Events
-      SensuDashboard.EventsMetadata = new SensuDashboard.Models.Metadata.Events
-      SensuDashboard.EventsView = new SensuDashboard.Views.Events.Index
+      try
+        $.ajax
+          type: 'GET'
+          url: '/all'
+          context: this
+          dataType: 'json'
+          success: (data, textStatus, jqXHR) ->
+            SensuDashboard.Stashes = new SensuDashboard.Collections.Stashes(data['stashes'])
+            SensuDashboard.Events = new SensuDashboard.Collections.Events(data['events'])
+            SensuDashboard.Clients = new SensuDashboard.Collections.Clients(data.clients)
+            SensuDashboard.EventsMetadata = new SensuDashboard.Models.Metadata.Events
 
-      SensuDashboard.Events.fetch()
+            SensuDashboard.Routes = new SensuDashboard.Router
+            Backbone.history.start()
 
-      @successCallback.call(this)
-      #@errorCallback.call(this)
+            @successCallback.call(this)
+          error: (jqXHR, textStatus, errorThrown) ->
+            console.log jqXHR.status+' '+jqXHR.statusText
+            console.log errorThrown
+            console.log textStatus
+            console.log jqXHR
+            @error()
+
+      catch error
+        @error()
+
+    error: ->
+      @errorCallback.call(this)
+      return
