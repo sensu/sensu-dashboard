@@ -15,7 +15,7 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
 
     addAll: ->
       @$el.empty()
-      @$el.html(@template({ clients: @collection.toJSON() }))
+      @$el.html(@template({ clients: @collection }))
 
     render: ->
       @addAll()

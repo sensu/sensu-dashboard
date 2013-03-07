@@ -15,7 +15,7 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
 
     addAll: ->
       @$el.empty()
-      @$el.html(@template({ stashes: @collection.toJSON() }))
+      @$el.html(@template({ stashes: @collection }))
 
     render: ->
       @addAll()

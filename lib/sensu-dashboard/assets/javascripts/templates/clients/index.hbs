@@ -1,19 +1,53 @@
+<div id="counts_container" class="form-stacked">
+  <h4>Clients Count</h4>
+  <ul id="counts">
+    <li><span class="label label-success">{{clients.models.length}} total</span></li>
+  </ul>
+</div>
+
+<input id="clients_filter" type="text" />
+
+<div class="btn-group">
+  <a id="toggle-checkboxes" class="btn btn-success" href="#">
+    <i class="icon-check icon-white" />
+  </a>
+  <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#">
+    <span class="caret" />
+  </a>
+  <ul class="dropdown-menu">
+    <li class="dropdown-header">Select</li>
+    <li><a id="select-all" href="#"><i class="icon-check" /> All</a></li>
+    <li><a id="select-none" href="#"><i class="icon-ban-circle" /> None</a></li>
+    <li><a id="select-silenced" href="#"><i class="icon-volume-off" /> Silenced</a></li>
+    <li><a id="select-unsilenced" href="#"><i class="icon-volume-up" /> Unsilenced</a></li>
+    <li class="divider" />
+    <li class="dropdown-header">Actions</li>
+    <li><a id="resolve-selected" href="#"><i class="icon-ok-sign" /> Resolve</a></li>
+    <li><a id="silence-selected-clients" href="#"><i class="icon-volume-off" /> Silence Clients</a></li>
+    <li><a id="unsilence-selected-clients" href="#"><i class="icon-volume-up" /> Unsilence Clients</a></li>
+  </ul>
+</div>
+
 <table id="clients" class="table table-bordered sensu-table">
   <thead>
     <tr>
-      <th class="col_clients">Client</th>
+      <th></th>
+      <th class="col_client_id">Client</th>
       <th class="col_public_ip">Public IP</th>
       <th class="col_timestamp">Timestamp</th>
-      <th class="col_output">Subscriptions</th>
+      <th class="col_subscriptions">Subscriptions</th>
     </tr>
   </thead>
   <tbody>
-    {{#each clients}}
-      <tr rel="leanModal" href="#event_details_modal">
-        <td id="client_id">{{name}}</td>
-        <td id="public_ip">{{address}}</td>
-        <td id="timestamp">{{timestamp}}</td>
-        <td id="subscriptions">{{subscriptions}}</td>
+    {{#each clients.models}}
+      <tr rel="leanModal" href="#event_details_modal" data-id="{{cid}}">
+        <td class="select">
+          <input type="checkbox" name="{{cid}}" />
+        </td>
+        <td class="client_id">{{attributes.name}}</td>
+        <td class="public_ip">{{attributes.address}}</td>
+        <td class="timestamp">{{attributes.timestamp}}</td>
+        <td class="subscriptions">{{attributes.subscriptions}}</td>
       </tr>
     {{/each}}
   </tbody>

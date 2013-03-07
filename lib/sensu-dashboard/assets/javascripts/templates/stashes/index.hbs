@@ -1,15 +1,45 @@
+<div id="counts_container" class="form-stacked">
+  <h4>Stashes Count</h4>
+  <ul id="counts">
+    <li><span class="label label-success">{{stashes.models.length}} total</span></li>
+  </ul>
+</div>
+
+<input id="stashes_filter" type="text" />
+
+<div class="btn-group">
+  <a id="toggle-checkboxes" class="btn btn-success" href="#">
+    <i class="icon-check icon-white" />
+  </a>
+  <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#">
+    <span class="caret" />
+  </a>
+  <ul class="dropdown-menu">
+    <li class="dropdown-header">Select</li>
+    <li><a id="select-all" href="#"><i class="icon-check" /> All</a></li>
+    <li><a id="select-none" href="#"><i class="icon-ban-circle" /> None</a></li>
+    <li class="divider" />
+    <li class="dropdown-header">Actions</li>
+    <li><a id="remove-selected" href="#"><i class="icon-remove" /> Remove</a></li>
+  </ul>
+</div>
+
 <table id="stashes" class="table table-bordered sensu-table">
   <thead>
     <tr>
+      <th></th>
       <th class="col_path">Path</th>
       <th class="col_keys">Keys</th>
     </tr>
   </thead>
   <tbody>
-    {{#each stashes}}
-      <tr rel="leanModal" href="#event_details_modal">
-        <td class="path">{{path}}</td>
-        <td class="keys">{{keys}}</td>
+    {{#each stashes.models}}
+      <tr rel="leanModal" href="#event_details_modal" data-id="{{cid}}">
+        <td class="select">
+          <input type="checkbox" name="{{cid}}" />
+        </td>
+        <td class="path">{{attributes.path}}</td>
+        <td class="keys">{{attributes.keys}}</td>
       </tr>
     {{/each}}
   </tbody>

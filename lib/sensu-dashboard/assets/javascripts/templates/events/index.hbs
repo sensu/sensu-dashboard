@@ -1,6 +1,6 @@
-<div id="other_info" class="form-stacked">
+<div id="counts_container" class="form-stacked">
   <h4>Events Count</h4>
-  <ul id="event_counts">
+  <ul id="counts">
     <li><span class="label label-success">{{total}} total</span></li>
     <li><span class="label label-important">{{critical}} critical</span></li>
     <li><span class="label label-warning">{{unknown}} unknown</span></li>
@@ -8,22 +8,53 @@
   </ul>
 </div>
 
+<div id="filter_unknown_container">
+  <input id="filter_unknown" type="checkbox" checked="checked" />
+  <strong>Filter Unknown Checks</strong>
+</div>
+
+<input id="events_filter" type="text" />
+
+<div class="btn-group">
+  <a id="toggle-checkboxes" class="btn btn-success" href="#">
+    <i class="icon-check icon-white" />
+  </a>
+  <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#">
+    <span class="caret" />
+  </a>
+  <ul class="dropdown-menu">
+    <li class="dropdown-header">Select</li>
+    <li><a id="select-all" href="#"><i class="icon-check" /> All</a></li>
+    <li><a id="select-none" href="#"><i class="icon-ban-circle" /> None</a></li>
+    <li><a id="select-critical" href="#"><i class="icon-fire" /> Critical</a></li>
+    <li><a id="select-unknown" href="#"><i class="icon-question-sign" /> Question</a></li>
+    <li><a id="select-warning" href="#"><i class="icon-warning-sign" /> Warning</a></li>
+    <li><a id="select-silenced" href="#"><i class="icon-volume-off" /> Silenced</a></li>
+    <li><a id="select-unsilenced" href="#"><i class="icon-volume-up" /> Unsilenced</a></li>
+    <li class="divider" />
+    <li class="dropdown-header">Actions</li>
+    <li><a id="resolve-selected" href="#"><i class="icon-ok-sign" /> Resolve</a></li>
+    <li><a id="silence-selected-checks" href="#"><i class="icon-volume-off" /> Silence Checks</a></li>
+    <li><a id="unsilence-selected-checks" href="#"><i class="icon-volume-up" /> Unsilence Checks</a></li>
+  </ul>
+</div>
+
 <table id="events" class="table table-bordered sensu-table">
   <thead>
     <tr>
       <th></th>
-      <th>Client</th>
-      <th>Check</th>
-      <th>Output</th>
+      <th class="col_client">Client</th>
+      <th class="col_check">Check</th>
+      <th class="col_output">Output</th>
     </tr>
   </thead>
   <tbody>
     {{#each events.models}}
       <tr class="{{attributes.status_name}}" data-id="{{cid}}">
-        <td class="select_col">
+        <td class="select">
           <input type="checkbox" name="{{cid}}" />
         </td>
-        <td class="client_col" data-controls-modal="event_modal">
+        <td class="client" data-controls-modal="event_modal">
           {{#isClientSilenced attributes.client ../stashes}}
           <i class="icon-volume-off icon-white unsilenced"/>
           {{else}}
@@ -31,7 +62,7 @@
           {{/isClientSilenced}}
           {{attributes.client}}
         </td>
-        <td class="check_col" data-controls-modal="event_modal">
+        <td class="check" data-controls-modal="event_modal">
           {{#isCheckSilenced attributes.client attributes.check ../stashes}}
           <i class="icon-volume-off icon-white unsilenced" />
           {{else}}
@@ -39,28 +70,38 @@
           {{/isCheckSilenced}}
           {{attributes.check}}
         </td>
-        <td class="output_col" data-controls-modal="event_modal">{{attributes.output}}</td>
+        <td class="output" data-controls-modal="event_modal">{{attributes.output}}</td>
       </tr>
     {{/each}}
   </tbody>
 </table>
 
-{{#if current_model}}
+{{#if current_event}}
 <div id="event_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h4 id="modal_label">
-      {{current_model.attributes.client}}<br />
-      <small>{{current_model.attributes.check}}</small>
+      {{current_event.attributes.client}}<br />
+      <small>{{current_event.attributes.check}}</small>
     </h4>
   </div>
   <div class="modal-body">
-    {{#each current_model.attributes}}
-    <div style="background-color: #f5f5f5; border: 1px solid rgba(0, 0, 0, 0.15); border-radius: 4px; padding: 7px; margin-bottom: 7px;">
+    <h3 class="section_title">event data</h3>
+    {{#each current_event.attributes}}
+    <div class="well">
       <h5>{{@key}}</h5>
       <span>{{this}}</span>
     </div>
     {{/each}}
+    <h3 class="section_title">client data</h3>
+    {{#if current_client}}
+      {{#each current_client.attributes}}
+        <div class="well">
+          <h5>{{@key}}</h5>
+          <span>{{this}}</span>
+        </div>
+      {{/each}}
+    {{/if}}
   </div>
   <div class="modal-footer">
     <button id="silence_client" class="btn btn-danger" data-id="{{current_model.cid}}">
