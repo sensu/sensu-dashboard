@@ -7,3 +7,4 @@ namespace 'SensuDashboard.Models', (exports) ->
       keys: []
 
     initialize: ->
+      @set { id: @get('path') }

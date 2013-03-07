@@ -120,10 +120,10 @@ table.table#events
   tbody
     tr
 
-      td.client_col
+      td.client
         font-weight: bold
 
-      td.output_col
+      td.output
         white-space: normal
 
     tr.unknown
@@ -172,10 +172,10 @@ table.table#clients
       color: #999
       background-color: #eee
 
-      td#client_id
+      td.client_id
         font-weight: bold
 
-      td#subscriptions
+      td.subscriptions
         white-space: normal
 
 ul.dropdown-menu > li.dropdown-header
@@ -191,8 +191,22 @@ ul.dropdown-menu > li.dropdown-header
   color: #999
   display: block
 
+.section_title
+  border-bottom: 1px solid #eee
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif
+  font-weight: 300
+  font-size: 18px
+
 .well
+  background-color: #eee
   -webkit-box-shadow: none
   -moz-box-shadow: none
   box-shadow: none
   border: 0
+  padding: 14px
+
+  h5
+    margin: 0
+
+  span
+    font-size: 12px

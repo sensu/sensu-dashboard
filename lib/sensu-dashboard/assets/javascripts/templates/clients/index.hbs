@@ -1,7 +1,7 @@
 <div id="counts_container" class="form-stacked">
   <h4>Clients Count</h4>
   <ul id="counts">
-    <li><span class="label label-success">{{total}} total</span></li>
+    <li><span class="label label-success">{{clients.models.length}} total</span></li>
   </ul>
 </div>
 
@@ -32,22 +32,22 @@
   <thead>
     <tr>
       <th></th>
-      <th class="col_clients">Client</th>
+      <th class="col_client_id">Client</th>
       <th class="col_public_ip">Public IP</th>
       <th class="col_timestamp">Timestamp</th>
-      <th class="col_output">Subscriptions</th>
+      <th class="col_subscriptions">Subscriptions</th>
     </tr>
   </thead>
   <tbody>
     {{#each clients.models}}
       <tr rel="leanModal" href="#event_details_modal" data-id="{{cid}}">
-        <td class="select_col">
+        <td class="select">
           <input type="checkbox" name="{{cid}}" />
         </td>
-        <td id="client_id">{{attributes.name}}</td>
-        <td id="public_ip">{{attributes.address}}</td>
-        <td id="timestamp">{{attributes.timestamp}}</td>
-        <td id="subscriptions">{{attributes.subscriptions}}</td>
+        <td class="client_id">{{attributes.name}}</td>
+        <td class="public_ip">{{attributes.address}}</td>
+        <td class="timestamp">{{attributes.timestamp}}</td>
+        <td class="subscriptions">{{attributes.subscriptions}}</td>
       </tr>
     {{/each}}
   </tbody>

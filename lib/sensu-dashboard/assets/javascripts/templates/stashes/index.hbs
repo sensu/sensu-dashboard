@@ -1,7 +1,7 @@
 <div id="counts_container" class="form-stacked">
   <h4>Stashes Count</h4>
   <ul id="counts">
-    <li><span class="label label-success">{{total}} total</span></li>
+    <li><span class="label label-success">{{stashes.models.length}} total</span></li>
   </ul>
 </div>
 
@@ -35,7 +35,7 @@
   <tbody>
     {{#each stashes.models}}
       <tr rel="leanModal" href="#event_details_modal" data-id="{{cid}}">
-        <td class="select_col">
+        <td class="select">
           <input type="checkbox" name="{{cid}}" />
         </td>
         <td class="path">{{attributes.path}}</td>
