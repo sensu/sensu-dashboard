@@ -23,6 +23,10 @@ class Dashboard < Sinatra::Base
     end
   end
 
+  def self.non_reachable?(host)
+    ["localhost","127.0.0.1","::1"].include?(host.to_s.downcase)
+  end
+
   def self.setup(options={})
     base = Sensu::Base.new(options)
     $logger = base.logger
@@ -33,8 +37,10 @@ class Dashboard < Sinatra::Base
     unless $settings[:dashboard][:port].is_a?(Integer)
       raise('dashboard must have a port')
     end
-    unless $settings[:dashboard][:user].is_a?(String) && $settings[:dashboard][:password].is_a?(String)
-      raise('dashboard must have a user and password')
+    unless non_reachable?($settings[:dashboard][:host]) # If we are not route-able, the proxy is responsible for auth
+      unless $settings[:dashboard][:user].is_a?(String) && $settings[:dashboard][:password].is_a?(String)
+        raise('dashboard must have a user and password')
+      end
     end
     base.setup_process
     $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
@@ -59,14 +65,26 @@ class Dashboard < Sinatra::Base
   set :static, true
   set :public_folder, Proc.new { File.join(root, 'public') }
 
-  use Rack::Auth::Basic do |user, password|
-    user == $settings[:dashboard][:user] && password == $settings[:dashboard][:password]
+  helpers do
+    def protected!
+      unless authorized?
+        response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
+        throw(:halt, [401, "Not authorized\n"])
+      end
+    end
+
+    def authorized?
+      return true if Dashboard.non_reachable?($settings[:dashboard][:host]) # if reachable?
+      @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+      @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [$settings[:dashboard][:user],$settings[:dashboard][:password]]
+    end
   end
 
-  before do
-    content_type 'application/json'
-    request_log(env)
-  end
+ before do
+   content_type 'application/json'
+   request_log(env)
+   protected!
+ end
 
   aget '/' do
     content_type 'text/html'
