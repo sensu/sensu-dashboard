@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.description = %q{Display current events and clients in sensu via a simple web interface}
 
   s.add_dependency("sensu", ">= 0.9.8")
+  s.add_dependency("json")
   s.add_dependency("em-http-request", "1.0.1")
   s.add_dependency("sass")
 

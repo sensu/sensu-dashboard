@@ -1,4 +1,5 @@
 require 'sensu/base'
+require 'json'
 require 'thin'
 require 'sinatra/async'
 require 'em-http-request'
