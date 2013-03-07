@@ -13,7 +13,7 @@ class Dashboard < Sinatra::Base
       self.setup(options)
 
       Thin::Logging.silent = true
-      Thin::Server.start(self, $settings[:dashboard][:port])
+      Thin::Server.start($settings[:dashboard][:host], $settings[:dashboard][:port], self)
 
       %w[INT TERM].each do |signal|
         Signal.trap(signal) do
@@ -37,6 +37,7 @@ class Dashboard < Sinatra::Base
     unless $settings[:dashboard][:port].is_a?(Integer)
       raise('dashboard must have a port')
     end
+    $settings[:dashboard][:host] ||= "0.0.0.0"
     unless non_reachable?($settings[:dashboard][:host]) # If we are not route-able, the proxy is responsible for auth
       unless $settings[:dashboard][:user].is_a?(String) && $settings[:dashboard][:password].is_a?(String)
         raise('dashboard must have a user and password')
@@ -64,7 +65,6 @@ class Dashboard < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :static, true
   set :public_folder, Proc.new { File.join(root, 'public') }
-
   helpers do
     def protected!
       unless authorized?
@@ -80,11 +80,11 @@ class Dashboard < Sinatra::Base
     end
   end
 
- before do
-   content_type 'application/json'
-   request_log(env)
-   protected!
- end
+  before do
+    content_type 'application/json'
+    request_log(env)
+    protected!
+  end
 
   aget '/' do
     content_type 'text/html'
