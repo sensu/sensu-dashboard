@@ -13,7 +13,7 @@ class Dashboard < Sinatra::Base
       self.setup(options)
 
       Thin::Logging.silent = true
-      Thin::Server.start($settings[:dashboard][:host], $settings[:dashboard][:port], self)
+      Thin::Server.start($settings[:dashboard][:bind], $settings[:dashboard][:port], self)
 
       %w[INT TERM].each do |signal|
         Signal.trap(signal) do
@@ -21,10 +21,6 @@ class Dashboard < Sinatra::Base
         end
       end
     end
-  end
-
-  def self.non_reachable?(host)
-    ["localhost","127.0.0.1","::1"].include?(host.to_s.downcase)
   end
 
   def self.setup(options={})
@@ -37,12 +33,8 @@ class Dashboard < Sinatra::Base
     unless $settings[:dashboard][:port].is_a?(Integer)
       raise('dashboard must have a port')
     end
-    $settings[:dashboard][:host] ||= "0.0.0.0"
-    unless non_reachable?($settings[:dashboard][:host]) # If we are not route-able, the proxy is responsible for auth
-      unless $settings[:dashboard][:user].is_a?(String) && $settings[:dashboard][:password].is_a?(String)
-        raise('dashboard must have a user and password')
-      end
-    end
+    $settings[:dashboard][:bins] ||= "0.0.0.0"
+
     base.setup_process
     $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
     $api_options = {}
@@ -74,7 +66,7 @@ class Dashboard < Sinatra::Base
     end
 
     def authorized?
-      return true if Dashboard.non_reachable?($settings[:dashboard][:host]) # if reachable?
+      return true if [$settings[:dashboard][:user], $settings[:dashboard][:password]].all? { |param| param.nil? }
       @auth ||=  Rack::Auth::Basic::Request.new(request.env)
       @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [$settings[:dashboard][:user],$settings[:dashboard][:password]]
     end
