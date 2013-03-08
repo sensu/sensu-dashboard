@@ -1,11 +1,11 @@
 Handlebars.registerHelper 'isClientSilenced', (client, stashes, block) ->
-  for stash in stashes when stash.id is 'silence'
-    return block.fn(this) if stash['silence/'+client]
+  for stash in stashes when stash.id is 'silence/'+client
+    return block.fn(this)
 
   return block.inverse(this)
 
 Handlebars.registerHelper 'isCheckSilenced', (client, check, stashes, block) ->
-  for stash in stashes when stash.id is 'silence'
-    return block.fn(this) if stash['silence/'+client+'/'+check]
+  for stash in stashes when stash.id is 'silence/'+client+'/'+check
+    return block.fn(this)
 
   return block.inverse(this)

@@ -19,4 +19,3 @@ namespace 'SensuDashboard', (exports) ->
       Backbone.history.start()
 
   exports.App = new Application() # Initialize app
-

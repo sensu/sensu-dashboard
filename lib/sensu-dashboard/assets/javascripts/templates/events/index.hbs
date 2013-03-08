@@ -94,27 +94,35 @@
     </div>
     {{/each}}
     <h3 class="section_title">client data</h3>
-    {{#if current_client}}
-      {{#each current_client.attributes}}
-        <div class="well">
-          <h5>{{@key}}</h5>
-          <span>{{this}}</span>
-        </div>
-      {{/each}}
-    {{/if}}
+    {{#each current_client.attributes}}
+      <div class="well">
+        <h5>{{@key}}</h5>
+        <span>{{this}}</span>
+      </div>
+    {{/each}}
   </div>
   <div class="modal-footer">
-    <button id="silence_client" class="btn btn-danger" data-id="{{current_model.cid}}">
-      <i class="icon-volume-up icon-white" />
-      &nbsp;Silence Client
+    <button id="silence_client" class="btn btn-danger">
+      {{#isClientSilenced current_client.attributes.name ../stashes}}
+        <i class="icon-volume-off icon-white" />
+        <span>&nbsp;Un-silence Client</span>
+      {{else}}
+        <i class="icon-volume-up icon-white" />
+        <span>&nbsp;Silence Client</span>
+      {{/isClientSilenced}}
     </button>
-    <button id="silence_check" class="btn btn-danger" data-id="{{current_model.cid}}">
-      <i class="icon-volume-off icon-white" />
-      &nbsp;Unsilence Check
+    <button id="silence_check" class="btn btn-danger">
+      {{#isCheckSilenced current_client.attributes.name current_event.attributes.check ../stashes}}
+        <i class="icon-volume-off icon-white" />
+        <span>&nbsp;Un-silence Check</span>
+      {{else}}
+        <i class="icon-volume-up icon-white" />
+        <span>&nbsp;Silence Check</span>
+      {{/isCheckSilenced}}
     </button>
-    <button id="resolve_check" class="btn btn-danger" data-id="{{current_model.cid}}">
+    <button id="resolve_check" class="btn btn-danger">
       <i class="icon-ok icon-white" />
-      &nbsp;Resolve
+      <span>&nbsp;Resolve</span>
     </button>
   </div>
 </div>
