@@ -13,7 +13,7 @@ class Dashboard < Sinatra::Base
       self.setup(options)
 
       Thin::Logging.silent = true
-      Thin::Server.start(self, $settings[:dashboard][:port])
+      Thin::Server.start($settings[:dashboard][:bind], $settings[:dashboard][:port], self)
 
       %w[INT TERM].each do |signal|
         Signal.trap(signal) do
@@ -33,9 +33,8 @@ class Dashboard < Sinatra::Base
     unless $settings[:dashboard][:port].is_a?(Integer)
       raise('dashboard must have a port')
     end
-    unless $settings[:dashboard][:user].is_a?(String) && $settings[:dashboard][:password].is_a?(String)
-      raise('dashboard must have a user and password')
-    end
+    $settings[:dashboard][:bind] ||= "0.0.0.0"
+
     base.setup_process
     $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
     $api_options = {}
@@ -58,14 +57,25 @@ class Dashboard < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :static, true
   set :public_folder, Proc.new { File.join(root, 'public') }
+  helpers do
+    def protected!
+      unless authorized?
+        response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
+        throw(:halt, [401, "Not authorized\n"])
+      end
+    end
 
-  use Rack::Auth::Basic do |user, password|
-    user == $settings[:dashboard][:user] && password == $settings[:dashboard][:password]
+    def authorized?
+      return true if [$settings[:dashboard][:user], $settings[:dashboard][:password]].all? { |param| param.nil? }
+      @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+      @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [$settings[:dashboard][:user],$settings[:dashboard][:password]]
+    end
   end
 
   before do
     content_type 'application/json'
     request_log(env)
+    protected!
   end
 
   aget '/' do
