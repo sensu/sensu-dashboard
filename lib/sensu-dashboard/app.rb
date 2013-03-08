@@ -33,7 +33,7 @@ class Dashboard < Sinatra::Base
     unless $settings[:dashboard][:port].is_a?(Integer)
       raise('dashboard must have a port')
     end
-    $settings[:dashboard][:bins] ||= "0.0.0.0"
+    $settings[:dashboard][:bind] ||= "0.0.0.0"
 
     base.setup_process
     $api_url = 'http://' + $settings[:api][:host] + ':' + $settings[:api][:port].to_s
