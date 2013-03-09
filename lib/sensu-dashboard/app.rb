@@ -156,6 +156,7 @@ module Sensu
         $api_options[:head]['Accept'] = 'application/json'
         multi = EM::MultiRequest.new
         multi.add :events, EM::HttpRequest.new($api_url + '/events').get($api_options)
+        multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
         multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
         multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
       rescue => error
@@ -169,7 +170,8 @@ module Sensu
       multi.callback do
         unless multi.responses[:errback].keys.count > 0
           response = {
-            :events => Oj.load(multi.responses[:callback][:events].response),
+            :events  => Oj.load(multi.responses[:callback][:events].response),
+            :checks  => Oj.load(multi.responses[:callback][:checks].response),
             :clients => Oj.load(multi.responses[:callback][:clients].response)
           }
           begin
@@ -203,7 +205,7 @@ module Sensu
             :error => multi.responses[:errback]
           })
           status 500
-          body '{"error":"sensu api returned an error while retrieving /events, /clients, and/or /stashes from the sensu api"}'
+          body '{"error":"sensu api returned an error while retrieving /events, /clients, /checks, and/or /stashes from the sensu api"}'
         end
       end
     end
