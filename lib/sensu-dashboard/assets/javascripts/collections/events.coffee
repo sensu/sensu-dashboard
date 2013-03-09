@@ -9,37 +9,52 @@ namespace 'SensuDashboard.Collections', (exports) ->
 
     toggleSelected: ->
       selected = true
-      selected = false if @where({selected: true}).length == @length
+      selected = false if @where({ selected: true }).length == @length
       @each (event) ->
-        event.set {selected: true}
+        event.set { selected: selected }
 
     selectAll: ->
       @each (event) ->
-        event.set {selected: true}
+        event.set { selected: true }
 
     selectNone: ->
       @each (event) ->
-        event.set {selected: false}
+        event.set { selected: false }
 
     selectCritical: ->
-      selected = true
-      selected = false if @where({status: 2, selected: true}).length == @where({status: 2}).length
-      @each (event) ->
-        event.set {selected: selected} if event.get 'status' == 2
+      events = @where({ status: 2 })
+      events_selected = @where({ status: 2, selected: true })
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set { selected: selected }
 
     selectUnknown: ->
-      selected = true
-      @each (event) ->
-        event.set {selected: true} if event.get('status') != 1 && event.get('status') != 2
+      events = @filter (event) ->
+        status = event.get('status')
+        return status != 1 && status != 2
+      events_selected = @filter (event) ->
+        status = event.get('status')
+        selected = event.get('selected')
+        return status != 1 && status != 2 && selected == true
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set { selected: selected }
 
     selectWarning: ->
-      selected = true
-      selected = false if @where({status: 1, selected: true}).length == @where({status: 1}).length
-      @each (event) ->
-        event.set {selected: true} if event.get('status') == 1
+      events = @where({ status: 1 })
+      events_selected = @where({ status: 1, selected: true })
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set { selected: selected }
 
     resolveSelected: ->
+      console.log event for event in @where({ selected: true })
 
     silenceSelected: ->
+      console.log event for event in @where({ selected: true })
 
     unsilenceSelected: ->
+      console.log event for event in @where({ selected: true })

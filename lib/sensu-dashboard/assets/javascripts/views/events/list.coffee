@@ -8,11 +8,12 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       @template = HandlebarsTemplates[@name]
       _.bindAll(this, 'addOne')
       @collection = collection
-      @listenTo(@collection, 'all', @render)
+      @listenTo(@collection, 'reset', @render)
+      @listenTo(@collection, 'add', @addOne)
 
     addOne: (event) ->
       item_subview = new SensuDashboard.Views.Events.Item({ model: event })
-      @assign(item_subview, 'tbody')
+      @$el.find('tbody').append(item_subview.render().el)
 
     addAll: ->
       @collection.each(@addOne)
@@ -30,6 +31,3 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
     #     current_event: current_event
     #     current_client: current_client
     #   $('#event_modal').modal()
-
-    # toggleSelect: ->
-    #   @model.set({ selected: true })

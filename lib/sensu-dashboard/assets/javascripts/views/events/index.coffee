@@ -7,13 +7,19 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
     name: 'events/index'
 
     events:
-      'click td[data-controls-modal]': 'showEventDetails'
-      'click button#resolve_check': 'resolveEvent'
-      'click button#silence_client': 'silenceClient'
-      'click button#silence_check': 'silenceCheck'
-      'click a#toggle-checkboxes': 'toggleSelected'
-      'click a#select-all': 'selectAll'
-      'click a#select-none': 'selectNone'
+      #'click td[data-controls-modal]': 'showEventDetails'
+      #'click #resolve_check': 'resolveEvent'
+      #'click #silence_client': 'silenceClient'
+      #'click #silence_check': 'silenceCheck'
+      'click #toggle-checkboxes': 'toggleSelected'
+      'click #select-all': 'selectAll'
+      'click #select-none': 'selectNone'
+      'click #select-critical': 'selectCritical'
+      'click #select-unknown': 'selectUnknown'
+      'click #select-warning': 'selectWarning'
+      'click #resolve-selected': 'resolveSelected'
+      'click #silence-selected': 'unsilenceSelected'
+      'click #unsilence-selected': 'unsilenceSelected'
 
     initialize: (model) ->
       @template = HandlebarsTemplates[@name]
@@ -28,23 +34,32 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       @assign(@list_subview, '#list')
       return this
 
-    # showEventDetails: (ev) ->
-    #   data_id = $(ev.target).parents('tr').first().attr('data-id')
-    #   current_event = SensuDashboard.Events.get(data_id)
-    #   current_client = SensuDashboard.Clients.get(current_event.attributes.client)
-    #   SensuDashboard.EventsMetadata.set
-    #     current_event: current_event
-    #     current_client: current_client
-    #   $('#event_modal').modal()
-
     toggleSelected: ->
-      @collection.attributes.events.toggleSelected()
+      @model.get('events').toggleSelected()
 
     selectAll: ->
-      @collection.attributes.events.selectAll()
+      @model.get('events').selectAll()
 
     selectNone: ->
-      @collection.attributes.events.selectNone()
+      @model.get('events').selectNone()
+
+    selectCritical: ->
+      @model.get('events').selectCritical()
+
+    selectUnknown: ->
+      @model.get('events').selectUnknown()
+
+    selectWarning: ->
+      @model.get('events').selectWarning()
+
+    resolveSelected: ->
+      @model.get('events').resolveSelected()
+
+    silenceSelected: ->
+      @model.get('events').silenceSelected()
+
+    unsilenceSelected: ->
+      @model.get('events').unsilenceSelected()
 
     showEventDetails: (ev) ->
       data_id = $(ev.target).parents('tr').first().attr('data-id')
