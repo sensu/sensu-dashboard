@@ -6,11 +6,14 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
 
     name: 'events/index'
 
-    # events:
-    #   'click td[data-controls-modal]': 'showEventDetails'
-    #   'click button#resolve_check': 'resolveEvent'
-    #   'click button#silence_client': 'silenceClient'
-    #   'click button#silence_check': 'silenceCheck'
+    events:
+      'click td[data-controls-modal]': 'showEventDetails'
+      'click button#resolve_check': 'resolveEvent'
+      'click button#silence_client': 'silenceClient'
+      'click button#silence_check': 'silenceCheck'
+      'click a#toggle-checkboxes': 'toggleSelected'
+      'click a#select-all': 'selectAll'
+      'click a#select-none': 'selectNone'
 
     initialize: (model) ->
       @template = HandlebarsTemplates[@name]
@@ -33,6 +36,24 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
     #     current_event: current_event
     #     current_client: current_client
     #   $('#event_modal').modal()
+
+    toggleSelected: ->
+      @collection.attributes.events.toggleSelected()
+
+    selectAll: ->
+      @collection.attributes.events.selectAll()
+
+    selectNone: ->
+      @collection.attributes.events.selectNone()
+
+    showEventDetails: (ev) ->
+      data_id = $(ev.target).parents('tr').first().attr('data-id')
+      current_event = SensuDashboard.Events.get(data_id)
+      current_client = SensuDashboard.Clients.get(current_event.attributes.client)
+      SensuDashboard.EventsMetadata.set
+        current_event: current_event
+        current_client: current_client
+      $('#event_modal').modal()
 
     # resolveEvent: (ev) ->
     #   tag_name = $(ev.target).prop('tagName')

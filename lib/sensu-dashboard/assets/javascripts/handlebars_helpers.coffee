@@ -9,3 +9,7 @@ Handlebars.registerHelper 'isCheckSilenced', (client, check, stashes, block) ->
     return block.fn(this)
 
   return block.inverse(this)
+
+Handlebars.registerHelper 'selected', (selected) ->
+  console.log selected
+  return if selected then 'checked' else ''

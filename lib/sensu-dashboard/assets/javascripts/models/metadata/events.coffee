@@ -14,6 +14,8 @@ namespace 'SensuDashboard.Models.Metadata', (exports) ->
       @updateCounts()
 
     updateCounts: ->
+      console.log 'here'
+      console.log SensuDashboard.Events
       @set
         events: SensuDashboard.Events
         stashes: SensuDashboard.Stashes.toJSON()
