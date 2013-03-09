@@ -16,6 +16,7 @@ namespace 'SensuDashboard', (exports) ->
             SensuDashboard.Stashes = new SensuDashboard.Collections.Stashes(data.stashes)
             SensuDashboard.Events = new SensuDashboard.Collections.Events(data.events)
             SensuDashboard.Clients = new SensuDashboard.Collections.Clients(data.clients)
+            SensuDashboard.Checks = new SensuDashboard.Collections.Checks(data.checks)
             SensuDashboard.EventsMetadata = new SensuDashboard.Models.Metadata.Events
 
             @successCallback.call(this)
