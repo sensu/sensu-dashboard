@@ -47,9 +47,7 @@ module Sensu
         $logger = base.logger
         settings = base.settings
         $dashboard_settings = settings[:dashboard] || {
-          :port => 8080,
-          :user => 'admin',
-          :password => 'secret'
+          :port => 8080
         }
         $api_settings = settings[:api] || {
           :host => 'localhost',
@@ -62,11 +60,6 @@ module Sensu
         end
         unless $dashboard_settings[:port].is_a?(Integer)
           invalid_settings('dashboard port must be an integer', {
-            :settings => $dashboard_settings
-          })
-        end
-        unless $dashboard_settings[:user].is_a?(String) && $dashboard_settings[:password].is_a?(String)
-          invalid_settings('dashboard user and password must be strings', {
             :settings => $dashboard_settings
           })
         end
@@ -115,13 +108,25 @@ module Sensu
     set :static, true
     set :public_folder, Proc.new { File.join(root, 'public') }
 
-    use Rack::Auth::Basic do |user, password|
-      user == $dashboard_settings[:user] && password == $dashboard_settings[:password]
+    helpers do
+      def protected!
+        unless authorized?
+          response['WWW-Authenticate'] = %(Basic realm='Restricted Area')
+          throw(:halt, [401, 'Not authorized\n'])
+        end
+      end
+
+      def authorized?
+        return true if [$dashboard_settings[:user], $dashboard_settings[:password]].all? { |param| param.nil? }
+        @auth ||= Rack::Auth::Basic::Request.new(request.env)
+        @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [$dashboard_settings[:user], $dashboard_settings[:password]]
+      end
     end
 
     before do
       content_type 'text/html'
       request_log_line
+      protected!
     end
 
     aget '/', :provides => 'html' do
