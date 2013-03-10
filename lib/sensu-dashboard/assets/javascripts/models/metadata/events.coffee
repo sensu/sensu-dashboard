@@ -9,8 +9,8 @@ namespace 'SensuDashboard.Models.Metadata', (exports) ->
       unknown: 0
 
     initialize: ->
-      SensuDashboard.Events.on 'reset', @updateCounts, this
-      SensuDashboard.Stashes.on 'reset', @updateCounts, this
+      SensuDashboard.Events.on 'all', @updateCounts, this
+      SensuDashboard.Stashes.on 'all', @updateCounts, this
       @updateCounts()
 
     updateCounts: ->

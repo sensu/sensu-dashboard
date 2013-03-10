@@ -1,10 +1,10 @@
-namespace 'SensuDashboard.Views.Clients', (exports) ->
+namespace 'SensuDashboard.Views.Stashes', (exports) ->
 
   class exports.Index extends SensuDashboard.Views.Base
 
     el: $('#main')
 
-    name: 'clients/index'
+    name: 'stashes/index'
 
     initialize: (collection) ->
       @template = HandlebarsTemplates[@name]
@@ -15,8 +15,7 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
 
     addAll: ->
       @$el.empty()
-      @$el.html(@template({ clients: @collection }))
+      @$el.html(@template({ stashes: @collection }))
 
     render: ->
       @addAll()
-      return this

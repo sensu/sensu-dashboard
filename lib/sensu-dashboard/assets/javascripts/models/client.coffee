@@ -7,3 +7,6 @@ namespace 'SensuDashboard.Models', (exports) ->
       address: null
       subscriptions: []
       timestamp: 0
+
+    initialize: ->
+      @set { id: @get('name') }
