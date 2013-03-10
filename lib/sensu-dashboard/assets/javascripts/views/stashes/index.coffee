@@ -1,6 +1,6 @@
 namespace 'SensuDashboard.Views.Stashes', (exports) ->
 
-  class exports.Index extends Backbone.View
+  class exports.Index extends SensuDashboard.Views.Base
 
     el: $('#main')
 

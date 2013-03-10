@@ -1,12 +1,4 @@
-<div id="counts_container" class="form-stacked">
-  <h4>Events Count</h4>
-  <ul id="counts">
-    <li><span class="label label-success">{{total}} total</span></li>
-    <li><span class="label label-important">{{critical}} critical</span></li>
-    <li><span class="label label-warning">{{unknown}} unknown</span></li>
-    <li><span class="label label-unknown">{{warning}} warning</span></li>
-  </ul>
-</div>
+<div id="counts"></div>
 
 <div id="filter_unknown_container">
   <input id="filter_unknown" type="checkbox" checked="checked" />
@@ -27,7 +19,7 @@
     <li><a id="select-all" href="#"><i class="icon-check" /> All</a></li>
     <li><a id="select-none" href="#"><i class="icon-ban-circle" /> None</a></li>
     <li><a id="select-critical" href="#"><i class="icon-fire" /> Critical</a></li>
-    <li><a id="select-unknown" href="#"><i class="icon-question-sign" /> Question</a></li>
+    <li><a id="select-unknown" href="#"><i class="icon-question-sign" /> Unknown</a></li>
     <li><a id="select-warning" href="#"><i class="icon-warning-sign" /> Warning</a></li>
     <li><a id="select-silenced" href="#"><i class="icon-volume-off" /> Silenced</a></li>
     <li><a id="select-unsilenced" href="#"><i class="icon-volume-up" /> Unsilenced</a></li>
@@ -39,83 +31,4 @@
   </ul>
 </div>
 
-<table id="events" class="table table-bordered sensu-table">
-  <thead>
-    <tr>
-      <th></th>
-      <th class="col_client">Client</th>
-      <th class="col_check">Check</th>
-      <th class="col_output">Output</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each events.models}}
-      <tr class="{{attributes.status_name}}" data-id="{{cid}}">
-        <td class="select">
-          <input type="checkbox" name="{{cid}}" />
-        </td>
-        <td class="client" data-controls-modal="event_modal">
-          {{#isClientSilenced attributes.client ../stashes}}
-          <i class="icon-volume-off icon-white unsilenced"/>
-          {{else}}
-          <i class="icon-volume-up icon-white" />
-          {{/isClientSilenced}}
-          {{attributes.client}}
-        </td>
-        <td class="check" data-controls-modal="event_modal">
-          {{#isCheckSilenced attributes.client attributes.check ../stashes}}
-          <i class="icon-volume-off icon-white unsilenced" />
-          {{else}}
-          <i class="icon-volume-up icon-white" />
-          {{/isCheckSilenced}}
-          {{attributes.check}}
-        </td>
-        <td class="output" data-controls-modal="event_modal">{{attributes.output}}</td>
-      </tr>
-    {{/each}}
-  </tbody>
-</table>
-
-{{#if current_event}}
-<div id="event_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h4 id="modal_label">
-      {{current_event.attributes.client}}<br />
-      <small>{{current_event.attributes.check}}</small>
-    </h4>
-  </div>
-  <div class="modal-body">
-    <h3 class="section_title">event data</h3>
-    {{#each current_event.attributes}}
-    <div class="well">
-      <h5>{{@key}}</h5>
-      <span>{{this}}</span>
-    </div>
-    {{/each}}
-    <h3 class="section_title">client data</h3>
-    {{#if current_client}}
-      {{#each current_client.attributes}}
-        <div class="well">
-          <h5>{{@key}}</h5>
-          <span>{{this}}</span>
-        </div>
-      {{/each}}
-    {{/if}}
-  </div>
-  <div class="modal-footer">
-    <button id="silence_client" class="btn btn-danger" data-id="{{current_model.cid}}">
-      <i class="icon-volume-up icon-white" />
-      &nbsp;Silence Client
-    </button>
-    <button id="silence_check" class="btn btn-danger" data-id="{{current_model.cid}}">
-      <i class="icon-volume-off icon-white" />
-      &nbsp;Unsilence Check
-    </button>
-    <button id="resolve_check" class="btn btn-danger" data-id="{{current_model.cid}}">
-      <i class="icon-ok icon-white" />
-      &nbsp;Resolve
-    </button>
-  </div>
-</div>
-{{/if}}
+<div id="list"></div>
