@@ -24,23 +24,4 @@
   </ul>
 </div>
 
-<table id="stashes" class="table table-bordered sensu-table">
-  <thead>
-    <tr>
-      <th></th>
-      <th class="col_path">Path</th>
-      <th class="col_keys">Keys</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each stashes.models}}
-      <tr rel="leanModal" href="#event_details_modal" data-id="{{cid}}">
-        <td class="select">
-          <input type="checkbox" name="{{cid}}" />
-        </td>
-        <td class="path">{{attributes.path}}</td>
-        <td class="keys">{{attributes.keys}}</td>
-      </tr>
-    {{/each}}
-  </tbody>
-</table>
+<div id="stashes_container"></div>

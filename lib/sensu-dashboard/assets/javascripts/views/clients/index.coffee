@@ -6,17 +6,11 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
 
     name: 'clients/index'
 
-    initialize: (collection) ->
-      @template = HandlebarsTemplates[@name]
-      @collection = collection
-      @listenTo(collection, 'reset', @render)
-      @listenTo(collection, 'change', @render)
+    initialize: ->
+      @subview = new exports.List(collection: @collection)
       @render()
 
-    addAll: ->
-      @$el.empty()
-      @$el.html(@template({ clients: @collection }))
-
     render: ->
-      @addAll()
-      return this
+      @$el.html(@template({ clients: @collection }))
+      @assign(@subview, '#clients_container')
+      this

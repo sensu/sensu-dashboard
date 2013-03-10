@@ -5,6 +5,6 @@ namespace 'SensuDashboard.Models', (exports) ->
     defaults:
       path: 'silence'
       keys: []
+      selected: false
 
-    initialize: ->
-      @set { id: @get('path') }
+    idAttribute: 'path'

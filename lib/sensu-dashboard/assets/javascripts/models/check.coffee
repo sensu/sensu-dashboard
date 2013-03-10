@@ -7,3 +7,5 @@ namespace 'SensuDashboard.Models', (exports) ->
       standalone: false
       subscribers: ["all"]
       interval: 60
+
+    idAttribute: 'name'

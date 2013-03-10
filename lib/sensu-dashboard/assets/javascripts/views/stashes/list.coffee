@@ -1,8 +1,8 @@
-namespace 'SensuDashboard.Views.Events', (exports) ->
+namespace 'SensuDashboard.Views.Stashes', (exports) ->
 
   class exports.List extends SensuDashboard.Views.List
 
-    name: 'events/list'
+    name: 'stashes/list'
 
     itemClass: ->
       exports.ListItem
