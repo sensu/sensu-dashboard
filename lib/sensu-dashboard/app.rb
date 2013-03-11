@@ -165,12 +165,13 @@ module Sensu
         multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
         multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
         multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
+        multi.add :health, EM::HttpRequest.new($api_url + '/info').get($api_options)
       rescue => error
         $logger.error('failed to query the sensu api', {
           :error => error
         })
         status 404
-        body '{"error":"could not retrieve /events, /clients, and/or /stashes from the sensu api"}'
+        body '{"error":"could not retrieve /events, /clients, /checks, /info and/or /stashes from the sensu api"}'
       end
 
       multi.callback do
@@ -178,7 +179,8 @@ module Sensu
           response = {
             :events  => Oj.load(multi.responses[:callback][:events].response),
             :checks  => Oj.load(multi.responses[:callback][:checks].response),
-            :clients => Oj.load(multi.responses[:callback][:clients].response)
+            :clients => Oj.load(multi.responses[:callback][:clients].response),
+            :health  => Oj.load(multi.responses[:callback][:health].response)
           }
           begin
             $api_options[:head]['Accept'] = 'application/json'
@@ -211,7 +213,7 @@ module Sensu
             :error => multi.responses[:errback]
           })
           status 500
-          body '{"error":"sensu api returned an error while retrieving /events, /clients, /checks, and/or /stashes from the sensu api"}'
+          body '{"error":"sensu api returned an error while retrieving /events, /clients, /checks, /info, and/or /stashes from the sensu api"}'
         end
       end
     end

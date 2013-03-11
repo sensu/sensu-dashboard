@@ -18,6 +18,7 @@ namespace 'SensuDashboard', (exports) ->
             SensuDashboard.Clients = new SensuDashboard.Collections.Clients(data.clients)
             SensuDashboard.Checks = new SensuDashboard.Collections.Checks(data.checks)
             SensuDashboard.EventsMetadata = new SensuDashboard.Models.Metadata.Events
+            SensuDashboard.Health = new SensuDashboard.Models.Health(data.health)
 
             @successCallback.call(this)
           error: (jqXHR, textStatus, errorThrown) ->
