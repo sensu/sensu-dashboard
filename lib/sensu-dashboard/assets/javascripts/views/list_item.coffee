@@ -7,7 +7,7 @@ namespace 'SensuDashboard.Views', (exports) ->
     initialize: ->
       @name = @options.name unless @name
       @listenTo(@model, 'change',  @render)
-      @listenTo(@model, 'destroy', @render)
+      @listenTo(@model, 'destroy', @remove)
 
     render: ->
       @$el.html(@template(@model.toJSON()))

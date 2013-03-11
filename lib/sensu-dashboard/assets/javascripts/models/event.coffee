@@ -51,6 +51,7 @@ namespace 'SensuDashboard.Models', (exports) ->
       stash.save {},
         success: (model, response, opts) =>
           SensuDashboard.Stashes.add(model)
+          @trigger('change')
           @successCallback.apply(this, [model, response, opts]) if @successCallback
         error: (model, xhr, opts) =>
           @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
@@ -63,9 +64,11 @@ namespace 'SensuDashboard.Models', (exports) ->
         stash.destroy
           url: SensuDashboard.Stashes.url+'/'+@get('silence_path')
           success: (model, response, opts) =>
+            @trigger('change')
             @successCallback.apply(this, [model, response, opts]) if @successCallback
 
           error: (model, xhr, opts) =>
             @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
       else
+        @trigger('change')
         @successCallback.apply(this, [this]) if @successCallback
