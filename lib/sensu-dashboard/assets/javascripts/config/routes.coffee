@@ -9,10 +9,10 @@ namespace 'SensuDashboard', (exports) ->
       "clients": "clients"
 
     events: ->
-      new SensuDashboard.Views.Events.Index(SensuDashboard.EventsMetadata)
+      new SensuDashboard.Views.Events.Index(model: SensuDashboard.EventsMetadata)
 
     stashes: ->
-      new SensuDashboard.Views.Stashes.Index(SensuDashboard.Stashes)
+      new SensuDashboard.Views.Stashes.Index(collection: SensuDashboard.Stashes)
 
     clients: ->
-      new SensuDashboard.Views.Clients.Index(SensuDashboard.Clients)
+      new SensuDashboard.Views.Clients.Index(collection: SensuDashboard.Clients)

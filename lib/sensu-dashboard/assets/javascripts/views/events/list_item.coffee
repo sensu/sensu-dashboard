@@ -1,10 +1,8 @@
 namespace 'SensuDashboard.Views.Events', (exports) ->
 
-  class exports.Item extends SensuDashboard.Views.Base
+  class exports.ListItem extends SensuDashboard.Views.ListItem
 
-    name: 'events/item'
-
-    tagName: 'tr'
+    name: 'events/list_item'
 
     className: ->
       @model.get('status_name')
@@ -12,15 +10,6 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
     events:
       'click td': 'showDetails'
       'click input[type=checkbox]': 'toggleSelect'
-
-    initialize: ->
-      @template = HandlebarsTemplates[@name]
-      @listenTo(@model, 'change', @render)
-      @listenTo(@model, 'destroy', @remove)
-
-    render: ->
-      @$el.html(@template(@model.toJSON()))
-      return this
 
     toggleSelect: ->
       @model.set({ selected: !@model.get('selected') })

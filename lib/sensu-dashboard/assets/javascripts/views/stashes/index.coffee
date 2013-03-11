@@ -6,16 +6,11 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
 
     name: 'stashes/index'
 
-    initialize: (collection) ->
-      @template = HandlebarsTemplates[@name]
-      @collection = collection
-      @listenTo(collection, 'reset', @render)
-      @listenTo(collection, 'change', @render)
+    initialize: ->
+      @stashes_view = new exports.List(collection: @collection)
       @render()
 
-    addAll: ->
-      @$el.empty()
-      @$el.html(@template({ stashes: @collection }))
-
     render: ->
-      @addAll()
+      @$el.html(@template(stashes: @collection))
+      @assign(@stashes_view, '#stashes_container')
+      this
