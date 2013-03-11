@@ -26,3 +26,9 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       @model.set({ selected: !@model.get('selected') })
 
     showDetails: ->
+      new SensuDashboard.Views.Modal
+        name: 'events/modal'
+        model:
+          event: @model.toJSON()
+          client: SensuDashboard.Clients.get(@model.get('client')).toJSON()
+          stashes: SensuDashboard.Stashes.toJSON()
