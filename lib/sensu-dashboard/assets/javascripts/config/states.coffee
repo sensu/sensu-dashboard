@@ -17,9 +17,14 @@ namespace 'SensuDashboard', (exports) ->
       view: (opts) ->
         new SensuDashboard.Views.Stashes.Index(collection: SensuDashboard.Stashes)
 
-    health: class extends exports.MainState
-      route: "stashes"
+    checks: class extends exports.MainState
+      route: "checks"
       view: (opts) ->
-        new SensuDashboard.Views.Health.Index(model: SensuDashboard.Health)
+        new SensuDashboard.Views.Checks.Index(collection: SensuDashboard.Checks)
+
+    info: class extends exports.MainState
+      route: "info"
+      view: (opts) ->
+        new SensuDashboard.Views.Info.Index(model: SensuDashboard.Info)
 
   }, "events"

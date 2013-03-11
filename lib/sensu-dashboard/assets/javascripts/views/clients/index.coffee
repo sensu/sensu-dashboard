@@ -25,7 +25,7 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       @$el.html(@template(clients: @collection))
       @assign(@counts_subview, '#counts')
       @assign(@subview, '#clients_container')
-      $('#filter').html(@autocomplete_view.render().el)
+      @$el.find('#filter').html(@autocomplete_view.render().el)
       this
 
     toggleSelected: ->
