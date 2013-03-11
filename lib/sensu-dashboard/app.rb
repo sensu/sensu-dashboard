@@ -80,7 +80,8 @@ module Sensu
 
       def start
         Thin::Logging.silent = true
-        Thin::Server.start(self, $dashboard_settings[:port])
+        bind = $dashboard_settings[:bind] || '0.0.0.0'
+        Thin::Server.start(bind, $dashboard_settings[:port], self)
       end
 
       def stop
