@@ -17,11 +17,9 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       'click #silence-selected': 'unsilenceSelected'
       'click #unsilence-selected': 'unsilenceSelected'
 
-    initialize: (model) ->
-      @template = HandlebarsTemplates[@name]
-      @model = model
+    initialize: ->
       @counts_subview = new SensuDashboard.Views.Events.Counts(@model)
-      @list_subview = new SensuDashboard.Views.Events.List(@model.get('events'))
+      @list_subview = new SensuDashboard.Views.Events.List(collection: @model.get('events'))
       @render()
 
     render: ->
