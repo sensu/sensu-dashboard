@@ -9,3 +9,13 @@ namespace 'SensuDashboard.Views', (exports) ->
     attributes:
       tabindex: '-1'
       role: 'dialog'
+
+    initialize: ->
+      @template = HandlebarsTemplates[@options.name || 'modal']
+      @$el.on('hidden', => @remove())
+      @render()
+
+    render: ->
+      @$el.html(@template(@model || {}))
+      @$el.appendTo('body')
+      @$el.modal('show')

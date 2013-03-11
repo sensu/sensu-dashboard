@@ -1,49 +1,17 @@
-<div id="event_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  {{#if title}}
     <h4 id="modal_label">
-      {{current_event.attributes.client}}<br />
-      <small>{{current_event.attributes.check}}</small>
+      <span>{{title}}</span><br />
+      {{#if subtitle}}<small>{{subtitle}}</small>{{/if}}
     </h4>
-  </div>
-  <div class="modal-body">
-    <h3 class="section_title">event data</h3>
-    {{#each current_event.attributes}}
-    <div class="well">
-      <h5>{{@key}}</h5>
-      <span>{{this}}</span>
-    </div>
-    {{/each}}
-    <h3 class="section_title">client data</h3>
-    {{#each current_client.attributes}}
-      <div class="well">
-        <h5>{{@key}}</h5>
-        <span>{{this}}</span>
-      </div>
-    {{/each}}
-  </div>
-  <div class="modal-footer">
-    <button id="silence_client" class="btn btn-danger">
-      {{#isClientSilenced current_client.attributes.name ../stashes}}
-        <i class="icon-volume-off icon-white" />
-        <span>&nbsp;Un-silence Client</span>
-      {{else}}
-        <i class="icon-volume-up icon-white" />
-        <span>&nbsp;Silence Client</span>
-      {{/isClientSilenced}}
-    </button>
-    <button id="silence_check" class="btn btn-danger">
-      {{#isCheckSilenced current_client.attributes.name current_event.attributes.check ../stashes}}
-        <i class="icon-volume-off icon-white" />
-        <span>&nbsp;Un-silence Check</span>
-      {{else}}
-        <i class="icon-volume-up icon-white" />
-        <span>&nbsp;Silence Check</span>
-      {{/isCheckSilenced}}
-    </button>
-    <button id="resolve_check" class="btn btn-danger">
-      <i class="icon-ok icon-white" />
-      <span>&nbsp;Resolve</span>
-    </button>
-  </div>
+  {{/if}}
+</div>
+<div class="modal-body">
+  {{#if body}}
+    <p>{{body}}</p>
+  {{/if}}
+</div>
+<div class="modal-footer">
+  <a href="#" class="btn">Close</a>
 </div>
