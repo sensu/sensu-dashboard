@@ -7,9 +7,35 @@ namespace 'SensuDashboard.Collections', (exports) ->
     comparator: (event) ->
       event.get 'status_name'
 
+    getSelected: ->
+      @where({ selected: true })
+
+    getCriticals: ->
+      @where({ status: 2 })
+
+    getUnknowns: ->
+      @filter (event) ->
+        status = event.get('status')
+        return status != 1 && status != 2
+
+    getWarnings: ->
+      @where({ status: 1 })
+
+    getSelectedCriticals: ->
+      @where({ status: 2, selected: true })
+
+    getSelectedUnknowns: ->
+      @filter (event) ->
+        status = event.get('status')
+        selected = event.get('selected')
+        return status != 1 && status != 2 && selected == true
+
+    getSelectedWarnings: ->
+      @where({ status: 1, selected: true })
+
     toggleSelected: ->
       selected = true
-      selected = false if @where({ selected: true }).length == @length
+      selected = false if @getSelected().length == @length
       @each (event) ->
         event.set { selected: selected }
 
@@ -22,39 +48,58 @@ namespace 'SensuDashboard.Collections', (exports) ->
         event.set { selected: false }
 
     selectCritical: ->
-      events = @where({ status: 2 })
-      events_selected = @where({ status: 2, selected: true })
+      events = @getCriticals()
+      events_selected = @getSelectedCriticals()
       for event in events
         selected = true
         selected = false if events_selected.length == events.length
         event.set { selected: selected }
 
     selectUnknown: ->
-      events = @filter (event) ->
-        status = event.get('status')
-        return status != 1 && status != 2
-      events_selected = @filter (event) ->
-        status = event.get('status')
-        selected = event.get('selected')
-        return status != 1 && status != 2 && selected == true
+      events = @getUnknowns()
+      events_selected = @getSelectedUnknowns()
       for event in events
         selected = true
         selected = false if events_selected.length == events.length
         event.set { selected: selected }
 
     selectWarning: ->
-      events = @where({ status: 1 })
-      events_selected = @where({ status: 1, selected: true })
+      events = @getWarnings()
+      events_selected = @getSelectedWarnings()
       for event in events
         selected = true
         selected = false if events_selected.length == events.length
         event.set { selected: selected }
 
-    resolveSelected: ->
-      console.log event for event in @where({ selected: true })
+    resolveSelected: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for event in @getSelected()
+        event.resolve
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success
 
-    silenceSelected: ->
-      console.log event for event in @where({ selected: true })
+    silenceSelected: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for event in @getSelected()
+        event.silence
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success
 
-    unsilenceSelected: ->
-      console.log event for event in @where({ selected: true })
+    unsilenceSelected: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for event in @getSelected()
+        event.unsilence
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, response, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success

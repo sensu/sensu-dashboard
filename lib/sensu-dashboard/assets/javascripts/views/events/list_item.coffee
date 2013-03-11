@@ -8,7 +8,7 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       @model.get('status_name')
 
     events:
-      'click td': 'showDetails'
+      'click td:not(.select)': 'showDetails'
       'click input[type=checkbox]': 'toggleSelect'
 
     toggleSelect: ->

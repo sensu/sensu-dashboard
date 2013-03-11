@@ -6,6 +6,13 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
 
     name: 'clients/index'
 
+    events:
+      'click #toggle-checkboxes': 'toggleSelected'
+      'click #select-all': 'selectAll'
+      'click #select-none': 'selectNone'
+      'click #silence-selected': 'unsilenceSelected'
+      'click #unsilence-selected': 'unsilenceSelected'
+
     initialize: ->
       @subview = new exports.List(collection: @collection)
       @render()
@@ -14,3 +21,22 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       @$el.html(@template({ clients: @collection }))
       @assign(@subview, '#clients_container')
       this
+
+    toggleSelected: ->
+      @collection.toggleSelected()
+
+    selectAll: ->
+      @collection.selectAll()
+
+    selectNone: ->
+      @collection.selectNone()
+
+    selectSilenced: ->
+
+    selectUnsilenced: ->
+
+    silenceSelected: ->
+      @collection.silenceSelected()
+
+    unsilenceSelected: ->
+      @collection.unsilenceSelected()
