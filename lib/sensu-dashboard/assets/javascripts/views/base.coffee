@@ -8,3 +8,9 @@ namespace 'SensuDashboard.Views', (exports) ->
 
     assign: (view, selector) ->
       view.setElement(@$(selector)).render()
+
+    dispose: ->
+      @remove()
+      @off()
+      @model.off(null, null , @) if @model
+      @collection.off(null, null, @) if @collection

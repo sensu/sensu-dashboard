@@ -2,8 +2,6 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
 
   class exports.Index extends SensuDashboard.Views.Base
 
-    el: $('#main')
-
     name: 'stashes/index'
 
     events:
@@ -13,13 +11,13 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
       'click #remove-selected': 'removeSelected'
 
     initialize: ->
+      @stashes_view = new exports.List(collection: @collection)
       @autocomplete_view = new SensuDashboard.Views.AutoCompleteField()
       @counts_subview = new SensuDashboard.Views.Stashes.Counts(collection: @collection)
       @stashes_view = new exports.List({
         collection: @collection
         autocomplete_view: @autocomplete_view
       })
-      @render()
 
     render: ->
       @$el.html(@template(stashes: @collection))

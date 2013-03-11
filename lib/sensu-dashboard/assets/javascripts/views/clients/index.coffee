@@ -2,8 +2,6 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
 
   class exports.Index extends SensuDashboard.Views.Base
 
-    el: $('#main')
-
     name: 'clients/index'
 
     events:
@@ -22,7 +20,6 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
         collection: @collection
         autocomplete_view: @autocomplete_view
       })
-      @render()
 
     render: ->
       @$el.html(@template(clients: @collection))
