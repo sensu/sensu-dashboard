@@ -7,12 +7,16 @@ namespace 'SensuDashboard', (exports) ->
       "events":  "events"
       "stashes": "stashes"
       "clients": "clients"
+      "health":  "health"
 
     events: ->
-      new SensuDashboard.Views.Events.Index(SensuDashboard.EventsMetadata)
+      new SensuDashboard.Views.Events.Index(model: SensuDashboard.EventsMetadata)
 
-    stahes: ->
-      new SensuDashboard.Views.Stashes.Index(SensuDashboard.Stashes)
+    stashes: ->
+      new SensuDashboard.Views.Stashes.Index(collection: SensuDashboard.Stashes)
 
     clients: ->
-      new SensuDashboard.Views.Clients.Index(SensuDashboard.Clients)
+      new SensuDashboard.Views.Clients.Index(collection: SensuDashboard.Clients)
+
+    health: ->
+      new SensuDashboard.Views.Health.Index(model: SensuDashboard.Health)

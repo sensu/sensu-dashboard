@@ -1,0 +1,46 @@
+<div id="health_label" class="form-stacked">
+  <h4>Sensu Server Health</h4>
+</div>
+
+<table id="health" class="table table-bordered">
+  <thead>
+    <tr>
+      <th class="col_health_name">Name</th>
+      <th class="col_health_value">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sensu Version</td>
+      <td>{{sensu.version}}</td>
+    </tr>
+    <tr>
+      <td>RabbitMQ</td>
+      <td>{{rmq_status}}</td>
+    </tr>
+    <tr>
+      <td>Keepalive Messages</td>
+      <td>{{rabbitmq.keepalives.messages}}</td>
+    </tr>
+    <tr>
+      <td>Keepalive Consumers</td>
+      <td>{{rabbitmq.keepalives.consumers}}</td>
+    </tr>
+    <tr>
+      <td>Result Messages</td>
+      <td>{{rabbitmq.results.messages}}</td>
+    </tr>
+    <tr>
+      <td>Result Consumers</td>
+      <td>{{rabbitmq.results.consumers}}</td>
+    </tr>
+    <tr>
+      <td>Redis</td>
+      <td>{{redis_status}}</td>
+    </tr>
+    <tr>
+    </tr>
+    <tr>
+    </tr>
+  </tbody>
+</table>

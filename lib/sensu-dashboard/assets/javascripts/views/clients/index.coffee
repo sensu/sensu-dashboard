@@ -1,22 +1,42 @@
 namespace 'SensuDashboard.Views.Clients', (exports) ->
 
-  class exports.Index extends Backbone.View
+  class exports.Index extends SensuDashboard.Views.Base
 
     el: $('#main')
 
     name: 'clients/index'
 
-    initialize: (collection) ->
-      @template = HandlebarsTemplates[@name]
-      @collection = collection
-      @listenTo(collection, 'reset', @render)
-      @listenTo(collection, 'change', @render)
+    events:
+      'click #toggle-checkboxes': 'toggleSelected'
+      'click #select-all': 'selectAll'
+      'click #select-none': 'selectNone'
+      'click #silence-selected': 'unsilenceSelected'
+      'click #unsilence-selected': 'unsilenceSelected'
+
+    initialize: ->
+      @subview = new exports.List(collection: @collection)
       @render()
 
-    addAll: ->
-      @$el.empty()
-      @$el.html(@template({ clients: @collection.toJSON() }))
-
     render: ->
-      @addAll()
-      return this
+      @$el.html(@template(clients: @collection))
+      @assign(@subview, '#clients_container')
+      this
+
+    toggleSelected: ->
+      @collection.toggleSelected()
+
+    selectAll: ->
+      @collection.selectAll()
+
+    selectNone: ->
+      @collection.selectNone()
+
+    selectSilenced: ->
+
+    selectUnsilenced: ->
+
+    silenceSelected: ->
+      @collection.silenceSelected()
+
+    unsilenceSelected: ->
+      @collection.unsilenceSelected()
