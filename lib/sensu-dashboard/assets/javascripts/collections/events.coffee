@@ -5,56 +5,179 @@ namespace 'SensuDashboard.Collections', (exports) ->
     url: '/events'
 
     comparator: (event) ->
-      event.get 'status_name'
+      event.get('status_name')
 
-    toggleSelected: ->
-      selected = true
-      selected = false if @where({ selected: true }).length == @length
-      @each (event) ->
-        event.set { selected: selected }
+    getSelected: ->
+      @where(selected: true)
 
-    selectAll: ->
-      @each (event) ->
-        event.set { selected: true }
+    getCriticals: ->
+      @where(status: 2)
 
-    selectNone: ->
-      @each (event) ->
-        event.set { selected: false }
-
-    selectCritical: ->
-      events = @where({ status: 2 })
-      events_selected = @where({ status: 2, selected: true })
-      for event in events
-        selected = true
-        selected = false if events_selected.length == events.length
-        event.set { selected: selected }
-
-    selectUnknown: ->
-      events = @filter (event) ->
+    getUnknowns: ->
+      @filter (event) ->
         status = event.get('status')
         return status != 1 && status != 2
-      events_selected = @filter (event) ->
+
+    getWarnings: ->
+      @where(status: 1)
+
+    getSilenced: ->
+      @where(silenced: true)
+
+    getSilencedClients: ->
+      @where(client_silenced: true)
+
+    getUnsilenced: ->
+      @where(silenced: false)
+
+    getUnsilencedClients: ->
+      @where(client_silenced: false)
+
+    getSelectedCriticals: ->
+      @where(status: 2, selected: true)
+
+    getSelectedUnknowns: ->
+      @filter (event) ->
         status = event.get('status')
         selected = event.get('selected')
         return status != 1 && status != 2 && selected == true
+
+    getSelectedWarnings: ->
+      @where(status: 1, selected: true)
+
+    getSelectedSilenced: ->
+      @where(silenced: true, selected: true)
+
+    getSelectedSilencedClients: ->
+      @where(client_silenced: true, selected: true)
+
+    getSelectedUnsilenced: ->
+      @where(silenced: false, selected: true)
+
+    getSelectedUnsilencedClients: ->
+      @where(client_silenced: false, selected: true)
+
+    toggleSelected: ->
+      selected = true
+      selected = false if @getSelected().length == @length
+      @each (event) ->
+        event.set(selected: selected)
+
+    selectAll: ->
+      @each (event) ->
+        event.set(selected: true)
+
+    selectNone: ->
+      @each (event) ->
+        event.set(selected: false)
+
+    selectCritical: ->
+      events = @getCriticals()
+      events_selected = @getSelectedCriticals()
       for event in events
         selected = true
         selected = false if events_selected.length == events.length
-        event.set { selected: selected }
+        event.set(selected: selected)
+
+    selectUnknown: ->
+      events = @getUnknowns()
+      events_selected = @getSelectedUnknowns()
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set(selected: selected)
 
     selectWarning: ->
-      events = @where({ status: 1 })
-      events_selected = @where({ status: 1, selected: true })
+      events = @getWarnings()
+      events_selected = @getSelectedWarnings()
       for event in events
         selected = true
         selected = false if events_selected.length == events.length
-        event.set { selected: selected }
+        event.set(selected: selected)
 
-    resolveSelected: ->
-      console.log event for event in @where({ selected: true })
+    selectSilenced: ->
+      events = @getSilenced()
+      events_selected = @getSelectedSilenced()
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set(selected: selected)
 
-    silenceSelected: ->
-      console.log event for event in @where({ selected: true })
+    selectSilencedClients: ->
+      events = @getSilencedClients()
+      events_selected = @getSelectedSilencedClients()
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set(selected: selected)
 
-    unsilenceSelected: ->
-      console.log event for event in @where({ selected: true })
+    selectUnsilenced: ->
+      events = @getUnsilenced()
+      events_selected = @getSelectedUnsilenced()
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set(selected: selected)
+
+    selectUnsilencedClients: ->
+      events = @getUnsilencedClients()
+      events_selected = @getSelectedUnsilencedClients()
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set(selected: selected)
+
+    resolveSelected: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for event in @getSelected()
+        event.resolve
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success
+
+    silenceSelectedChecks: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for event in @getSelected()
+        event.silence
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success
+
+    unsilenceSelectedChecks: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for event in @getSelected()
+        event.unsilence
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success
+
+    silenceSelectedClients: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for event in @getSelected()
+        SensuDashboard.Clients.get(event.get('client')).silence
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success
+
+    unsilenceSelectedClients: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for event in @getSelected()
+        SensuDashboard.Clients.get(event.get('client')).unsilence
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success
