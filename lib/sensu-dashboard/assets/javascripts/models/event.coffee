@@ -11,6 +11,8 @@ namespace 'SensuDashboard.Models', (exports) ->
       flapping: false
       issued: '0000-00-00T00:00:00Z'
       selected: false
+      silenced: false
+      client_silenced: false
 
     initialize: ->
       @set { id: @get('client')+'/'+@get('check') }
@@ -18,7 +20,22 @@ namespace 'SensuDashboard.Models', (exports) ->
       @setStatusName(@get('status'))
       @set
         url: '/events/'+@get('id')
+        client_silence_path: 'silence/'+@get('client')
         silence_path: 'silence/'+@get('id')
+      @listenTo(SensuDashboard.Stashes, 'reset', @setSilencing)
+      @listenTo(SensuDashboard.Stashes, 'add', @setSilencing)
+      @listenTo(SensuDashboard.Stashes, 'remove', @setSilencing)
+      @setSilencing()
+
+    setSilencing: ->
+      silenced = false
+      client_silenced = false
+      silenced = true if SensuDashboard.Stashes.get(@get('silence_path'))
+      client_silenced = true if SensuDashboard.Stashes.get(@get('client_silence_path'))
+      if @get('silenced') != silenced || @get('client_silenced') != client_silenced
+        @set
+          silenced: silenced
+          client_silenced: client_silenced
 
     setOutputIfEmpty: (output) ->
       if output == ''
@@ -51,7 +68,6 @@ namespace 'SensuDashboard.Models', (exports) ->
       stash.save {},
         success: (model, response, opts) =>
           SensuDashboard.Stashes.add(model)
-          @trigger('change')
           @successCallback.apply(this, [model, response, opts]) if @successCallback
         error: (model, xhr, opts) =>
           @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
@@ -64,11 +80,9 @@ namespace 'SensuDashboard.Models', (exports) ->
         stash.destroy
           url: SensuDashboard.Stashes.url+'/'+@get('silence_path')
           success: (model, response, opts) =>
-            @trigger('change')
             @successCallback.apply(this, [model, response, opts]) if @successCallback
 
           error: (model, xhr, opts) =>
             @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
       else
-        @trigger('change')
         @successCallback.apply(this, [this]) if @successCallback

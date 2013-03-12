@@ -11,13 +11,17 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       'click td:not(.select)': 'showDetails'
       'click input[type=checkbox]': 'toggleSelect'
 
+    initialize: ->
+      @client = SensuDashboard.Clients.get(@model.get('client'))
+      @stashes = SensuDashboard.Stashes
+      @listenTo(@client, 'remove', @remove)
+      super
+
     toggleSelect: ->
       @model.set({ selected: !@model.get('selected') })
 
     showDetails: ->
-      new SensuDashboard.Views.Modal
-        name: 'events/modal'
-        model:
-          event: @model.toJSON()
-          client: SensuDashboard.Clients.get(@model.get('client')).toJSON()
-          stashes: SensuDashboard.Stashes.toJSON()
+      new SensuDashboard.Views.Events.Modal
+        model: new Backbone.Model
+          event: @model
+          client: @client

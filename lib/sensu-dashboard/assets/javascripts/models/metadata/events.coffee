@@ -10,14 +10,12 @@ namespace 'SensuDashboard.Models.Metadata', (exports) ->
 
     initialize: ->
       SensuDashboard.Events.on 'all', @updateCounts, this
-      SensuDashboard.Stashes.on 'all', @updateCounts, this
       @updateCounts()
 
     updateCounts: ->
       @set
         events: SensuDashboard.Events
-        stashes: SensuDashboard.Stashes.toJSON()
         total: SensuDashboard.Events.length
         warning: SensuDashboard.Events.getWarnings().length
         critical: SensuDashboard.Events.getCriticals().length
-        unknown: SensuDashboard.Events.getUnknowns().length # TODO: check for all status codes that are not 1 or 2
+        unknown: SensuDashboard.Events.getUnknowns().length

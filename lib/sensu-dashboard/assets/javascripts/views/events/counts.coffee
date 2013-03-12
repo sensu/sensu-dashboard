@@ -5,8 +5,6 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
     name: 'events/counts'
 
     initialize: (model) ->
-      @template = HandlebarsTemplates[@name]
-      @model = model
       @listenTo(@model, 'all', @render)
 
     render: ->

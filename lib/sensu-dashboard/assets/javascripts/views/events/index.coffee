@@ -18,7 +18,7 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       'click #unsilence-selected-checks': 'unsilenceSelectedChecks'
 
     initialize: ->
-      @counts_subview = new SensuDashboard.Views.Events.Counts(@model)
+      @counts_subview = new SensuDashboard.Views.Events.Counts(model: @model)
       @list_subview = new SensuDashboard.Views.Events.List(collection: @model.get('events'))
       @render()
 
@@ -61,7 +61,7 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
     silenceSelectedChecks: ->
       @model.get('events').silenceSelected
         success: ->
-          console.log 'silenced events'
+          console.log 'silenced events' # TODO: show this visually
         error: (model, xhr, opts) ->
           console.log 'failed to silence event'
           console.log model
@@ -69,7 +69,7 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
     unsilenceSelectedChecks: ->
       @model.get('events').unsilenceSelected
         success:
-          console.log 'unsilenced events'
+          console.log 'unsilenced events' # TODO: show this visually
         error: (model, xhr, opts) ->
           console.log 'failed to unsilence event'
           console.log model
