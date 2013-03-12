@@ -3,7 +3,8 @@ namespace 'SensuDashboard.Models', (exports) ->
   class exports.Stash extends Backbone.Model
 
     defaults:
-      id: 'silence'
-      payload: {}
+      path: 'silence'
+      keys: []
+      selected: false
 
-    initialize: ->
+    idAttribute: 'path'

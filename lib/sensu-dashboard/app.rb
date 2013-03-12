@@ -47,9 +47,7 @@ module Sensu
         $logger = base.logger
         settings = base.settings
         $dashboard_settings = settings[:dashboard] || {
-          :port => 8080,
-          :user => 'admin',
-          :password => 'secret'
+          :port => 8080
         }
         $api_settings = settings[:api] || {
           :host => 'localhost',
@@ -65,11 +63,6 @@ module Sensu
             :settings => $dashboard_settings
           })
         end
-        unless $dashboard_settings[:user].is_a?(String) && $dashboard_settings[:password].is_a?(String)
-          invalid_settings('dashboard user and password must be strings', {
-            :settings => $dashboard_settings
-          })
-        end
         base.setup_process
         $api_url = 'http://' + $api_settings[:host] + ':' + $api_settings[:port].to_s
         $api_options = {:head => {}}
@@ -80,7 +73,8 @@ module Sensu
 
       def start
         Thin::Logging.silent = true
-        Thin::Server.start(self, $dashboard_settings[:port])
+        bind = $dashboard_settings[:bind] || '0.0.0.0'
+        Thin::Server.start(bind, $dashboard_settings[:port], self)
       end
 
       def stop
@@ -115,13 +109,25 @@ module Sensu
     set :static, true
     set :public_folder, Proc.new { File.join(root, 'public') }
 
-    use Rack::Auth::Basic do |user, password|
-      user == $dashboard_settings[:user] && password == $dashboard_settings[:password]
+    helpers do
+      def protected!
+        unless authorized?
+          response['WWW-Authenticate'] = %(Basic realm='Restricted Area')
+          throw(:halt, [401, 'Not authorized\n'])
+        end
+      end
+
+      def authorized?
+        return true if [$dashboard_settings[:user], $dashboard_settings[:password]].all? { |param| param.nil? }
+        @auth ||= Rack::Auth::Basic::Request.new(request.env)
+        @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [$dashboard_settings[:user], $dashboard_settings[:password]]
+      end
     end
 
     before do
       content_type 'text/html'
       request_log_line
+      protected!
     end
 
     aget '/', :provides => 'html' do
@@ -156,21 +162,25 @@ module Sensu
         $api_options[:head]['Accept'] = 'application/json'
         multi = EM::MultiRequest.new
         multi.add :events, EM::HttpRequest.new($api_url + '/events').get($api_options)
+        multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
         multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
         multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
+        multi.add :health, EM::HttpRequest.new($api_url + '/info').get($api_options)
       rescue => error
         $logger.error('failed to query the sensu api', {
           :error => error
         })
         status 404
-        body '{"error":"could not retrieve /events, /clients, and/or /stashes from the sensu api"}'
+        body '{"error":"could not retrieve /events, /clients, /checks, /info and/or /stashes from the sensu api"}'
       end
 
       multi.callback do
         unless multi.responses[:errback].keys.count > 0
           response = {
-            :events => Oj.load(multi.responses[:callback][:events].response),
-            :clients => Oj.load(multi.responses[:callback][:clients].response)
+            :events  => Oj.load(multi.responses[:callback][:events].response),
+            :checks  => Oj.load(multi.responses[:callback][:checks].response),
+            :clients => Oj.load(multi.responses[:callback][:clients].response),
+            :health  => Oj.load(multi.responses[:callback][:health].response)
           }
           begin
             $api_options[:head]['Accept'] = 'application/json'
@@ -190,7 +200,11 @@ module Sensu
           end
 
           http.callback do
-            response[:stashes] = Oj.load(http.response.empty? ? '{}' : http.response)
+            stashes = {}
+            stashes = Oj.load(http.response).map do |path, keys|
+              { :path => path, :keys => keys }
+            end unless http.response.empty?
+            response[:stashes] = stashes
             status 200
             body Oj.dump(response)
           end
@@ -199,7 +213,7 @@ module Sensu
             :error => multi.responses[:errback]
           })
           status 500
-          body '{"error":"sensu api returned an error while retrieving /events, /clients, and/or /stashes from the sensu api"}'
+          body '{"error":"sensu api returned an error while retrieving /events, /clients, /checks, /info, and/or /stashes from the sensu api"}'
         end
       end
     end
@@ -258,7 +272,7 @@ module Sensu
       begin
         $api_options[:head]['Accept'] = 'application/json'
         $api_options[:body] = request.body.read
-        http = EM::HttpRequest.new($api_url + '/' + path).put($api_options)
+        http = EM::HttpRequest.new($api_url + '/' + path).post($api_options)
       rescue => error
         $logger.error('failed to query the sensu api', {
           :error => error
@@ -270,6 +284,30 @@ module Sensu
       http.errback do
         status 404
         body '{"error":"could not retrieve /'+path+' from the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        body http.response
+      end
+    end
+
+    adelete '/*', :provides => 'json' do |path|
+      content_type 'application/json'
+      begin
+        $api_options[:head]['Accept'] = 'application/json'
+        http = EM::HttpRequest.new($api_url + '/' + path).delete($api_options)
+      rescue => error
+        $logger.error('failed to query the sensu api', {
+          :error => error
+        })
+        status 404
+        body '{"error":"could not delete /'+path+' from the sensu api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not delete /'+path+' from the sensu api"}'
       end
 
       http.callback do

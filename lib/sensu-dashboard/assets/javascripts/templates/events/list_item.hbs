@@ -1,0 +1,18 @@
+<td class="select"><input type="checkbox" {{selected selected}}/></td>
+<td class="client">
+  {{#if client_silenced}}
+    <i class="icon-volume-off icon-white unsilenced"/>
+  {{else}}
+    <i class="icon-volume-up icon-white" />
+  {{/if}}
+  {{client}}
+</td>
+<td class="check">
+  {{#if silenced}}
+    <i class="icon-volume-off icon-white unsilenced"/>
+  {{else}}
+    <i class="icon-volume-up icon-white" />
+  {{/if}}
+  {{check}}
+</td>
+<td class="output">{{output}}</td>
