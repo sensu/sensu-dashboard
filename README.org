@@ -1,4 +1,0 @@
-* Sonian Monitoring Dashboard
-- Lists current alerts from the monitoring server
-- Lists clients subscribed to AMQP queues
-- Uses WebSockets to receive new information
