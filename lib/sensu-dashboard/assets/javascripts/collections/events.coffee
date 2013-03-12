@@ -5,13 +5,13 @@ namespace 'SensuDashboard.Collections', (exports) ->
     url: '/events'
 
     comparator: (event) ->
-      event.get 'status_name'
+      event.get('status_name')
 
     getSelected: ->
-      @where({ selected: true })
+      @where(selected: true)
 
     getCriticals: ->
-      @where({ status: 2 })
+      @where(status: 2)
 
     getUnknowns: ->
       @filter (event) ->
@@ -19,10 +19,22 @@ namespace 'SensuDashboard.Collections', (exports) ->
         return status != 1 && status != 2
 
     getWarnings: ->
-      @where({ status: 1 })
+      @where(status: 1)
+
+    getSilenced: ->
+      @where(silenced: true)
+
+    getSilencedClients: ->
+      @where(client_silenced: true)
+
+    getUnsilenced: ->
+      @where(silenced: false)
+
+    getUnsilencedClients: ->
+      @where(client_silenced: false)
 
     getSelectedCriticals: ->
-      @where({ status: 2, selected: true })
+      @where(status: 2, selected: true)
 
     getSelectedUnknowns: ->
       @filter (event) ->
@@ -31,21 +43,33 @@ namespace 'SensuDashboard.Collections', (exports) ->
         return status != 1 && status != 2 && selected == true
 
     getSelectedWarnings: ->
-      @where({ status: 1, selected: true })
+      @where(status: 1, selected: true)
+
+    getSelectedSilenced: ->
+      @where(silenced: true, selected: true)
+
+    getSelectedSilencedClients: ->
+      @where(client_silenced: true, selected: true)
+
+    getSelectedUnsilenced: ->
+      @where(silenced: false, selected: true)
+
+    getSelectedUnsilencedClients: ->
+      @where(client_silenced: false, selected: true)
 
     toggleSelected: ->
       selected = true
       selected = false if @getSelected().length == @length
       @each (event) ->
-        event.set { selected: selected }
+        event.set(selected: selected)
 
     selectAll: ->
       @each (event) ->
-        event.set { selected: true }
+        event.set(selected: true)
 
     selectNone: ->
       @each (event) ->
-        event.set { selected: false }
+        event.set(selected: false)
 
     selectCritical: ->
       events = @getCriticals()
@@ -53,7 +77,7 @@ namespace 'SensuDashboard.Collections', (exports) ->
       for event in events
         selected = true
         selected = false if events_selected.length == events.length
-        event.set { selected: selected }
+        event.set(selected: selected)
 
     selectUnknown: ->
       events = @getUnknowns()
@@ -61,7 +85,7 @@ namespace 'SensuDashboard.Collections', (exports) ->
       for event in events
         selected = true
         selected = false if events_selected.length == events.length
-        event.set { selected: selected }
+        event.set(selected: selected)
 
     selectWarning: ->
       events = @getWarnings()
@@ -69,7 +93,39 @@ namespace 'SensuDashboard.Collections', (exports) ->
       for event in events
         selected = true
         selected = false if events_selected.length == events.length
-        event.set { selected: selected }
+        event.set(selected: selected)
+
+    selectSilenced: ->
+      events = @getSilenced()
+      events_selected = @getSelectedSilenced()
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set(selected: selected)
+
+    selectSilencedClients: ->
+      events = @getSilencedClients()
+      events_selected = @getSelectedSilencedClients()
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set(selected: selected)
+
+    selectUnsilenced: ->
+      events = @getUnsilenced()
+      events_selected = @getSelectedUnsilenced()
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set(selected: selected)
+
+    selectUnsilencedClients: ->
+      events = @getUnsilencedClients()
+      events_selected = @getSelectedUnsilencedClients()
+      for event in events
+        selected = true
+        selected = false if events_selected.length == events.length
+        event.set(selected: selected)
 
     resolveSelected: (options = {}) ->
       @successCallback = options.success
@@ -82,7 +138,7 @@ namespace 'SensuDashboard.Collections', (exports) ->
             @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
       @successCallback.call(this) if @successCallback && success
 
-    silenceSelected: (options = {}) ->
+    silenceSelectedChecks: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
       success = true
@@ -93,7 +149,7 @@ namespace 'SensuDashboard.Collections', (exports) ->
             @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
       @successCallback.call(this) if @successCallback && success
 
-    unsilenceSelected: (options = {}) ->
+    unsilenceSelectedChecks: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
       success = true
@@ -101,5 +157,27 @@ namespace 'SensuDashboard.Collections', (exports) ->
         event.unsilence
           error: (model, xhr, opts) =>
             success = false
-            @errorCallback.apply(this, [model, response, opts]) if @errorCallback
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success
+
+    silenceSelectedClients: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for event in @getSelected()
+        SensuDashboard.Clients.get(event.get('client')).silence
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success
+
+    unsilenceSelectedClients: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for event in @getSelected()
+        SensuDashboard.Clients.get(event.get('client')).unsilence
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
       @successCallback.call(this) if @successCallback && success

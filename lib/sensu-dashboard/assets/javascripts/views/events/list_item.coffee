@@ -18,10 +18,9 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       super
 
     toggleSelect: ->
-      @model.set({ selected: !@model.get('selected') })
+      @model.set(selected: !@model.get('selected'))
 
     showDetails: ->
       new SensuDashboard.Views.Events.Modal
-        model: new Backbone.Model
-          event: @model
-          client: @client
+        event: @model
+        client: @client

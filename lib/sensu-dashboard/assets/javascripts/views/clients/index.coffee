@@ -18,7 +18,7 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       @render()
 
     render: ->
-      @$el.html(@template({ clients: @collection }))
+      @$el.html(@template(clients: @collection))
       @assign(@subview, '#clients_container')
       this
 

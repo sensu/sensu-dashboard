@@ -12,7 +12,7 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       'click input[type=checkbox]': 'toggleSelect'
 
     toggleSelect: ->
-      @model.set({ selected: !@model.get('selected') })
+      @model.set(selected: !@model.get('selected'))
 
     showDetails: ->
       new SensuDashboard.Views.Modal

@@ -11,8 +11,8 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
 
     initialize: ->
       @$el.on('hidden', => @remove())
-      @event = @model.get('event')
-      @client = @model.get('client')
+      @event = @options.event
+      @client = @options.client
       @listenTo(@event, 'change', @render)
       @listenTo(@event, 'destroy', @remove)
       @listenTo(@client, 'change', @render)
@@ -65,3 +65,13 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
         @event.silence()
 
     resolveCheck: (ev) ->
+      tag_name = $(ev.target).prop('tagName')
+      if tag_name == 'SPAN' || tag_name == 'I'
+        parent = $(ev.target).parent()
+      else
+        parent = $(ev.target)
+      icon = parent.find('i').first()
+      text = parent.find('span').first()
+      icon.removeClass('icon-volume-off').addClass('icon-spinner icon-spin')
+      text.html('Resolving...')
+      @event.resolve()

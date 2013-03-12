@@ -19,3 +19,7 @@ namespace 'SensuDashboard.Views', (exports) ->
       @$el.html(@template(@model || {}))
       @$el.appendTo('body')
       @$el.modal('show')
+
+    remove: ->
+      @$el.modal('hide')
+      super

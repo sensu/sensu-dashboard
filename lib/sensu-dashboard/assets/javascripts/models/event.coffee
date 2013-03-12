@@ -15,7 +15,7 @@ namespace 'SensuDashboard.Models', (exports) ->
       client_silenced: false
 
     initialize: ->
-      @set { id: @get('client')+'/'+@get('check') }
+      @set(id: @get('client')+'/'+@get('check'))
       @setOutputIfEmpty(@get('output'))
       @setStatusName(@get('status'))
       @set
@@ -39,13 +39,13 @@ namespace 'SensuDashboard.Models', (exports) ->
 
     setOutputIfEmpty: (output) ->
       if output == ''
-        @set { output: 'nil output' }
+        @set(output: 'nil output')
 
     setStatusName: (status) ->
       switch status
-        when 1 then @set { status_name: 'warning' }
-        when 2 then @set { status_name: 'critical' }
-        else @set { status_name: 'unknown' }
+        when 1 then @set(status_name: 'warning')
+        when 2 then @set(status_name: 'critical')
+        else @set(status_name: 'unknown')
 
     resolve: (options = {}) =>
       @successCallback = options.success
