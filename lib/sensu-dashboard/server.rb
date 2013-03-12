@@ -9,8 +9,8 @@ require 'sprockets'
 require 'yui/compressor'
 require 'handlebars_assets'
 
-module Sensu
-  class Dashboard < Sinatra::Base
+module Sensu::Dashboard
+  class Server < Sinatra::Base
     register Sinatra::Async
 
     configure do
