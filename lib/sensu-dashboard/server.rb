@@ -8,6 +8,7 @@ require 'uri'
 require 'sprockets'
 require 'yui/compressor'
 require 'handlebars_assets'
+
 require 'sensu-dashboard/constants'
 
 module Sensu::Dashboard
@@ -154,9 +155,30 @@ module Sensu::Dashboard
       body sass stylesheet.to_sym
     end
 
-    aget '/version' do
-      content_type 'text/plain'
-      body Sensu::Dashboard::VERSION
+    aget '/health', :provides => 'json' do
+      content_type 'application/json'
+      begin
+        $api_options[:head]['Accept'] = 'application/json'
+        http = EM::HttpRequest.new($api_url + '/info').get($api_options)
+      rescue => error
+        $logger.error('failed to query sensu /info api', {
+          :error => error
+        })
+        status 404
+        body '{"error":"could not retrieve /info from the sensu api"}'
+      end
+
+      http.errback do
+        status 404
+        body '{"error":"could not retrieve /info from the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        health = Oj.load(http.response)
+        health[:sensu_dashboard] = {:version => Sensu::Dashboard::VERSION}
+        body Oj.dump(health)
+      end
     end
 
     #
@@ -188,7 +210,7 @@ module Sensu::Dashboard
             :clients => Oj.load(multi.responses[:callback][:clients].response),
             :health  => Oj.load(multi.responses[:callback][:health].response)
           }
-          response[:health][:version] = Sensu::Dashboard::VERSION
+          response[:health][:sensu_dashboard] = {:version => Sensu::Dashboard::VERSION}
           begin
             $api_options[:head]['Accept'] = 'application/json'
             $api_options[:body] = multi.responses[:callback][:stashes].response
