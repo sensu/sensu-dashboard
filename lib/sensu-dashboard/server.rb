@@ -9,7 +9,7 @@ require 'sprockets'
 require 'yui/compressor'
 require 'handlebars_assets'
 
-require 'sensu-dashboard/constants'
+require File.dirname(__FILE__) + '/constants.rb'
 
 module Sensu::Dashboard
   class Server < Sinatra::Base
