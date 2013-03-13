@@ -8,6 +8,7 @@ require 'uri'
 require 'sprockets'
 require 'yui/compressor'
 require 'handlebars_assets'
+require 'sensu-dashboard/constants'
 
 module Sensu::Dashboard
   class Server < Sinatra::Base
@@ -153,6 +154,11 @@ module Sensu::Dashboard
       body sass stylesheet.to_sym
     end
 
+    aget '/version' do
+      content_type 'text/plain'
+      body Sensu::Dashboard::VERSION
+    end
+
     #
     # API Proxy
     #
@@ -182,6 +188,7 @@ module Sensu::Dashboard
             :clients => Oj.load(multi.responses[:callback][:clients].response),
             :health  => Oj.load(multi.responses[:callback][:health].response)
           }
+          response[:health][:version] = Sensu::Dashboard::VERSION
           begin
             $api_options[:head]['Accept'] = 'application/json'
             $api_options[:body] = multi.responses[:callback][:stashes].response

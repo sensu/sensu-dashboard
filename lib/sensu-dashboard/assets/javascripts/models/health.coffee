@@ -17,6 +17,7 @@ namespace 'SensuDashboard.Models', (exports) ->
         connected: false
       redis:
         connected: false
+      version: null
     
     initialize: ->
       @setRMQStatus   @get('rabbitmq').connected
