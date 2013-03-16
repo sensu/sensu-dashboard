@@ -27,12 +27,17 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       @events_collection = @model.get('events')
       @counts_subview = new SensuDashboard.Views.Events.Counts(model: @model)
       @list_subview = new SensuDashboard.Views.Events.List(collection: @events_collection)
+      @auto_complete = new SensuDashboard.Views.AutoCompleteField({
+        sources: [SensuDashboard.Clients, SensuDashboard.Checks]
+        results_view: new SensuDashboard.Views.AutoCompleteResults()
+      })
       @render()
 
     render: ->
       @$el.html(@template())
       @assign(@counts_subview, '#counts')
       @assign(@list_subview, '#list')
+      $('#filter').html(@auto_complete.render().el)
       return this
 
     toggleSelected: ->
