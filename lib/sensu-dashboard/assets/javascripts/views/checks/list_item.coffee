@@ -15,10 +15,9 @@ namespace 'SensuDashboard.Views.Checks', (exports) ->
       this
 
     presenter: ->
-      presented = _.extend(@model.toJSON(), {
+      _.extend(@model.toJSON(), {
         standalone: @model.get('standalone') || 'false'
       })
-      return presented
 
     toggleSelect: ->
       @model.set(selected: !@model.get('selected'))
