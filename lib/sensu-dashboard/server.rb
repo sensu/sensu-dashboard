@@ -67,7 +67,7 @@ module Sensu::Dashboard
         end
         base.setup_process
         $api_url = 'http://' + $api_settings[:host] + ':' + $api_settings[:port].to_s
-        $api_options = {:head => {}}
+        $api_options = {:head => {'Accept' => 'application/json'}}
         if $api_settings[:user] && $api_settings[:password]
           $api_options.merge!(:head => {:authorization => [$api_settings[:user], $api_settings[:password]]})
         end
@@ -193,21 +193,13 @@ module Sensu::Dashboard
     #
     aget '/all', :provides => 'json' do
       content_type 'application/json'
-      begin
-        $api_options[:head]['Accept'] = 'application/json'
-        multi = EM::MultiRequest.new
-        multi.add :events, EM::HttpRequest.new($api_url + '/events').get($api_options)
-        multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
-        multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
-        multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
-        multi.add :health, EM::HttpRequest.new($api_url + '/info').get($api_options)
-      rescue => error
-        $logger.error('failed to query the sensu api', {
-          :error => error
-        })
-        status 404
-        body '{"error":"could not retrieve /events, /clients, /checks, /info and/or /stashes from the sensu api"}'
-      end
+
+      multi = EM::MultiRequest.new
+      multi.add :events, EM::HttpRequest.new($api_url + '/events').get($api_options)
+      multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
+      multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
+      multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
+      multi.add :health, EM::HttpRequest.new($api_url + '/info').get($api_options)
 
       multi.callback do
         unless multi.responses[:errback].keys.count > 0
@@ -218,38 +210,39 @@ module Sensu::Dashboard
             :health  => Oj.load(multi.responses[:callback][:health].response)
           }
           response[:health][:sensu_dashboard] = {:version => Sensu::Dashboard::VERSION}
-          begin
-            $api_options[:head]['Accept'] = 'application/json'
-            $api_options[:body] = multi.responses[:callback][:stashes].response
-            http = EM::HttpRequest.new($api_url + '/stashes').post($api_options)
-          rescue => error
-            $logger.error('failed to query the sensu api', {
-              :error => error
-            })
-            status 404
-            body '{"error":"could not retrieve /stashes from the sensu api"}'
-          end
+
+          api_options = $api_options
+          api_options[:body] = multi.responses[:callback][:stashes].response
+
+          http = EM::HttpRequest.new($api_url + '/stashes').post(api_options)
 
           http.errback do
-            status 404
-            body '{"error":"could not retrieve /stashes from the sensu api"}'
+            error_details = {:error => 'could not retrieve /stashes from the sensu api'}
+            $logger.error('failed to query the sensu api', error_details)
+            status 500
+            body Oj.dump(error_details)
           end
 
           http.callback do
             stashes = {}
-            stashes = Oj.load(http.response).map do |path, keys|
-              { :path => path, :keys => keys }
-            end unless http.response.empty?
+            unless http.response.empty?
+              stashes = Oj.load(http.response).map do |path, keys|
+                {:path => path, :keys => keys}
+              end
+            end
             response[:stashes] = stashes
             status 200
             body Oj.dump(response)
           end
         else
-          $logger.error('sensu api returned an error', {
-            :error => multi.responses[:errback]
-          })
+          failed_requests = []
+          multi.responses[:errback].each do |route, _|
+            failed_requests << '/' + route.to_s
+          end
+          error_details = {:error => 'could not retrieve ' + failed_requests.join(', ') + ' from the sensu api'}
+          $logger.error('failed to query the sensu api', error_details)
           status 500
-          body '{"error":"sensu api returned an error while retrieving /events, /clients, /checks, /info, and/or /stashes from the sensu api"}'
+          body Oj.dump(error_details)
         end
       end
     end
@@ -257,7 +250,6 @@ module Sensu::Dashboard
     aget '/*', :provides => 'json' do |path|
       content_type 'application/json'
       begin
-        $api_options[:head]['Accept'] = 'application/json'
         http = EM::HttpRequest.new($api_url + '/' + path).get($api_options)
       rescue => error
         $logger.error('failed to query the sensu api', {
@@ -281,7 +273,6 @@ module Sensu::Dashboard
     apost '/*', :provides => 'json' do |path|
       content_type 'application/json'
       begin
-        $api_options[:head]['Accept'] = 'application/json'
         $api_options[:body] = request.body.read
         http = EM::HttpRequest.new($api_url + '/' + path).post($api_options)
       rescue => error
@@ -306,7 +297,6 @@ module Sensu::Dashboard
     aput '/*', :provides => 'json' do |path|
       content_type 'application/json'
       begin
-        $api_options[:head]['Accept'] = 'application/json'
         $api_options[:body] = request.body.read
         http = EM::HttpRequest.new($api_url + '/' + path).post($api_options)
       rescue => error
@@ -331,7 +321,6 @@ module Sensu::Dashboard
     adelete '/*', :provides => 'json' do |path|
       content_type 'application/json'
       begin
-        $api_options[:head]['Accept'] = 'application/json'
         http = EM::HttpRequest.new($api_url + '/' + path).delete($api_options)
       rescue => error
         $logger.error('failed to query the sensu api', {
