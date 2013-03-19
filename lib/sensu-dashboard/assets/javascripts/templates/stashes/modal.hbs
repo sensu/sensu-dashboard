@@ -1,0 +1,21 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 id="modal_label">
+      <span>{{id}}</span>
+    </h4>
+</div>
+<div class="modal-body">
+  <h3 class="section_title">stash data</h3>
+  {{#each keys}}
+    <div class="well">
+      <h5>{{@key}}</h5>
+      <span>{{#if this}}{{this}}{{else}}false/nil{{/if}}</span>
+    </div>
+  {{/each}}
+</div>
+<div class="modal-footer">
+  <button id="remove_stash" class="btn btn-danger">
+    <i class="icon-remove icon-white" />
+    <span>&nbsp;Remove</span>
+  </button>
+</div>
