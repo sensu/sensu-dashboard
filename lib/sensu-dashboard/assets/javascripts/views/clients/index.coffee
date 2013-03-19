@@ -10,8 +10,10 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       'click #toggle-checkboxes': 'toggleSelected'
       'click #select-all': 'selectAll'
       'click #select-none': 'selectNone'
-      'click #silence-selected': 'unsilenceSelected'
-      'click #unsilence-selected': 'unsilenceSelected'
+      'click #select-silenced': 'selectSilenced'
+      'click #select-unsilenced': 'selectUnsilenced'
+      'click #silence-selected-clients': 'silenceSelected'
+      'click #unsilence-selected-clients': 'unsilenceSelected'
 
     initialize: ->
       @subview = new exports.List(collection: @collection)
@@ -32,8 +34,10 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       @collection.selectNone()
 
     selectSilenced: ->
+      @collection.selectSilenced()
 
     selectUnsilenced: ->
+      @collection.selectUnsilenced()
 
     silenceSelected: ->
       @collection.silenceSelected()

@@ -15,8 +15,6 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       @model.set(selected: !@model.get('selected'))
 
     showDetails: ->
-      new SensuDashboard.Views.Modal
+      new SensuDashboard.Views.Clients.Modal
         name: 'clients/modal'
-        model:
-          client: @model.toJSON()
-          stashes: SensuDashboard.Stashes.toJSON()
+        model: @model
