@@ -5,7 +5,7 @@ namespace 'SensuDashboard.Collections', (exports) ->
     url: '/clients'
 
     comparator: (event) ->
-      event.get 'name'
+      event.get('name')
 
     getSelected: ->
       @where(selected: true)
@@ -16,6 +16,18 @@ namespace 'SensuDashboard.Collections', (exports) ->
       @each (client) ->
         client.set(selected: selected)
 
+    getSilenced: ->
+      @where(silenced: true)
+
+    getUnsilenced: ->
+      @where(silenced: false)
+
+    getSelectedSilenced: ->
+      @where(silenced: true, selected: true)
+
+    getSelectedUnsilenced: ->
+      @where(silenced: false, selected: true)
+
     selectAll: ->
       @each (client) ->
         client.set(selected: true)
@@ -24,11 +36,40 @@ namespace 'SensuDashboard.Collections', (exports) ->
       @each (client) ->
         client.set(selected: false)
 
-    resolveSelected: ->
-      console.log client for client in @getSelected()
+    selectSilenced: ->
+      clients = @getSilenced()
+      clients_selected = @getSelectedSilenced()
+      for client in clients
+        selected = true
+        selected = false if clients_selected.length == clients.length
+        client.set(selected: selected)
 
-    silenceSelected: ->
-      console.log client for client in @getSelected()
+    selectUnsilenced: ->
+      clients = @getUnsilenced()
+      clients_selected = @getSelectedUnsilenced()
+      for client in clients
+        selected = true
+        selected = false if clients_selected.length == clients.length
+        client.set(selected: selected)
 
-    unsilenceSelected: ->
-      console.log client for client in @getSelected()
+    silenceSelected: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for client in @getSelected()
+        client.silence
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success
+
+    unsilenceSelected: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      success = true
+      for client in @getSelected()
+        client.unsilence
+          error: (model, xhr, opts) =>
+            success = false
+            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+      @successCallback.call(this) if @successCallback && success

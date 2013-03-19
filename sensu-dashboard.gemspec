@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency('handlebars_assets')
   s.add_dependency('therubyracer')
   s.add_dependency('less')
+  s.add_dependency('sinatra', '1.3.5')
 
   s.files         = Dir.glob('{bin,lib}/**/*') + %w[sensu-dashboard.gemspec README.md CHANGELOG.md MIT-LICENSE.txt]
   s.executables   = Dir.glob('bin/**/*').map { |file| File.basename(file) }
