@@ -1,3 +1,7 @@
+gem 'thin', '1.5.0'
+gem 'sinatra', '1.3.5'
+gem 'async_sinatra', '1.0.0'
+
 require 'sensu/base'
 require 'thin'
 require 'sinatra/async'
@@ -8,6 +12,8 @@ require 'uri'
 require 'sprockets'
 require 'yui/compressor'
 require 'handlebars_assets'
+
+require File.dirname(__FILE__) + '/constants.rb'
 
 module Sensu::Dashboard
   class Server < Sinatra::Base
@@ -160,6 +166,29 @@ module Sensu::Dashboard
       body sass stylesheet.to_sym
     end
 
+    aget '/health', :provides => 'json' do
+      content_type 'application/json'
+
+      multi = EM::MultiRequest.new
+      multi.add :events, EM::HttpRequest.new($api_url + '/events').get($api_options)
+      multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
+      multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
+      multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
+      multi.add :health, EM::HttpRequest.new($api_url + '/info').get($api_options)
+
+      http.errback do
+        status 404
+        body '{"error":"could not retrieve /info from the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        health = Oj.load(http.response)
+        health[:sensu_dashboard] = {:version => Sensu::Dashboard::VERSION}
+        body Oj.dump(health)
+      end
+    end
+
     #
     # API Proxy
     #
@@ -181,6 +210,7 @@ module Sensu::Dashboard
             :clients => Oj.load(multi.responses[:callback][:clients].response),
             :health  => Oj.load(multi.responses[:callback][:health].response)
           }
+          response[:health][:sensu_dashboard] = {:version => Sensu::Dashboard::VERSION}
 
           api_options = $api_options
           api_options[:body] = multi.responses[:callback][:stashes].response

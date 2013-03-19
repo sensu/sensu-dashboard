@@ -1,7 +1,14 @@
 <td class="select">
   <input type="checkbox" {{selected selected}}/>
 </td>
-<td class="client_id">{{name}}</td>
+<td class="client_id">
+  {{#if silenced}}
+    <i class="icon-volume-off icon-white unsilenced"/>
+  {{else}}
+    <i class="icon-volume-up icon-white" />
+  {{/if}}
+  {{name}}
+</td>
 <td class="public_ip">{{address}}</td>
 <td class="timestamp">{{timestamp}}</td>
 <td class="subscriptions">{{subscriptions}}</td>
