@@ -1,3 +1,7 @@
+gem 'thin', '1.5.0'
+gem 'sinatra', '1.3.5'
+gem 'async_sinatra', '1.0.0'
+
 require 'sensu/base'
 require 'thin'
 require 'sinatra/async'
