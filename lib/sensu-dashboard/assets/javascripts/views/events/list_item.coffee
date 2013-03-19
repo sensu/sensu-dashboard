@@ -13,7 +13,6 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
 
     initialize: ->
       @client = SensuDashboard.Clients.get(@model.get('client'))
-      @stashes = SensuDashboard.Stashes
       @listenTo(@client, 'remove', @remove)
       super
 
