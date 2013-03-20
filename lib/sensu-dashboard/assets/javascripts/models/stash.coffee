@@ -4,7 +4,6 @@ namespace 'SensuDashboard.Models', (exports) ->
 
     defaults:
       path: 'silence'
-      keys: []
       selected: false
 
     idAttribute: 'path'
@@ -16,4 +15,5 @@ namespace 'SensuDashboard.Models', (exports) ->
         success: (model, response, opts) =>
           @successCallback.apply(this, [model, response, opts]) if @successCallback
         error: (model, xhr, opts) =>
-	  @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+          @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+

@@ -28,12 +28,12 @@ namespace 'SensuDashboard.Models', (exports) ->
       @successCallback = options.success
       @errorCallback = options.error
       stash = new SensuDashboard.Models.Stash
-        id: @get('silence_path')
         path: @get('silence_path')
-        keys: [ new Date().toUTCString() ]
+        timestamp: Math.round(new Date().getTime() / 1000)
       stash.url = SensuDashboard.Stashes.url+'/'+@get('silence_path')
       stash.save {},
         success: (model, response, opts) =>
+          delete model.attributes.issued
           SensuDashboard.Stashes.add(model)
           @successCallback.apply(this, [model, response, opts]) if @successCallback
         error: (model, xhr, opts) =>
