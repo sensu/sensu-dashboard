@@ -225,10 +225,10 @@ module Sensu::Dashboard
           end
 
           http.callback do
-            stashes = {}
+            stashes = []
             unless http.response.empty?
               stashes = Oj.load(http.response).map do |path, keys|
-                {:path => path, :keys => keys}
+                {:path => path}.merge(keys)
               end
             end
             response[:stashes] = stashes
