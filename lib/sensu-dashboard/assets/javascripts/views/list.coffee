@@ -15,7 +15,11 @@ namespace 'SensuDashboard.Views', (exports) ->
 
     initialize: ->
       @listenTo(@collection, 'reset', @render)
-      @listenTo(@collection, 'add', @renderItem)
+      @listenTo(@collection, 'add', @render)
+
+    addItem: (item) ->
+      @renderItem(item)
+      @collection.sort()
 
     renderItem: (item) ->
       item_view = @itemView(item)

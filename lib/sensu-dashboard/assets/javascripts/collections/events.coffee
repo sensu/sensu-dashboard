@@ -130,54 +130,49 @@ namespace 'SensuDashboard.Collections', (exports) ->
     resolveSelected: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      success = true
       for event in @getSelected()
         event.resolve
+          success: (model, response, opts) =>
+            @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
-            success = false
-            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
-      @successCallback.call(this) if @successCallback && success
+            @errorCallback.call(this, model) if @errorCallback
 
     silenceSelectedChecks: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      success = true
       for event in @getSelected()
         event.silence
+          success: (model, response, opts) =>
+            @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
-            success = false
-            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
-      @successCallback.call(this) if @successCallback && success
+            @errorCallback.call(this, model) if @errorCallback
 
     unsilenceSelectedChecks: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      success = true
       for event in @getSelected()
         event.unsilence
+          success: (model, response, opts) =>
+            @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
-            success = false
-            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
-      @successCallback.call(this) if @successCallback && success
+            @errorCallback.call(this, model) if @errorCallback
 
     silenceSelectedClients: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      success = true
       for event in @getSelected()
         SensuDashboard.Clients.get(event.get('client')).silence
+          success: (model, response, opts) =>
+            @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
-            success = false
-            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
-      @successCallback.call(this) if @successCallback && success
+            @errorCallback.call(this, model) if @errorCallback
 
     unsilenceSelectedClients: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      success = true
       for event in @getSelected()
         SensuDashboard.Clients.get(event.get('client')).unsilence
+          success: (model, response, opts) =>
+            @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
-            success = false
-            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
-      @successCallback.call(this) if @successCallback && success
+            @errorCallback.call(this, model) if @errorCallback

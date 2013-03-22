@@ -63,44 +63,77 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       @events_collection.selectSilenced()
 
     selectUnsilencedChecks: ->
-      @events_collection.selectUnsilenced()
+      events_selected = @events_collection.getSelected().length
+      @events_collection.selectUnsilenced
+        success: ->
+          toastr.success('Unsilenced ' + events_selected + ' events'
+            , 'Success!'
+            , { positionClass: 'toast-bottom-right' })
 
     resolveSelected: ->
       @events_collection.resolveSelected
-        success: ->
-          console.log 'resolved events' # TODO: show this visually
-        error: (model, xhr, opts) ->
-          console.log 'failed to resolve event'
-          console.log model
+        success: (model) ->
+          event_name = model.get('client') + '_' + model.get('check')
+          toastr.success('Resolved event ' + event_name + '.'
+            , 'Success!'
+            , { positionClass: 'toast-bottom-right' })
+        error: (model) ->
+          event_name = model.get('client') + '_' + model.get('check')
+          toastr.error('Error resolving event ' + event_name + '. Is Sensu API running?'
+            , 'Resolving Error'
+            , { positionClass: 'toast-bottom-right' })
+
 
     silenceSelectedClients: ->
       @events_collection.silenceSelectedClients
-        success: ->
-          console.log 'silenced clients' # TODO: show this visually
+        success: (model) ->
+          client_name = model.get('name')
+          toastr.success('Silenced client ' + client_name + '.'
+            , 'Success!'
+            , { positionClass: 'toast-bottom-right' })
         error: (model, xhr, opts) ->
-          console.log 'failed to silence clients'
-          console.log model
+          client_name = model.get('name')
+          toastr.error('Error silencing client ' + client_name + '.'
+            , 'Silencing Error!'
+            , { positionClass: 'toast-bottom-right' })
 
     silenceSelectedChecks: ->
       @events_collection.silenceSelectedChecks
-        success: ->
-          console.log 'silenced checks' # TODO: show this visually
-        error: (model, xhr, opts) ->
-          console.log 'failed to silence checks'
-          console.log model
+        success: (model) ->
+          check_name = model.get('check')
+          toastr.success('Silenced check ' + check_name + '.'
+            , 'Success!'
+            , { positionClass: 'toast-bottom-right' })
+        error: (model) ->
+          check_name = model.get('check')
+          toastr.error('Error silencing check ' + check_name + '.'
+            , 'Silencing Error!'
+            , { positionClass: 'toast-bottom-right' })
 
     unsilenceSelectedClients: ->
       @events_collection.unsilenceSelectedClients
-        success:
-          console.log 'unsilenced clients' # TODO: show this visually
-        error: (model, xhr, opts) ->
-          console.log 'failed to unsilence clients'
-          console.log model
+        success: (model) ->
+          client_name = model.get('name')
+          toastr.success('Un-silenced client ' + client_name + '.'
+            , 'Success!'
+            , { positionClass: 'toast-bottom-right' })
+        error: (model) ->
+          client_name = model.get('name')
+          toastr.error('Error un-silencing client ' + client_name + '. ' +
+            'The client may already be un-sileneced or Sensu API is down.'
+            , 'Un-silencing Error!'
+            , { positionClass: 'toast-bottom-right' })
 
     unsilenceSelectedChecks: ->
       @events_collection.unsilenceSelectedChecks
-        success:
-          console.log 'unsilenced checks' # TODO: show this visually
-        error: (model, xhr, opts) ->
-          console.log 'failed to unsilence check'
-          console.log model
+        success: (model) ->
+          check_name = model.get('check')
+          toastr.success('Un-silenced check ' + check_name + '.'
+            , 'Success!'
+            , { positionClass: 'toast-bottom-right' })
+        error: (model) ->
+          check_name = model.get('check')
+          toastr.error('Error un-silencing check ' + check_name + '. ' +
+            'The check may already be un-sileneced or Sensu API is down.'
+            , 'Un-silencing Error!'
+            , { positionClass: 'toast-bottom-right' })
