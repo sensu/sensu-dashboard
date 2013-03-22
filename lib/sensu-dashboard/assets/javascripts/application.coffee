@@ -10,12 +10,12 @@ namespace 'SensuDashboard', (exports) ->
           @boot()
 
         error: =>
-          console.log("Bootstrap Error")
-          $("#initial-loading-indicator").remove()
+          new SensuDashboard.Views.Error
+          toastr.error("Error during bootstrap. Is Sensu API running?"
+            , "Bootstrap Error"
+            , { positionClass: 'toast-bottom-right' })
 
     boot: ->
-      $("#initial-loading-indicator").remove()
-
       Backbone.history.start()
 
   exports.App = new Application() # Initialize app

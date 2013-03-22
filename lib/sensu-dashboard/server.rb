@@ -177,7 +177,7 @@ module Sensu::Dashboard
       multi.add :health, EM::HttpRequest.new($api_url + '/info').get($api_options)
 
       http.errback do
-        status 404
+        status 502
         body '{"error":"could not retrieve /info from the sensu api"}'
       end
 
@@ -220,7 +220,7 @@ module Sensu::Dashboard
           http.errback do
             error_details = {:error => 'could not retrieve /stashes from the sensu api'}
             $logger.error('failed to query the sensu api', error_details)
-            status 500
+            status 502
             body Oj.dump(error_details)
           end
 
@@ -242,7 +242,7 @@ module Sensu::Dashboard
           end
           error_details = {:error => 'could not retrieve ' + failed_requests.join(', ') + ' from the sensu api'}
           $logger.error('failed to query the sensu api', error_details)
-          status 500
+          status 502
           body Oj.dump(error_details)
         end
       end
@@ -261,7 +261,7 @@ module Sensu::Dashboard
       end
 
       http.errback do
-        status 404
+        status 502
         body '{"error":"could not retrieve /'+path+' from the sensu api"}'
       end
 
@@ -285,7 +285,7 @@ module Sensu::Dashboard
       end
 
       http.errback do
-        status 404
+        status 502
         body '{"error":"could not retrieve /'+path+' from the sensu api"}'
       end
 
@@ -309,7 +309,7 @@ module Sensu::Dashboard
       end
 
       http.errback do
-        status 404
+        status 502
         body '{"error":"could not retrieve /'+path+' from the sensu api"}'
       end
 
@@ -332,7 +332,7 @@ module Sensu::Dashboard
       end
 
       http.errback do
-        status 404
+        status 502
         body '{"error":"could not delete /'+path+' from the sensu api"}'
       end
 

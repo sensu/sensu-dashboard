@@ -55,21 +55,19 @@ namespace 'SensuDashboard.Collections', (exports) ->
     silenceSelected: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      success = true
       for client in @getSelected()
         client.silence
+          success: (model, response, opts) =>
+            @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
-            success = false
-            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
-      @successCallback.call(this) if @successCallback && success
+            @errorCallback.call(this, model) if @errorCallback
 
     unsilenceSelected: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      success = true
       for client in @getSelected()
         client.unsilence
+          success: (model, xhr, opts) =>
+            @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
-            success = false
-            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
-      @successCallback.call(this) if @successCallback && success
+            @errorCallback.call(this, model) if @errorCallback
