@@ -169,12 +169,7 @@ module Sensu::Dashboard
     aget '/health', :provides => 'json' do
       content_type 'application/json'
 
-      multi = EM::MultiRequest.new
-      multi.add :events, EM::HttpRequest.new($api_url + '/events').get($api_options)
-      multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
-      multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
-      multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
-      multi.add :health, EM::HttpRequest.new($api_url + '/info').get($api_options)
+      http = EM::HttpRequest.new($api_url + '/info').get($api_options)
 
       http.errback do
         status 502
