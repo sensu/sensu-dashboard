@@ -7,6 +7,7 @@ namespace 'SensuDashboard', (exports) ->
       "events":  "events"
       "stashes": "stashes"
       "clients": "clients"
+      "checks":  "checks"
       "health":  "health"
 
     events: ->
@@ -17,6 +18,9 @@ namespace 'SensuDashboard', (exports) ->
 
     clients: ->
       new SensuDashboard.Views.Clients.Index(collection: SensuDashboard.Clients)
+
+    checks: ->
+      new SensuDashboard.Views.Checks.Index(collection: SensuDashboard.Checks)
 
     health: ->
       new SensuDashboard.Views.Health.Index(model: SensuDashboard.Health)
