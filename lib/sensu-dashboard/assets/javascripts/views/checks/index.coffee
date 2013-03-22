@@ -6,15 +6,6 @@ namespace 'SensuDashboard.Views.Checks', (exports) ->
 
     name: 'checks/index'
 
-    events:
-      'click #toggle-checkboxes': 'toggleSelected'
-      'click #select-all': 'selectAll'
-      'click #select-none': 'selectNone'
-      'click #select-silenced': 'selectSilenced'
-      'click #select-unsilenced': 'selectUnsilenced'
-      'click #silence-selected': 'silenceSelected'
-      'click #unsilence-selected': 'unsilenceSelected'
-
     initialize: ->
       @subview = new exports.List(collection: @collection)
       @render()
@@ -23,22 +14,3 @@ namespace 'SensuDashboard.Views.Checks', (exports) ->
       @$el.html(@template(checks: @collection))
       @assign(@subview, '#checks_container')
       this
-
-    toggleSelected: ->
-      @collection.toggleSelected()
-
-    selectAll: ->
-      @collection.selectAll()
-
-    selectNone: ->
-      @collection.selectNone()
-
-    selectSilenced: ->
-      @collection.selectSilenced()
-
-    selectUnsilenced: ->
-      @collection.selectUnsilenced()
-
-    silenceSelected: ->
-
-    unsilenceSelected: ->

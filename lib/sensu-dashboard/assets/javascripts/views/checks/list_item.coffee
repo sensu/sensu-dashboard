@@ -7,9 +7,6 @@ namespace 'SensuDashboard.Views.Checks', (exports) ->
     className: ->
       @model.get('name')
 
-    events:
-      'click input[type=checkbox]': 'toggleSelect'
-
     render: ->
       @$el.html(@template(@presenter()))
       this
@@ -18,6 +15,3 @@ namespace 'SensuDashboard.Views.Checks', (exports) ->
       _.extend(@model.toJSON(), {
         standalone: @model.get('standalone') || 'false'
       })
-
-    toggleSelect: ->
-      @model.set(selected: !@model.get('selected'))
