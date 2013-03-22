@@ -1,6 +1,6 @@
 namespace 'SensuDashboard.Collections', (exports) ->
 
-  class exports.Clients extends Backbone.Collection
+  class exports.Clients extends SensuDashboard.Collections.Base
     model: SensuDashboard.Models.Client,
     url: '/clients'
 

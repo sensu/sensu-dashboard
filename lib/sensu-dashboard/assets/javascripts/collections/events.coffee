@@ -1,6 +1,6 @@
 namespace 'SensuDashboard.Collections', (exports) ->
 
-  class exports.Events extends Backbone.Collection
+  class exports.Events extends SensuDashboard.Collections.Base
     model: SensuDashboard.Models.Event,
     url: '/events'
 

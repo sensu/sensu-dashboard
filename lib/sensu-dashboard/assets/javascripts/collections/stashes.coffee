@@ -1,6 +1,6 @@
 namespace 'SensuDashboard.Collections', (exports) ->
 
-  class exports.Stashes extends Backbone.Collection
+  class exports.Stashes extends SensuDashboard.Collections.Base
     model: SensuDashboard.Models.Stash,
     url: '/stashes'
 
