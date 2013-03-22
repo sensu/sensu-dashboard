@@ -37,9 +37,6 @@ html(lang='en')
               a(href='#checks') Checks
             li#nav_health
               a(href='#health') Server Health
-            li#nav_settings
-              a(href='#settingsModal' data-toggle='modal')
-                i.icon-cog.icon-white
     .container-fluid#content
       == yield
     footer
@@ -48,34 +45,5 @@ html(lang='en')
         ' Sonian, Inc.
       ' 2013
       a(href='https://github.com/sonian/sensu-dashboard/blob/master/MIT-LICENSE.txt') License (MIT)
-
-    .modal.hide.fade#settingsModal
-      .modal-header
-        button.close(type='button' data-dismiss='modal') x
-        h3 Settings
-      .modal-body
-        form.form-horizontal
-          fieldset
-            .control-group
-              label.control-label(for='columnsList') Event Columns
-              .controls
-                select#eventColumnsList.span3(multiple='multiple')
-                div(style='margin-top: 7px')
-                  button.btn.btn-info#eventColumnBtnUp(type='button')
-                    i.icon-arrow-up.icon-white
-                  button.btn.btn-info#eventColumnBtnDown(type='button' style='margin-left: 4px; margin-right: 4px;')
-                    i.icon-arrow-down.icon-white
-                  button.btn.btn-danger#eventColumnBtnRemove(type='button') Remove
-          fieldset
-            .control-group
-              .controls
-                .input-append
-                  input.span3#eventColumnName(size='16' type='text')
-                  button.btn.btn-success#eventColumnBtnAdd(type='button') Add
-                p.help-block
-
-      .modal-footer
-        a.btn(href='#' data-dismiss='modal') Close
-        a.btn.btn-primary(href='#') Save changes
 
 script(src='assets/app.js')
