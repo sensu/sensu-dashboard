@@ -92,7 +92,6 @@ input#clients_filter
   -o-transition: border linear .2s, box-shadow linear .2s
   transition: border linear .2s, box-shadow linear .2s
   display: inline-block
-  height: 40px
   padding: 2px 6px
   -webkit-border-radius: 4px
   -moz-border-radius: 4px
@@ -143,6 +142,13 @@ input#clients_filter
       i.icon-remove-sign:hover
         color: #ccc
 
+      i.close
+        font-size: 12px
+        color: #fff
+        opacity: 0.8
+        float: none
+        text-shadow: 0 -1px 0 #004e87, 0 1px 0 #0059b0
+
     li.tokens
 
       span.copy
@@ -160,6 +166,7 @@ input#clients_filter
         outline: none
         background: transparent
         width: auto
+        height: 20px
         min-width: 200px
         -webkit-user-select: text
         font-size: 14px
