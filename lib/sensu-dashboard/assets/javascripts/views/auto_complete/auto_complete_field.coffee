@@ -17,8 +17,6 @@ namespace 'SensuDashboard.Views', (exports) ->
       @resultsView.setDelegate(this)
       @resultsView.on("item:selected", @tokenize, this)
 
-      @delegate = @options.delegate
-
       this
 
     render: ->
@@ -44,12 +42,17 @@ namespace 'SensuDashboard.Views', (exports) ->
       token = {object: object, node: node.el}
       @el.insertBefore(token.node, @container)
       @tokens.push(token)
+      @delegate.filtersUpdated()
 
     tokenize: ->
       object = @resultsView.AutoCompleteTokenFieldItemSelected()
       @inputTester.focus()
       @insertToken(object)
       @textContent.innerHTML = @inputTester.value = ""
+
+    deleteTokenAtIndex: (index, deselect) ->
+      super(index, deselect)
+      @delegate.filtersUpdated()
 
     _filterCollection: (query) ->
       results = @matcher.query(query)

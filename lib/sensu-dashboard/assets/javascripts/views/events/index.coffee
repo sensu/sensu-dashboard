@@ -26,10 +26,13 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
     initialize: ->
       @events_collection = @model.get('events')
       @counts_subview = new SensuDashboard.Views.Events.Counts(model: @model)
-      @list_subview = new SensuDashboard.Views.Events.List(collection: @events_collection)
       @auto_complete = new SensuDashboard.Views.AutoCompleteField({
         sources: [SensuDashboard.Clients, SensuDashboard.Checks]
         results_view: new SensuDashboard.Views.AutoCompleteResults()
+      })
+      @list_subview = new SensuDashboard.Views.Events.List({
+        collection: @events_collection
+        autocomplete_view: @auto_complete
       })
       @render()
 
