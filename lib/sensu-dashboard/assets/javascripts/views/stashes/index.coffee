@@ -14,6 +14,7 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
 
     initialize: ->
       @autocomplete_view = new SensuDashboard.Views.AutoCompleteField()
+      @counts_subview = new SensuDashboard.Views.Stashes.Counts(collection: @collection)
       @stashes_view = new exports.List({
         collection: @collection
         autocomplete_view: @autocomplete_view
@@ -22,6 +23,7 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
 
     render: ->
       @$el.html(@template(stashes: @collection))
+      @assign(@counts_subview, '#counts')
       @assign(@stashes_view, '#stashes_container')
       $('#filter').html(@autocomplete_view.render().el)
       this
