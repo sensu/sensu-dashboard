@@ -105,18 +105,7 @@ namespace 'SensuDashboard.Views', (exports) ->
         $(@delegate.inputTester).popover("hide")
         @visible = false
 
-    #
-    # Delegate
-    #
-
-    AutoCompleteTokenFieldEmpty: ->
-      @_hide()
-
-    AutoCompleteTokenFieldBlur: ->
-      # ..
-
-    AutoCompleteTokenFieldResults: ->
-      @renderCollection()
+    _show: ->
       unless @visible
         $(@delegate.inputTester).popover({
           html: true
@@ -125,7 +114,21 @@ namespace 'SensuDashboard.Views', (exports) ->
         }).popover("show")
         @setElement(@delegate.$el.find("div.popover-content ul.auto-complete-results")[0])
         @visible = true
+      @renderCollection()
 
-    AutoCompleteTokenFieldItemSelected: ->
+    #
+    # Delegate
+    #
+
+    autoCompleteTokenFieldEmpty: ->
+      @_hide()
+
+    autoCompleteTokenFieldBlur: ->
+      @_show()
+
+    autoCompleteTokenFieldResults: ->
+      @_show()
+
+    autoCompleteTokenFieldItemSelected: ->
       @_hide()
       @selectedObject()
