@@ -29,10 +29,6 @@ namespace 'SensuDashboard', (exports) ->
 
             @successCallback.call(this)
           error: (jqXHR, textStatus, errorThrown) ->
-            console.log jqXHR.status+' '+jqXHR.statusText
-            console.log errorThrown
-            console.log textStatus
-            console.log jqXHR
             @error()
 
       catch error

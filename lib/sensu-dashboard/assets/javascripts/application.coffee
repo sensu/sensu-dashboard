@@ -3,6 +3,8 @@ namespace 'SensuDashboard', (exports) ->
   class Application
 
     constructor: ->
+      $.ajaxSetup(cache: false)
+
       SensuDashboard.Routes = new SensuDashboard.Router
 
       bootstrapper = new SensuDashboard.Bootstrapper
