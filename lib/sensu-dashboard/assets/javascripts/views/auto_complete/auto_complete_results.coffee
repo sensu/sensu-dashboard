@@ -62,7 +62,6 @@ namespace 'SensuDashboard.Views', (exports) ->
 
     selectAtIndex: (index) ->
       if 0 <= index < @items.length
-        console.log(@$el.find(".selected"))
         @$el.find(".selected").removeClass("selected")
         item = @items[index]
         $(item).addClass("selected")

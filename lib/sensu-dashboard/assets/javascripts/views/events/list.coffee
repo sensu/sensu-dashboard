@@ -15,7 +15,6 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
     resolvedCollection: ->
       resolved = @collection.chain()
       for token in @autocomplete_view.tokens
-        console.log token
         model = token.object
         resolved = if model instanceof SensuDashboard.Models.Check
           resolved.filter (record) ->
@@ -25,9 +24,6 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
             record.get('client') == model.get('name')
         else if _.isString(model)
           resolved.filter (record) ->
-            console.log record.get('output')
-            console.log model
-            console.log liquidMetal.score(record.get('output'), model)
             liquidMetal.score(record.get('output'), model) > 0.7
 
       resolved
