@@ -16,12 +16,17 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       'click #unsilence-selected-clients': 'unsilenceSelected'
 
     initialize: ->
-      @subview = new exports.List(collection: @collection)
+      @autocomplete_view = new SensuDashboard.Views.AutoCompleteField()
+      @subview = new exports.List({
+        collection: @collection
+        autocomplete_view: @autocomplete_view
+      })
       @render()
 
     render: ->
       @$el.html(@template(clients: @collection))
       @assign(@subview, '#clients_container')
+      $('#filter').html(@autocomplete_view.render().el)
       this
 
     toggleSelected: ->

@@ -13,12 +13,17 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
       'click #remove-selected': 'removeSelected'
 
     initialize: ->
-      @stashes_view = new exports.List(collection: @collection)
+      @autocomplete_view = new SensuDashboard.Views.AutoCompleteField()
+      @stashes_view = new exports.List({
+        collection: @collection
+        autocomplete_view: @autocomplete_view
+      })
       @render()
 
     render: ->
       @$el.html(@template(stashes: @collection))
       @assign(@stashes_view, '#stashes_container')
+      $('#filter').html(@autocomplete_view.render().el)
       this
 
     toggleSelected: ->

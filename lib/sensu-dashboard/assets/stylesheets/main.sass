@@ -76,10 +76,158 @@ input#clients_filter
   clear: both
   width: 100%
 
-input#checks_filter
-  margin-top: 8px
-  clear: both
+#filter
+  border: 1px solid #cccccc
+  float: left
+  margin: 10px 0 10px 0
   width: 100%
+  box-sizing: border-box
+  background-color: #ffffff
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075)
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075)
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075)
+  -webkit-transition: border linear .2s, box-shadow linear .2s
+  -moz-transition: border linear .2s, box-shadow linear .2s
+  -o-transition: border linear .2s, box-shadow linear .2s
+  transition: border linear .2s, box-shadow linear .2s
+  display: inline-block
+  padding: 2px 6px
+  -webkit-border-radius: 4px
+  -moz-border-radius: 4px
+  -o-border-radius: 4px
+  -ms-border-radius: 4px
+  -khtml-border-radius: 4px
+  border-radius: 4px
+  vertical-align: middle
+
+  ul.token-field
+    list-style-type: none
+    margin: 0
+    padding: 0
+
+    li
+      float: left
+      margin: 5px 3px
+      padding: 2px 7px
+      display: inline-block
+      position: relative
+
+    li.token
+      color: #FFF
+      text-shadow: 0 -1px 0 #004e87, 0 1px 0 #0059b0
+      text-decoration: none
+      font-size: 12px
+      padding: 2px 4px
+      border: 1px solid #0f467f
+      border-bottom-color: #0f467f
+      cursor: pointer
+      background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4c9bea), color-stop(100%, #1460ac))
+      background-image: -webkit-linear-gradient(#4c9bea, #1460ac)
+      background-image: -moz-linear-gradient(#4c9bea, #1460ac)
+      background-image: -o-linear-gradient(#4c9bea, #1460ac)
+      background-image: -ms-linear-gradient(#4c9bea, #1460ac)
+      background-image: linear-gradient(#4c9bea, #1460ac)
+      -moz-box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
+      -webkit-box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
+      -o-box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
+      box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
+      -moz-border-radius: 4px
+      -webkit-border-radius: 4px
+      -o-border-radius: 4px
+      -ms-border-radius: 4px
+      -khtml-border-radius: 4px
+      border-radius: 4px
+
+      i.icon-remove-sign:hover
+        color: #ccc
+
+      i.close
+        font-size: 12px
+        color: #fff
+        opacity: 0.8
+        float: none
+        text-shadow: 0 -1px 0 #004e87, 0 1px 0 #0059b0
+
+    li.token.selected
+      text-shadow: 0 -1px 0 #3d3d3d, 0 1px 0 #484848
+      border: 1px solid #3c3c3c
+      border-bottom-color: #3c3c3c
+      background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #8c8c8c), color-stop(100%, #525252))
+      background-image: -webkit-linear-gradient(#8c8c8c, #525252)
+      background-image: -moz-linear-gradient(#8c8c8c, #525252)
+      background-image: -o-linear-gradient(#8c8c8c, #525252)
+      background-image: -ms-linear-gradient(#8c8c8c, #525252)
+      background-image: linear-gradient(#8c8c8c, #525252)
+      -moz-box-shadow: inset 0 1px 0 #aaaaaa, 0px 1px 5px rgba(0, 0, 0, 0.55)
+      -webkit-box-shadow: inset 0 1px 0 #aaaaaa, 0px 1px 5px rgba(0, 0, 0, 0.55)
+      -o-box-shadow: inset 0 1px 0 #aaaaaa, 0px 1px 5px rgba(0, 0, 0, 0.55)
+      box-shadow: inset 0 1px 0 #aaaaaa, 0px 1px 5px rgba(0, 0, 0, 0.55)
+
+      i.close
+        text-shadow: 0 -1px 0 #3d3d3d, 0 1px 0 #484848
+
+    li.tokens
+
+      span.copy
+        visibility: hidden
+        height: 20px
+        float: left
+
+      input
+        position: absolute
+        left: 0
+        right: 0
+        top: 0
+        bottom: 0
+        padding: 0
+        margin: 2px 0 0 0
+        border: none
+        outline: none
+        background: transparent
+        width: auto
+        height: 20px
+        min-width: 200px
+        -webkit-user-select: text
+        font-size: 14px
+        line-height: 20px
+        color: #555555
+
+      ul.auto-complete-results
+        padding: 0
+        margin: 0
+
+        li
+          float: none
+          display: block
+
+        li.selected
+          color: #fff
+          text-shadow: 0 -1px 0 #004e87, 0 1px 0 #0059b0
+          text-decoration: none
+          padding: 4px 6px
+          border: 1px solid #0f467f
+          border-bottom-color: #0f467f
+          cursor: pointer
+          background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4c9bea), color-stop(100%, #1460ac))
+          background-image: -webkit-linear-gradient(#4c9bea, #1460ac)
+          background-image: -moz-linear-gradient(#4c9bea, #1460ac)
+          background-image: -o-linear-gradient(#4c9bea, #1460ac)
+          background-image: -ms-linear-gradient(#4c9bea, #1460ac)
+          background-image: linear-gradient(#4c9bea, #1460ac)
+          -moz-box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
+          -webkit-box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
+          -o-box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
+          box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
+          -moz-border-radius: 4px
+          -webkit-border-radius: 4px
+          -o-border-radius: 4px
+          -ms-border-radius: 4px
+          -khtml-border-radius: 4px
+          border-radius: 4px
+
+div.auto-complete-results
+  li
+    list-style-type: none
 
 table.sensu-table
   border-collapse: collapse
