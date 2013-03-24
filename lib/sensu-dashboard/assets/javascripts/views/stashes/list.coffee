@@ -24,8 +24,10 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
       resolved
 
     renderCollection: ->
-      @resolvedCollection().each (event) =>
-        @renderItem(event)
+      super(_(@resolvedCollection().map().value()))
+
+    renderEmpty: ->
+      super(_(@resolvedCollection().map().value()))
 
     #
     # Autocomplete delegate

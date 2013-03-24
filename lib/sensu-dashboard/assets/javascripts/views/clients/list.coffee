@@ -35,8 +35,10 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       !(result is undefined)
 
     renderCollection: ->
-      @resolvedCollection().each (event) =>
-        @renderItem(event)
+      super(_(@resolvedCollection().map().value()))
+
+    renderEmpty: ->
+      super(_(@resolvedCollection().map().value()))
 
     #
     # Autocomplete delegate
