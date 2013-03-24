@@ -82,8 +82,6 @@ namespace 'SensuDashboard.Views', (exports) ->
         e.preventDefault()
         return
 
-      super
-
     _submit: ->
       @trigger("submit")
 
