@@ -1,6 +1,6 @@
 namespace 'SensuDashboard.Models', (exports) ->
 
-  class exports.Health extends Backbone.Model
+  class exports.Info extends Backbone.Model
 
     defaults:
       sensu:
@@ -21,7 +21,7 @@ namespace 'SensuDashboard.Models', (exports) ->
         version: null
         poll_frequency: 10
 
-    url: '/health'
+    url: '/info'
 
     initialize: ->
       @setRMQStatus   @get('rabbitmq').connected

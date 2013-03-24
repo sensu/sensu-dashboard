@@ -1,10 +1,10 @@
-namespace 'SensuDashboard.Views.Health', (exports) ->
+namespace 'SensuDashboard.Views.Info', (exports) ->
 
   class exports.Index extends SensuDashboard.Views.Base
 
     el: $('#main')
 
-    name: 'health/index'
+    name: 'info/index'
 
     initialize: ->
       @listenTo(@model, 'destroy', @render)

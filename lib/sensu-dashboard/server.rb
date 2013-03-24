@@ -172,7 +172,7 @@ module Sensu::Dashboard
       body sass stylesheet.to_sym
     end
 
-    aget '/health', :provides => 'json' do
+    aget '/info', :provides => 'json' do
       content_type 'application/json'
 
       http = EM::HttpRequest.new($api_url + '/info').get($api_options)
@@ -184,12 +184,12 @@ module Sensu::Dashboard
 
       http.callback do
         status http.response_header.status
-        health = Oj.load(http.response)
-        health[:sensu_dashboard] = {
+        info = Oj.load(http.response)
+        info[:sensu_dashboard] = {
           :version => Sensu::Dashboard::VERSION,
           :poll_frequency => $dashboard_settings[:poll_frequency]
         }
-        body Oj.dump(health)
+        body Oj.dump(info)
       end
     end
 
@@ -204,7 +204,7 @@ module Sensu::Dashboard
       multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
       multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
       multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
-      multi.add :health, EM::HttpRequest.new($api_url + '/info').get($api_options)
+      multi.add :info, EM::HttpRequest.new($api_url + '/info').get($api_options)
 
       multi.callback do
         unless multi.responses[:errback].keys.count > 0
@@ -212,9 +212,9 @@ module Sensu::Dashboard
             :events  => Oj.load(multi.responses[:callback][:events].response),
             :checks  => Oj.load(multi.responses[:callback][:checks].response),
             :clients => Oj.load(multi.responses[:callback][:clients].response),
-            :health  => Oj.load(multi.responses[:callback][:health].response)
+            :info    => Oj.load(multi.responses[:callback][:info].response)
           }
-          response[:health][:sensu_dashboard] = {
+          response[:info][:sensu_dashboard] = {
             :version => Sensu::Dashboard::VERSION,
             :poll_frequency => $dashboard_settings[:poll_frequency]
           }
