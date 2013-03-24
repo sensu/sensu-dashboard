@@ -6,6 +6,7 @@ namespace 'SensuDashboard.Views', (exports) ->
     className: "token-field"
     placeholder: ""
     minInputValue: 2
+    maxResults: 9
     popoverVisible: false
 
     initialize: ->
@@ -56,6 +57,7 @@ namespace 'SensuDashboard.Views', (exports) ->
 
     _filterCollection: (query) ->
       results = @matcher.query(query)
+      results = _.first(results, @maxResults)
       results.push(query)
       results
 
