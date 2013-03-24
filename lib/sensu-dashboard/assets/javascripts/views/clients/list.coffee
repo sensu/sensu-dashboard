@@ -30,7 +30,7 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       result = _.detect args, (options) =>
         value = record.get(options.key)
         score = liquidMetal.score(value, q)
-        score > (options.threshold || 0.7)
+        score >= (options.threshold || 0.7)
 
       !(result is undefined)
 
