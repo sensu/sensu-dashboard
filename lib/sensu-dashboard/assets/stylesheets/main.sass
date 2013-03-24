@@ -2,8 +2,9 @@ body
   background-color: #eee
 
 .navbar-inner
-  -webkit-border-radius: 0px
   -moz-border-radius: 0px
+  -khtml-border-radius: 0px
+  -webkit-border-radius: 0px
   border-radius: 0px
 
   .container
@@ -23,8 +24,9 @@ div#content
   background-color: white
   padding: 20px
   margin: -20px 20px 20px 20px
-  -webkit-border-radius: 0 0 6px 6px
   -moz-border-radius: 0 0 6px 6px
+  -khtml-border-radius: 0 0 6px 6px
+  -webkit-border-radius: 0 0 6px 6px
   border-radius: 0 0 6px 6px
   -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15)
   -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15)
@@ -56,12 +58,6 @@ div#counts_container
       margin-left: 2px
       margin-right: 2px
 
-div#filter_unknown_container
-  clear: both
-  padding: 8px
-  input
-    margin-right: 4px
-
 input#events_filter
   clear: both
   width: 100%
@@ -78,10 +74,10 @@ input#clients_filter
 
 #filter
   border: 1px solid #cccccc
-  float: left
   margin: 10px 0 10px 0
   width: 100%
   box-sizing: border-box
+  -moz-box-sizing: border-box
   background-color: #ffffff
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075)
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075)
@@ -92,11 +88,9 @@ input#clients_filter
   transition: border linear .2s, box-shadow linear .2s
   display: inline-block
   padding: 2px 6px
-  -webkit-border-radius: 4px
   -moz-border-radius: 4px
-  -o-border-radius: 4px
-  -ms-border-radius: 4px
   -khtml-border-radius: 4px
+  -webkit-border-radius: 4px
   border-radius: 4px
   vertical-align: middle
 
@@ -132,10 +126,8 @@ input#clients_filter
       -o-box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
       box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
       -moz-border-radius: 4px
-      -webkit-border-radius: 4px
-      -o-border-radius: 4px
-      -ms-border-radius: 4px
       -khtml-border-radius: 4px
+      -webkit-border-radius: 4px
       border-radius: 4px
 
       i.icon-remove-sign:hover
@@ -219,10 +211,8 @@ input#clients_filter
           -o-box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
           box-shadow: inset 0 1px 0 #7ab5f0, 0px 1px 5px rgba(0, 0, 0, 0.55)
           -moz-border-radius: 4px
-          -webkit-border-radius: 4px
-          -o-border-radius: 4px
-          -ms-border-radius: 4px
           -khtml-border-radius: 4px
+          -webkit-border-radius: 4px
           border-radius: 4px
 
 div.auto-complete-results
@@ -230,8 +220,14 @@ div.auto-complete-results
     list-style-type: none
 
 table.sensu-table
-  border-collapse: collapse
+  border-collapse: separate
+  border-spacing: 0
   border: 0
+
+  thead
+    tr
+      th
+        border: 0
 
   tbody
     tr
@@ -243,23 +239,33 @@ table.sensu-table
   td.check
     white-space: nowrap
 
-  tr
-    th
-      border: 0
-    td
-      border: 0
+      td
+        border: 0
 
   tbody:last-child
     tr:first-child
       td:first-child
         -moz-border-radius-topleft: 4px
+        -khtml-border-topleft-radius: 4px
+        -webkit-border-top-left-radius: 4px
         border-top-left-radius: 4px
       td:last-child
         -moz-border-radius-topright: 4px
+        -khtml-border-topright-radius: 4px
+        -webkit-border-top-right-radius: 4px
         border-top-right-radius: 4px
-      td:only-child
-        -moz-border-radius: 4px
-        border-radius: 4px
+
+    tr:last-child
+      td:first-child
+        -moz-border-radius-bottomleft: 4px
+        -khtml-border-bottomleft-radius: 4px
+        -webkit-border-bottom-left-radius: 4px
+        border-bottom-left-radius: 4px
+      td:last-child
+        -moz-border-radius-bottomright: 4px
+        -khtml-border-bottomright-radius: 4px
+        -webkit-border-bottom-right-radius: 4px
+        border-bottom-right-radius: 4px
 
 .table tbody tr:hover td, .table tbody tr:hover th
 
@@ -285,38 +291,42 @@ table.table#events_table
         white-space: normal
 
     tr.unknown
-      background-color: #fee9cc
-      color: #f89406
+      td
+        background-color: #fee9cc
+        color: #f89406
 
     tr.unknown:hover
-      background-color: #f89406
-      color: #fff
+      td
+        background-color: #f89406
+        color: #fff
 
     tr.critical
-      background-color: #f4c8c5
-      color: #9d261d
+      td
+        background-color: #f4c8c5
+        color: #9d261d
 
     tr.critical:hover
-      background-color: #9d261d
-      color: #fff
+      td
+        background-color: #9d261d
+        color: #fff
 
     tr.warning
-      background-color: #eee
-      color: #999
       td
         background-color: #eee
+        color: #999
+
 
     tr.warning:hover
-      background-color: #999
-      color: #fff
       td
         background-color: #999
+        color: #fff
 
 table.table#stashes_table
   tbody
     tr
-      color: #999
-      background-color: #eee
+      td
+        color: #999
+        background-color: #eee
 
       td.path
         font-weight: bold
@@ -327,8 +337,9 @@ table.table#stashes_table
 table.table#clients_table
   tbody
     tr
-      color: #999
-      background-color: #eee
+      td
+        color: #999
+        background-color: #eee
 
       td.client_id
         font-weight: bold
@@ -339,8 +350,9 @@ table.table#clients_table
 table.table#checks_table
   tbody
     tr
-      color: #999
-      background-color: #eee
+      td
+        color: #999
+        background-color: #eee
 
       td.check_id
         font-weight: bold
