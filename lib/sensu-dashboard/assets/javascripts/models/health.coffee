@@ -43,8 +43,7 @@ namespace 'SensuDashboard.Models', (exports) ->
 
     startLongPolling: (intervalSeconds) =>
       @longPolling = true
-      if intervalSeconds
-        @intervalSeconds = @intervalSeconds
+      @intervalSeconds = intervalSeconds if intervalSeconds
       @executeLongPolling()
 
     stopLongPolling: =>
@@ -56,4 +55,4 @@ namespace 'SensuDashboard.Models', (exports) ->
           @onFetch()
 
     onFetch: =>
-      setTimeout(@executeLongPolling, 10000) if @longPolling
+      setTimeout(@executeLongPolling, 1000 * @intervalSeconds) if @longPolling
