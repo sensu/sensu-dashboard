@@ -24,7 +24,8 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
             record.get('client') == model.get('name')
         else if _.isString(model)
           resolved.filter (record) ->
-            liquidMetal.score(record.get('output'), model) > 0.7
+            output = record.get('output').toLowerCase()
+            output.indexOf(model.toLowerCase()) != -1
 
       resolved
 
