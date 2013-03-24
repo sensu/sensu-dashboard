@@ -25,7 +25,8 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
         else if _.isString(model)
           resolved.filter (record) ->
             output = record.get('output').toLowerCase()
-            output.indexOf(model.toLowerCase()) != -1
+            result = output.indexOf(model.toLowerCase()) != -1
+            result || record.get('check').toLowerCase() == model.toLowerCase()
 
       resolved
 
