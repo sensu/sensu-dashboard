@@ -19,7 +19,10 @@ namespace 'SensuDashboard.Models', (exports) ->
         connected: false
       sensu_dashboard:
         version: null
-    
+        poll_frequency: 10
+
+    url: '/health'
+
     initialize: ->
       @setRMQStatus   @get('rabbitmq').connected
       @setRedisStatus @get('redis').connected
@@ -33,3 +36,24 @@ namespace 'SensuDashboard.Models', (exports) ->
 # Private
     _onlineStatus: (status) ->
       if status then 'Online' else 'Offline'
+
+    longPolling: false
+
+    intervalSeconds: 10
+
+    startLongPolling: (intervalSeconds) =>
+      @longPolling = true
+      if intervalSeconds
+        @intervalSeconds = @intervalSeconds
+      @executeLongPolling()
+
+    stopLongPolling: =>
+      @longPolling = false
+
+    executeLongPolling: =>
+      @fetch
+        success: =>
+          @onFetch()
+
+    onFetch: =>
+      setTimeout(@executeLongPolling, 10000) if @longPolling

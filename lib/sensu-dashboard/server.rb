@@ -53,7 +53,8 @@ module Sensu::Dashboard
         $logger = base.logger
         settings = base.settings
         $dashboard_settings = settings[:dashboard] || {
-          :port => 8080
+          :port => 8080,
+          :poll_frequency => 10
         }
         $api_settings = settings[:api] || {
           :host => 'localhost',
@@ -66,6 +67,11 @@ module Sensu::Dashboard
         end
         unless $dashboard_settings[:port].is_a?(Integer)
           invalid_settings('dashboard port must be an integer', {
+            :settings => $dashboard_settings
+          })
+        end
+        unless $dashboard_settings[:poll_frequency].is_a?(Integer)
+          invalid_settings('dashboard poll frequency must be an integer', {
             :settings => $dashboard_settings
           })
         end
@@ -179,7 +185,10 @@ module Sensu::Dashboard
       http.callback do
         status http.response_header.status
         health = Oj.load(http.response)
-        health[:sensu_dashboard] = {:version => Sensu::Dashboard::VERSION}
+        health[:sensu_dashboard] = {
+          :version => Sensu::Dashboard::VERSION,
+          :poll_frequency => $dashboard_settings[:poll_frequency]
+        }
         body Oj.dump(health)
       end
     end
@@ -205,7 +214,10 @@ module Sensu::Dashboard
             :clients => Oj.load(multi.responses[:callback][:clients].response),
             :health  => Oj.load(multi.responses[:callback][:health].response)
           }
-          response[:health][:sensu_dashboard] = {:version => Sensu::Dashboard::VERSION}
+          response[:health][:sensu_dashboard] = {
+            :version => Sensu::Dashboard::VERSION,
+            :poll_frequency => $dashboard_settings[:poll_frequency]
+          }
 
           api_options = $api_options
           api_options[:body] = multi.responses[:callback][:stashes].response

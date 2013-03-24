@@ -10,9 +10,6 @@ namespace 'SensuDashboard.Models', (exports) ->
       status: 3
       flapping: false
       issued: '0000-00-00T00:00:00Z'
-      selected: false
-      silenced: false
-      client_silenced: false
 
     initialize: ->
       @set(id: @get('client')+'/'+@get('check'))
