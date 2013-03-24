@@ -14,6 +14,7 @@ namespace 'SensuDashboard.Views', (exports) ->
       view = new kls(model: model, name: @itemName)
 
     initialize: ->
+      @listenTo(@collection, 'remove', @renderEmpty)
       @listenTo(@collection, 'reset', @render)
       @listenTo(@collection, 'add', @render)
 
@@ -25,9 +26,18 @@ namespace 'SensuDashboard.Views', (exports) ->
       item_view = @itemView(item)
       @$el.find(@collectionEl).append(item_view.render().el)
 
-    renderCollection: ->
-      @collection.each (item) =>
-        @renderItem(item)
+    renderCollection: (collection = @collection) ->
+      unless @renderEmpty(collection)
+        collection.each (item) =>
+          @renderItem(item)
+
+    renderEmpty: (collection = @collection) ->
+      if collection.isEmpty()
+        tmpl = HandlebarsTemplates["empty_list"]
+        @$el.html(tmpl())
+        true
+      else
+        false
 
     render: ->
       @$el.html(@template())
