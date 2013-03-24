@@ -255,6 +255,41 @@ module Sensu::Dashboard
       end
     end
 
+    aget '/stashes', :provides => 'json' do
+      content_type 'application/json'
+
+      http = EM::HttpRequest.new($api_url + '/stashes').get($api_options)
+
+      http.errback do
+        status 502
+        body '{"error":"could not retrieve /stashes from the sensu api"}'
+      end
+
+      http.callback do
+        api_options = $api_options
+        api_options[:body] = http.response
+        sthttp = EM::HttpRequest.new($api_url + '/stashes').post(api_options)
+
+        sthttp.errback do
+          error_details = {:error => 'could not retrieve /stashes from the sensu api'}
+          $logger.error('failed to query the sensu API', error_details)
+          status 502
+          body Oj.dump(error_details)
+        end
+
+        sthttp.callback do
+          stashes = []
+          unless sthttp.response.empty?
+            stashes = Oj.load(sthttp.response).map do |path, keys|
+              {:path => path}.merge(keys)
+            end
+          end
+          status 200
+          body Oj.dump(stashes)
+        end
+      end
+    end
+
     aget '/*', :provides => 'json' do |path|
       content_type 'application/json'
       begin
