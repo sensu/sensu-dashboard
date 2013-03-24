@@ -7,7 +7,6 @@ namespace 'SensuDashboard.Views', (exports) ->
     placeholder: ""
     minInputValue: 2
     maxResults: 9
-    popoverVisible: false
 
     initialize: ->
       super
@@ -46,7 +45,7 @@ namespace 'SensuDashboard.Views', (exports) ->
       @delegate.filtersUpdated()
 
     tokenize: ->
-      object = @resultsView.AutoCompleteTokenFieldItemSelected()
+      object = @resultsView.autoCompleteTokenFieldItemSelected()
       @inputTester.focus()
       @insertToken(object)
       @textContent.innerHTML = @inputTester.value = ""
@@ -65,12 +64,7 @@ namespace 'SensuDashboard.Views', (exports) ->
       query.trim().length >= @minInputValue
 
     keydown: (e) ->
-      switch e.keyCode
-        when 8
-          @_queryEntered(@inputTester.value)
-        else
-          @resultsView.keyDown(e)
-
+      @resultsView.keyDown(e)
       super
 
     keyup: (e) ->
@@ -95,33 +89,24 @@ namespace 'SensuDashboard.Views', (exports) ->
 
     _blur: (e) ->
       super
-      @resultsView.AutoCompleteTokenFieldBlur()
+      @resultsView.autoCompleteTokenFieldBlur()
 
     _queryEntered: (query) ->
+      if query.length > 0
+        $(@placeholderContent).hide()
+      else
+        $(@placeholderContent).show()
       if @queryMeetsMinLength(query)
         @_showPopover(@_filterCollection(query))
       else
-        @resultsView.AutoCompleteTokenFieldEmpty(false)
+        @resultsView.autoCompleteTokenFieldEmpty(false)
 
     # Other
 
     _showPopover: _.debounce((collection) ->
-      unless @inputTester.value == ""
-        $(@placeholderContent).hide()
-
-        unless @queryMeetsMinLength()
-          return @resultsView.AutoCompleteTokenFieldEmpty()
-
         @resultsView.setCollection(collection)
-        @resultsView.AutoCompleteTokenFieldResults()
-      else
-        $(@placeholderContent).show()
-        @resultsView.AutoCompleteTokenFieldEmpty()
+        @resultsView.autoCompleteTokenFieldResults()
     , 75)
-
-    _hidePopover: ->
-      @$el.popover 'hide', =>
-        @popoverVisible = false
 
     destroy: ->
       @resultsView.off null, null, this
