@@ -4,7 +4,6 @@ namespace 'SensuDashboard.Models', (exports) ->
 
     defaults:
       path: 'silence'
-      selected: false
 
     idAttribute: 'path'
 

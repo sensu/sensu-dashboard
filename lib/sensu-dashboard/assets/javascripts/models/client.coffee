@@ -7,7 +7,6 @@ namespace 'SensuDashboard.Models', (exports) ->
       address: null
       subscriptions: []
       timestamp: 0
-      selected: false
 
     idAttribute: 'name'
 
