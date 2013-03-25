@@ -10,6 +10,12 @@ namespace 'SensuDashboard.Collections', (exports) ->
     getSelected: ->
       @where(selected: true)
 
+    getSelectedClients: ->
+      _.map(@getSelected(), (event) -> event.get('client'))
+
+    getUniqueSelectedClients: ->
+      clients = _.uniq(@getSelectedClients())
+
     getCriticals: ->
       @where(status: 2)
 
@@ -160,8 +166,8 @@ namespace 'SensuDashboard.Collections', (exports) ->
     silenceSelectedClients: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      for event in @getSelected()
-        SensuDashboard.Clients.get(event.get('client')).silence
+      for client in @getUniqueSelectedClients()
+        SensuDashboard.Clients.get(client).silence
           success: (model, response, opts) =>
             @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
@@ -170,8 +176,8 @@ namespace 'SensuDashboard.Collections', (exports) ->
     unsilenceSelectedClients: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      for event in @getSelected()
-        SensuDashboard.Clients.get(event.get('client')).unsilence
+      for client in @getUniqueSelectedClients()
+        SensuDashboard.Clients.get(client).unsilence
           success: (model, response, opts) =>
             @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
