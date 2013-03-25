@@ -2,8 +2,6 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
 
   class exports.Index extends SensuDashboard.Views.Base
 
-    el: $('#main')
-
     name: 'stashes/index'
 
     events:
@@ -19,13 +17,12 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
         collection: @collection
         autocomplete_view: @autocomplete_view
       })
-      @render()
 
     render: ->
       @$el.html(@template(stashes: @collection))
       @assign(@counts_subview, '#counts')
       @assign(@stashes_view, '#stashes_container')
-      $('#filter').html(@autocomplete_view.render().el)
+      @$el.find('#filter').html(@autocomplete_view.render().el)
       this
 
     toggleSelected: ->

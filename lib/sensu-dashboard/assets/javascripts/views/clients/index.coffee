@@ -2,8 +2,6 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
 
   class exports.Index extends SensuDashboard.Views.Base
 
-    el: $('#main')
-
     name: 'clients/index'
 
     events:
@@ -22,13 +20,12 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
         collection: @collection
         autocomplete_view: @autocomplete_view
       })
-      @render()
 
     render: ->
       @$el.html(@template(clients: @collection))
       @assign(@counts_subview, '#counts')
       @assign(@subview, '#clients_container')
-      $('#filter').html(@autocomplete_view.render().el)
+      @$el.find('#filter').html(@autocomplete_view.render().el)
       this
 
     toggleSelected: ->
