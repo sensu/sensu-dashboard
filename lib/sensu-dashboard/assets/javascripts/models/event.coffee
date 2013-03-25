@@ -56,13 +56,13 @@ namespace 'SensuDashboard.Models', (exports) ->
     silence: (options = {}) =>
       @successCallback = options.success
       @errorCallback = options.error
-      stash = SensuDashboard.Stashes.create
+      stash = SensuDashboard.Stashes.create({
         path: @get('silence_path')
-        content: { timestamp: Math.round(new Date().getTime() / 1000) },
+        content: { timestamp: Math.round(new Date().getTime() / 1000) }}, {
         success: (model, response, opts) =>
-          @successCallback.apply(this, [this, response, opts]) if @successCallback
+          @successCallback.apply(this, [this, response]) if @successCallback
         error: (model, xhr, opts) =>
-          @errorCallback.apply(this, [this, xhr, opts]) if @errorCallback
+          @errorCallback.apply(this, [this, xhr, opts]) if @errorCallback})
 
     unsilence: (options = {}) =>
       @successCallback = options.success
