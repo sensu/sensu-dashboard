@@ -9,6 +9,8 @@ namespace 'SensuDashboard.Views', (exports) ->
     maxResults: 9
 
     localEvents:
+      'blur input': '_blur'
+      'focus input': '_focus'
       'focusin input': 'focusIn'
       'focusout input': 'focusOut'
 
@@ -21,7 +23,7 @@ namespace 'SensuDashboard.Views', (exports) ->
     initialize: ->
       super
 
-      @events = _.extend({}, @localEvents, @events)
+      @events = _.extend({}, @events, @localEvents)
 
       @matcher = new SensuDashboard.Matcher(sources: @options.sources)
 
@@ -102,11 +104,17 @@ namespace 'SensuDashboard.Views', (exports) ->
       @trigger("submit")
 
     _blur: (e) ->
-      super
+      @$el.removeClass("focus")
+      @selectTokenAtIndex(Infinity)
       @resultsView.autoCompleteTokenFieldBlur()
+
+    _focus: (e) ->
+      @$el.addClass("focus")
+      @_queryEntered(@inputTester.value)
 
     _queryEntered: (query) ->
       if query.length > 0
+        @selectTokenAtIndex(Infinity) unless @selectedIndex == Infinity
         $(@placeholderContent).hide()
       if @queryMeetsMinLength(query)
         @_showPopover(@_filterCollection(query))
