@@ -43,6 +43,7 @@ namespace 'SensuDashboard.Views', (exports) ->
       @el.insertBefore(token.node, @container)
       @tokens.push(token)
       @delegate.filtersUpdated()
+      $(@placeholderContent).show()
 
     tokenize: ->
       object = @resultsView.autoCompleteTokenFieldItemSelected()
@@ -70,11 +71,14 @@ namespace 'SensuDashboard.Views', (exports) ->
     keyup: (e) ->
       switch e.keyCode
         when 38, 40
-          # Prevent re-rendering when navigating auto-completer
           return false
 
-      @_queryEntered(@inputTester.value)
-      super
+      @textContent.innerHTML = @inputTester.value
+      switch e.keyCode
+        when 13
+          @tokenize()
+        else
+          @_queryEntered(@inputTester.value)
 
     keypress: (e) ->
       if e.keyCode == 13 && @inputTester.value == ""
@@ -92,8 +96,6 @@ namespace 'SensuDashboard.Views', (exports) ->
     _queryEntered: (query) ->
       if query.length > 0
         $(@placeholderContent).hide()
-      else
-        $(@placeholderContent).show()
       if @queryMeetsMinLength(query)
         @_showPopover(@_filterCollection(query))
       else
