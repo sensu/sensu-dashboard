@@ -32,4 +32,15 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
       text = parent.find('span').first()
       icon.removeClass('icon-volume-off').addClass('icon-spinner icon-spin')
       text.html('Removing...')
-      @model.remove()
+      @model.remove
+        success: (model) ->
+          stash_name = model.get('path')
+          toastr.success('Removed stash ' + stash_name + '.'
+            , 'Success!'
+            , { positionClass: 'toast-bottom-right' })
+        error: (model) ->
+          stash_name = model.get('path')
+          toastr.error('Error removing stash ' + stash_name + '. ' +
+            'The stash may already be removed or Sensu API is down.'
+            , 'Removal Error!'
+            , { positionClass: 'toast-bottom-right' })
