@@ -8,8 +8,20 @@ namespace 'SensuDashboard.Views', (exports) ->
     minInputValue: 2
     maxResults: 9
 
+    localEvents:
+      'focusin input': 'focusIn'
+      'focusout input': 'focusOut'
+
+    focusIn: ->
+      $('#filter').addClass('focus')
+
+    focusOut: ->
+      $('#filter').removeClass('focus')
+
     initialize: ->
       super
+
+      @events = _.extend({}, @localEvents, @events)
 
       @matcher = new SensuDashboard.Matcher(sources: @options.sources)
 
