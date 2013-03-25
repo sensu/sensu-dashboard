@@ -41,11 +41,32 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       if @client.get('silenced')
         icon.removeClass('icon-volume-off').addClass('icon-spinner icon-spin')
         text.html('Un-silencing...')
-        @client.unsilence()
+        @client.unsilence
+          success: (model) ->
+            client_name = model.get('name')
+            toastr.success('Un-silenced client ' + client_name + '.'
+              , 'Success!'
+              , { positionClass: 'toast-bottom-right' })
+          error: (model) ->
+            client_name = model.get('name')
+            toastr.error('Error un-silencing client ' + client_name + '. ' +
+              'The client may already be un-sileneced or Sensu API is down.'
+              , 'Un-silencing Error!'
+              , { positionClass: 'toast-bottom-right' })
       else
         icon.removeClass('icon-volume-up').addClass('icon-spinner icon-spin')
         text.html('Silencing...')
-        @client.silence()
+        @client.silence
+          success: (model) ->
+            client_name = model.get('name')
+            toastr.success('Silenced client ' + client_name + '.'
+              , 'Success!'
+              , { positionClass: 'toast-bottom-right' })
+          error: (model, xhr, opts) ->
+            client_name = model.get('name')
+            toastr.error('Error silencing client ' + client_name + '.'
+              , 'Silencing Error!'
+              , { positionClass: 'toast-bottom-right' })
 
     silenceCheck: (ev) ->
       tag_name = $(ev.target).prop('tagName')
@@ -58,11 +79,32 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       if @event.get('silenced')
         icon.removeClass('icon-volume-off').addClass('icon-spinner icon-spin')
         text.html('Un-silencing...')
-        @event.unsilence()
+        @event.unsilence
+          success: (model) ->
+            check_name = model.get('check')
+            toastr.success('Un-silenced check ' + check_name + '.'
+              , 'Success!'
+              , { positionClass: 'toast-bottom-right' })
+          error: (model) ->
+            check_name = model.get('check')
+            toastr.error('Error un-silencing check ' + check_name + '. ' +
+              'The check may already be un-sileneced or Sensu API is down.'
+              , 'Un-silencing Error!'
+                , { positionClass: 'toast-bottom-right' })
       else
         icon.removeClass('icon-volume-up').addClass('icon-spinner icon-spin')
         text.html('Silencing...')
-        @event.silence()
+        @event.silence
+          success: (model) ->
+            check_name = model.get('check')
+            toastr.success('Silenced check ' + check_name + '.'
+              , 'Success!'
+              , { positionClass: 'toast-bottom-right' })
+          error: (model) ->
+            check_name = model.get('check')
+            toastr.error('Error silencing check ' + check_name + '.'
+              , 'Silencing Error!'
+              , { positionClass: 'toast-bottom-right' })
 
     resolveCheck: (ev) ->
       tag_name = $(ev.target).prop('tagName')
@@ -74,4 +116,14 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
       text = parent.find('span').first()
       icon.removeClass('icon-volume-off').addClass('icon-spinner icon-spin')
       text.html('Resolving...')
-      @event.resolve()
+      @event.resolve
+        success: (model) ->
+          event_name = model.get('client') + '_' + model.get('check')
+          toastr.success('Resolved event ' + event_name + '.'
+            , 'Success!'
+            , { positionClass: 'toast-bottom-right' })
+        error: (model) ->
+          event_name = model.get('client') + '_' + model.get('check')
+          toastr.error('Error resolving event ' + event_name + '. Is Sensu API running?'
+            , 'Resolving Error'
+            , { positionClass: 'toast-bottom-right' })
