@@ -213,13 +213,11 @@ module Sensu::Dashboard
         end
 
         unless multi.responses[:errback].keys.count > 0 || empty_body
-          response = {
-            :events  => Oj.load(multi.responses[:callback][:events].response),
-            :checks  => Oj.load(multi.responses[:callback][:checks].response),
-            :clients => Oj.load(multi.responses[:callback][:clients].response),
-            :stashes => Oj.load(multi.responses[:callback][:stashes].response),
-            :info    => Oj.load(multi.responses[:callback][:info].response)
-          }
+          response = Hash.new
+
+          routes.each do |route|
+            response[route] = Oj.load(multi.responses[:callback][route].response)
+          end
 
           response[:info][:sensu_dashboard] = {
             :version => Sensu::Dashboard::VERSION,
