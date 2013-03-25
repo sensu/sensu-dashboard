@@ -24,7 +24,7 @@ namespace 'SensuDashboard.Collections', (exports) ->
     removeSelected: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      @each (stash) ->
+      for stash in @getSelected()
         stash.remove
           success: (model, xhr, opts) =>
             @successCallback.call(this, model) if @successCallback
