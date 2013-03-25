@@ -16,6 +16,12 @@ namespace 'SensuDashboard.Models', (exports) ->
       options.wait = true
       Backbone.create(attributes, options)
 
+    sync: (method, model, options) =>
+      options ||= {}
+      if method == 'delete'
+        options.url = SensuDashboard.Stashes.url + '/' + model.get('path')
+      Backbone.sync(method, model, options)
+
     remove: (options = {}) =>
       @successCallback = options.success
       @errorCallback = options.error
