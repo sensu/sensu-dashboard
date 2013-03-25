@@ -52,19 +52,17 @@ module Sensu::Dashboard
         base = Sensu::Base.new(options)
         $logger = base.logger
         settings = base.settings
-        $dashboard_settings = settings[:dashboard] || {
-          :port => 8080,
-          :poll_frequency => 10
-        }
-        $api_settings = settings[:api] || {
-          :host => 'localhost',
-          :port => 4567,
-          :user => nil,
-          :password => nil
-        }
-        unless $dashboard_settings.is_a?(Hash)
-          invalid_settings('misconfigured dashboard configuration')
+        if settings[:dashboard]
+          unless settings[:dashboard].is_a?(Hash)
+            invalid_settings('dashboard must be a hash')
+          end
         end
+        $dashboard_settings = settings[:dashboard] || Hash.new
+        $dashboard_settings[:port] ||= 8080
+        $dashboard_settings[:poll_frequency] ||= 10
+        $api_settings = settings[:api] || Hash.new
+        $api_settings[:host] ||= 'localhost'
+        $api_settings[:port] ||= 4567
         unless $dashboard_settings[:port].is_a?(Integer)
           invalid_settings('dashboard port must be an integer', {
             :settings => $dashboard_settings
