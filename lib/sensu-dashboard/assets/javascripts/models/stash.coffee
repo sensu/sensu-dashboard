@@ -24,3 +24,4 @@ namespace 'SensuDashboard.Models', (exports) ->
           @successCallback.apply(this, [model, response, opts]) if @successCallback
         error: (model, xhr, opts) =>
           @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+
