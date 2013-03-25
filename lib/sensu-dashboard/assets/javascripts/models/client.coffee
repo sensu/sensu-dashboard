@@ -7,7 +7,6 @@ namespace 'SensuDashboard.Models', (exports) ->
       address: null
       subscriptions: []
       timestamp: 0
-      selected: false
 
     idAttribute: 'name'
 
@@ -27,17 +26,13 @@ namespace 'SensuDashboard.Models', (exports) ->
     silence: (options = {}) =>
       @successCallback = options.success
       @errorCallback = options.error
-      stash = new SensuDashboard.Models.Stash
-        id: @get('silence_path')
+      stash = SensuDashboard.Stashes.create({
         path: @get('silence_path')
-        keys: [ new Date().toUTCString() ]
-      stash.url = SensuDashboard.Stashes.url+'/'+@get('silence_path')
-      stash.save {},
+        content: { timestamp: Math.round(new Date().getTime() / 1000) }}, {
         success: (model, response, opts) =>
-          SensuDashboard.Stashes.add(model)
-          @successCallback.apply(this, [model, response, opts]) if @successCallback
+          @successCallback.apply(this, [this, response]) if @successCallback
         error: (model, xhr, opts) =>
-          @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+          @errorCallback.apply(this, [this, xhr, opts]) if @errorCallback})
 
     unsilence: (options = {}) =>
       @successCallback = options.success
@@ -45,11 +40,9 @@ namespace 'SensuDashboard.Models', (exports) ->
       stash = SensuDashboard.Stashes.get(@get('silence_path'))
       if stash
         stash.destroy
-          url: SensuDashboard.Stashes.url+'/'+@get('silence_path')
           success: (model, response, opts) =>
-            @successCallback.apply(this, [model, response, opts]) if @successCallback
-
+            @successCallback.apply(this, [this, response, opts]) if @successCallback
           error: (model, xhr, opts) =>
-            @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+            @errorCallback.apply(this, [this, xhr, opts]) if @errorCallback
       else
-        @successCallback.apply(this, [this]) if @successCallback
+        @errorCallback.apply(this, [this]) if @errorCallback
