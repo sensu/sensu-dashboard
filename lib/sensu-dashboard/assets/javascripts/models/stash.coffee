@@ -4,8 +4,17 @@ namespace 'SensuDashboard.Models', (exports) ->
 
     defaults:
       path: 'silence'
+      content: {}
 
     idAttribute: 'path'
+
+    isNew: =>
+      !_.contains(SensuDashboard.Stashes.models, this)
+
+    create: (attributes, options) =>
+      options ||= {}
+      options.wait = true
+      Backbone.create(attributes, options)
 
     remove: (options = {}) =>
       @successCallback = options.success
@@ -15,3 +24,4 @@ namespace 'SensuDashboard.Models', (exports) ->
           @successCallback.apply(this, [model, response, opts]) if @successCallback
         error: (model, xhr, opts) =>
           @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
+

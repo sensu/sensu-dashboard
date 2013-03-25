@@ -14,7 +14,7 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
       @render()
 
     render: ->
-      template_data = { keys: @model.toJSON() }
+      template_data = @model.toJSON()
       if @$el.html() == ''
         @$el.html(@template(template_data))
         @$el.appendTo('body')

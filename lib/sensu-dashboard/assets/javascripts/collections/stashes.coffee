@@ -24,9 +24,14 @@ namespace 'SensuDashboard.Collections', (exports) ->
     removeSelected: (options = {}) ->
       @successCallback = options.success
       @errorCallback = options.error
-      @each (stash) ->
+      for stash in @getSelected()
         stash.remove
           success: (model, xhr, opts) =>
             @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
             @errorCallback.call(this, model) if @errorCallback
+
+    create: (attributes, options) ->
+      options ||= {}
+      options.wait = true
+      Backbone.Collection.prototype.create.call(this, attributes, options)

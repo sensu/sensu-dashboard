@@ -212,6 +212,7 @@ module Sensu::Dashboard
             :events  => Oj.load(multi.responses[:callback][:events].response),
             :checks  => Oj.load(multi.responses[:callback][:checks].response),
             :clients => Oj.load(multi.responses[:callback][:clients].response),
+            :stashes => Oj.load(multi.responses[:callback][:stashes].response),
             :info    => Oj.load(multi.responses[:callback][:info].response)
           }
           response[:info][:sensu_dashboard] = {
@@ -219,29 +220,8 @@ module Sensu::Dashboard
             :poll_frequency => $dashboard_settings[:poll_frequency]
           }
 
-          api_options = $api_options
-          api_options[:body] = multi.responses[:callback][:stashes].response
-
-          http = EM::HttpRequest.new($api_url + '/stashes').post(api_options)
-
-          http.errback do
-            error_details = {:error => 'could not retrieve /stashes from the sensu api'}
-            $logger.error('failed to query the sensu api', error_details)
-            status 502
-            body Oj.dump(error_details)
-          end
-
-          http.callback do
-            stashes = []
-            unless http.response.empty?
-              stashes = Oj.load(http.response).map do |path, keys|
-                {:path => path}.merge(keys)
-              end
-            end
-            response[:stashes] = stashes
-            status 200
-            body Oj.dump(response)
-          end
+          status 200
+          body Oj.dump(response)
         else
           failed_requests = []
           multi.responses[:errback].each do |route, _|
@@ -251,41 +231,6 @@ module Sensu::Dashboard
           $logger.error('failed to query the sensu api', error_details)
           status 502
           body Oj.dump(error_details)
-        end
-      end
-    end
-
-    aget '/stashes', :provides => 'json' do
-      content_type 'application/json'
-
-      http = EM::HttpRequest.new($api_url + '/stashes').get($api_options)
-
-      http.errback do
-        status 502
-        body '{"error":"could not retrieve /stashes from the sensu api"}'
-      end
-
-      http.callback do
-        api_options = $api_options
-        api_options[:body] = http.response
-        sthttp = EM::HttpRequest.new($api_url + '/stashes').post(api_options)
-
-        sthttp.errback do
-          error_details = {:error => 'could not retrieve /stashes from the sensu api'}
-          $logger.error('failed to query the sensu API', error_details)
-          status 502
-          body Oj.dump(error_details)
-        end
-
-        sthttp.callback do
-          stashes = []
-          unless sthttp.response.empty?
-            stashes = Oj.load(sthttp.response).map do |path, keys|
-              {:path => path}.merge(keys)
-            end
-          end
-          status 200
-          body Oj.dump(stashes)
         end
       end
     end

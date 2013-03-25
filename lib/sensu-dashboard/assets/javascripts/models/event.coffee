@@ -48,7 +48,6 @@ namespace 'SensuDashboard.Models', (exports) ->
       @successCallback = options.success
       @errorCallback = options.error
       @destroy
-        url: @get('url')
         success: (model, response, opts) =>
           @successCallback.apply(this, [model, response, opts]) if @successCallback
         error: (model, xhr, opts) =>
@@ -57,14 +56,10 @@ namespace 'SensuDashboard.Models', (exports) ->
     silence: (options = {}) =>
       @successCallback = options.success
       @errorCallback = options.error
-      stash = new SensuDashboard.Models.Stash
+      stash = SensuDashboard.Stashes.create
         path: @get('silence_path')
-        timestamp: Math.round(new Date().getTime() / 1000)
-      stash.url = SensuDashboard.Stashes.url+'/'+@get('silence_path')
-      stash.save {},
+        content: { timestamp: Math.round(new Date().getTime() / 1000) },
         success: (model, response, opts) =>
-          delete model.attributes.issued
-          SensuDashboard.Stashes.add(model)
           @successCallback.apply(this, [this, response, opts]) if @successCallback
         error: (model, xhr, opts) =>
           @errorCallback.apply(this, [this, xhr, opts]) if @errorCallback
@@ -75,7 +70,6 @@ namespace 'SensuDashboard.Models', (exports) ->
       stash = SensuDashboard.Stashes.get(@get('silence_path'))
       if stash
         stash.destroy
-          url: SensuDashboard.Stashes.url+'/'+@get('silence_path')
           success: (model, response, opts) =>
             @successCallback.apply(this, [this, response, opts]) if @successCallback
           error: (model, xhr, opts) =>
