@@ -199,15 +199,20 @@ module Sensu::Dashboard
     aget '/all', :provides => 'json' do
       content_type 'application/json'
 
+      routes = [:events, :checks, :clients, :stashes, :info]
+
       multi = EM::MultiRequest.new
-      multi.add :events, EM::HttpRequest.new($api_url + '/events').get($api_options)
-      multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
-      multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
-      multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
-      multi.add :info, EM::HttpRequest.new($api_url + '/info').get($api_options)
+
+      routes.each do |route|
+        multi.add route, EM::HttpRequest.new($api_url + '/' + route.to_s).get($api_options)
+      end
 
       multi.callback do
-        unless multi.responses[:errback].keys.count > 0
+        empty_body = routes.detect do |route|
+          multi.responses[:callback][route].response == ""
+        end
+
+        unless multi.responses[:errback].keys.count > 0 || empty_body
           response = {
             :events  => Oj.load(multi.responses[:callback][:events].response),
             :checks  => Oj.load(multi.responses[:callback][:checks].response),
@@ -215,6 +220,7 @@ module Sensu::Dashboard
             :stashes => Oj.load(multi.responses[:callback][:stashes].response),
             :info    => Oj.load(multi.responses[:callback][:info].response)
           }
+
           response[:info][:sensu_dashboard] = {
             :version => Sensu::Dashboard::VERSION,
             :poll_frequency => $dashboard_settings[:poll_frequency]
@@ -226,6 +232,9 @@ module Sensu::Dashboard
           failed_requests = []
           multi.responses[:errback].each do |route, _|
             failed_requests << '/' + route.to_s
+          end
+          if empty_body
+            failed_requests << empty_body
           end
           error_details = {:error => 'could not retrieve ' + failed_requests.join(', ') + ' from the sensu api'}
           $logger.error('failed to query the sensu api', error_details)
