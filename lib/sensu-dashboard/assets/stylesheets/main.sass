@@ -283,9 +283,11 @@ table.table#events_table
 
       td.client
         font-weight: bold
+        white-space: nowrap
 
       td.output
         white-space: normal
+        word-break: break-all
 
     tr.unknown
       td
@@ -340,9 +342,11 @@ table.table#clients_table
 
       td.client_id
         font-weight: bold
+        white-space: nowrap
 
       td.subscriptions
         white-space: normal
+        word-break: break-all
 
 table.table#checks_table
   tbody
@@ -353,6 +357,10 @@ table.table#checks_table
 
       td.check_id
         font-weight: bold
+        white-space: nowrap
+
+      td.command
+        word-break: break-all
 
 table.table#info_table
   width: 400px
