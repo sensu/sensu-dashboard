@@ -17,4 +17,10 @@ namespace 'SensuDashboard.Models', (exports) ->
       Backbone.create(attributes, options)
 
     remove: (options = {}) =>
-      @destroy(options)
+      @successCallback = options.success
+      @errorCallback = options.error
+      @destroy
+        success: (model, response, opts) =>
+          @successCallback.apply(this, [model, response, opts]) if @successCallback
+        error: (model, xhr, opts) =>
+          @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback

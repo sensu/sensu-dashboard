@@ -31,8 +31,8 @@ namespace 'SensuDashboard.Models', (exports) ->
         content: { timestamp: Math.round(new Date().getTime() / 1000) },
         success: (model, response, opts) =>
           @successCallback.apply(this, [this, response, opts]) if @successCallback
-        error: (model, response, opts) =>
-          @errorCallback.apply(this, [this, response, opts]) if @errorCallback
+        error: (model, xhr, opts) =>
+          @errorCallback.apply(this, [this, xhr, opts]) if @errorCallback
 
 
     unsilence: (options = {}) =>

@@ -45,7 +45,13 @@ namespace 'SensuDashboard.Models', (exports) ->
         else @set(status_name: 'unknown')
 
     resolve: (options = {}) =>
-      @destroy(options)
+      @successCallback = options.success
+      @errorCallback = options.error
+      @destroy
+        success: (model, response, opts) =>
+          @successCallback.apply(this, [model, response, opts]) if @successCallback
+        error: (model, xhr, opts) =>
+          @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
 
     silence: (options = {}) =>
       @successCallback = options.success
