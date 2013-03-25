@@ -1,7 +1,7 @@
 module Sensu
   module Dashboard
     unless defined?(Sensu::Dashboard::VERSION)
-      VERSION = '1.0.0.alpha.1'
+      VERSION = '0.9.9'
     end
   end
 end

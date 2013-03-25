@@ -11,6 +11,14 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
       'click td:not(.select)': 'showDetails'
       'click input[type=checkbox]': 'toggleSelect'
 
+    render: ->
+      template_data =
+        selected: @model.get('selected'),
+        path: @model.get('path'),
+        key_list: Object.keys(@model.get('content')).join(', ')
+      @$el.html(@template(template_data))
+      this
+
     toggleSelect: ->
       @model.set(selected: !@model.get('selected'))
 

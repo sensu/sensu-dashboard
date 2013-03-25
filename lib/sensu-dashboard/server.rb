@@ -53,7 +53,8 @@ module Sensu::Dashboard
         $logger = base.logger
         settings = base.settings
         $dashboard_settings = settings[:dashboard] || {
-          :port => 8080
+          :port => 8080,
+          :poll_frequency => 10
         }
         $api_settings = settings[:api] || {
           :host => 'localhost',
@@ -66,6 +67,11 @@ module Sensu::Dashboard
         end
         unless $dashboard_settings[:port].is_a?(Integer)
           invalid_settings('dashboard port must be an integer', {
+            :settings => $dashboard_settings
+          })
+        end
+        unless $dashboard_settings[:poll_frequency].is_a?(Integer)
+          invalid_settings('dashboard poll frequency must be an integer', {
             :settings => $dashboard_settings
           })
         end
@@ -166,26 +172,24 @@ module Sensu::Dashboard
       body sass stylesheet.to_sym
     end
 
-    aget '/health', :provides => 'json' do
+    aget '/info', :provides => 'json' do
       content_type 'application/json'
 
-      multi = EM::MultiRequest.new
-      multi.add :events, EM::HttpRequest.new($api_url + '/events').get($api_options)
-      multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
-      multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
-      multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
-      multi.add :health, EM::HttpRequest.new($api_url + '/info').get($api_options)
+      http = EM::HttpRequest.new($api_url + '/info').get($api_options)
 
       http.errback do
-        status 404
+        status 502
         body '{"error":"could not retrieve /info from the sensu api"}'
       end
 
       http.callback do
         status http.response_header.status
-        health = Oj.load(http.response)
-        health[:sensu_dashboard] = {:version => Sensu::Dashboard::VERSION}
-        body Oj.dump(health)
+        info = Oj.load(http.response)
+        info[:sensu_dashboard] = {
+          :version => Sensu::Dashboard::VERSION,
+          :poll_frequency => $dashboard_settings[:poll_frequency]
+        }
+        body Oj.dump(info)
       end
     end
 
@@ -200,7 +204,7 @@ module Sensu::Dashboard
       multi.add :checks, EM::HttpRequest.new($api_url + '/checks').get($api_options)
       multi.add :clients, EM::HttpRequest.new($api_url + '/clients').get($api_options)
       multi.add :stashes, EM::HttpRequest.new($api_url + '/stashes').get($api_options)
-      multi.add :health, EM::HttpRequest.new($api_url + '/info').get($api_options)
+      multi.add :info, EM::HttpRequest.new($api_url + '/info').get($api_options)
 
       multi.callback do
         unless multi.responses[:errback].keys.count > 0
@@ -208,33 +212,16 @@ module Sensu::Dashboard
             :events  => Oj.load(multi.responses[:callback][:events].response),
             :checks  => Oj.load(multi.responses[:callback][:checks].response),
             :clients => Oj.load(multi.responses[:callback][:clients].response),
-            :health  => Oj.load(multi.responses[:callback][:health].response)
+            :stashes => Oj.load(multi.responses[:callback][:stashes].response),
+            :info    => Oj.load(multi.responses[:callback][:info].response)
           }
-          response[:health][:sensu_dashboard] = {:version => Sensu::Dashboard::VERSION}
+          response[:info][:sensu_dashboard] = {
+            :version => Sensu::Dashboard::VERSION,
+            :poll_frequency => $dashboard_settings[:poll_frequency]
+          }
 
-          api_options = $api_options
-          api_options[:body] = multi.responses[:callback][:stashes].response
-
-          http = EM::HttpRequest.new($api_url + '/stashes').post(api_options)
-
-          http.errback do
-            error_details = {:error => 'could not retrieve /stashes from the sensu api'}
-            $logger.error('failed to query the sensu api', error_details)
-            status 500
-            body Oj.dump(error_details)
-          end
-
-          http.callback do
-            stashes = {}
-            unless http.response.empty?
-              stashes = Oj.load(http.response).map do |path, keys|
-                {:path => path, :keys => keys}
-              end
-            end
-            response[:stashes] = stashes
-            status 200
-            body Oj.dump(response)
-          end
+          status 200
+          body Oj.dump(response)
         else
           failed_requests = []
           multi.responses[:errback].each do |route, _|
@@ -242,7 +229,7 @@ module Sensu::Dashboard
           end
           error_details = {:error => 'could not retrieve ' + failed_requests.join(', ') + ' from the sensu api'}
           $logger.error('failed to query the sensu api', error_details)
-          status 500
+          status 502
           body Oj.dump(error_details)
         end
       end
@@ -261,7 +248,7 @@ module Sensu::Dashboard
       end
 
       http.errback do
-        status 404
+        status 502
         body '{"error":"could not retrieve /'+path+' from the sensu api"}'
       end
 
@@ -285,7 +272,7 @@ module Sensu::Dashboard
       end
 
       http.errback do
-        status 404
+        status 502
         body '{"error":"could not retrieve /'+path+' from the sensu api"}'
       end
 
@@ -309,7 +296,7 @@ module Sensu::Dashboard
       end
 
       http.errback do
-        status 404
+        status 502
         body '{"error":"could not retrieve /'+path+' from the sensu api"}'
       end
 
@@ -332,7 +319,7 @@ module Sensu::Dashboard
       end
 
       http.errback do
-        status 404
+        status 502
         body '{"error":"could not delete /'+path+' from the sensu api"}'
       end
 

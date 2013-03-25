@@ -6,7 +6,11 @@
 </div>
 <div class="modal-body">
   <h3 class="section_title">stash data</h3>
-  {{#each keys}}
+  <div class="well">
+    <h5>Path</h5>
+    <span class="modal_value">{{path}}</span>
+  </div>
+  {{#each content}}
     <div class="well">
       <h5>{{@key}}</h5>
       <span>{{#if this}}{{this}}{{else}}false/nil{{/if}}</span>

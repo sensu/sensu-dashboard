@@ -1,6 +1,6 @@
 namespace 'SensuDashboard.Collections', (exports) ->
 
-  class exports.Checks extends Backbone.Collection
+  class exports.Checks extends SensuDashboard.Collections.Base
     model: SensuDashboard.Models.Check,
     url: '/checks'
 

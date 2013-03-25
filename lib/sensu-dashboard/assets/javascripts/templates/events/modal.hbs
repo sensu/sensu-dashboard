@@ -10,14 +10,14 @@
   {{#each event}}
     <div class="well">
       <h5>{{@key}}</h5>
-      <span>{{#if this}}{{this}}{{else}}false/nil{{/if}}</span>
+      <span class="modal_value">{{#if this}}{{this}}{{else}}false/nil{{/if}}</span>
     </div>
   {{/each}}
   <h3 class="section_title">client data</h3>
   {{#each client}}
     <div class="well">
       <h5>{{@key}}</h5>
-      <span>{{#if this}}{{this}}{{else}}false/nil{{/if}}</span>
+      <span class="modal_value">{{#if this}}{{this}}{{else}}false/nil{{/if}}</span>
     </div>
   {{/each}}
 </div>
