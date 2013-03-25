@@ -111,6 +111,7 @@ namespace 'SensuDashboard.Views', (exports) ->
           html: true
           content: @$el
           placement: 'bottom'
+          trigger: 'manual'
         }).popover("show")
         @setElement(@delegate.$el.find("div.popover-content ul.auto-complete-results")[0])
         @visible = true
@@ -124,7 +125,7 @@ namespace 'SensuDashboard.Views', (exports) ->
       @_hide()
 
     autoCompleteTokenFieldBlur: ->
-      @_show()
+      @_hide()
 
     autoCompleteTokenFieldResults: ->
       @_show()
