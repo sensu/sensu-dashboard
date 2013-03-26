@@ -12,6 +12,7 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
       'click #select-unsilenced': 'selectUnsilenced'
       'click #silence-selected-clients': 'silenceSelected'
       'click #unsilence-selected-clients': 'unsilenceSelected'
+      'click #remove-selected': 'removeSelected'
 
     initialize: ->
       @counts_subview = new SensuDashboard.Views.Clients.Counts(collection: @collection)
@@ -68,4 +69,16 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
           toastr.error('Error un-silencing client ' + client_name + '. ' +
             'The client may already be un-sileneced or Sensu API is down.'
             , 'Un-silencing Error!'
+            , { positionClass: 'toast-bottom-right' })
+
+    removeSelected: ->
+      @collection.removeSelected
+        success: (model) ->
+          toastr.success('Removed client ' + model.get('name') + '.'
+            , 'Success!'
+            , { positionClass: 'toast-bottom-right' })
+        error: (model) ->
+          toastr.error('Error removing client ' + model.get('name') + '. ' +
+            'The client may have already been removed or Sensu API is down.'
+            , 'Removal Error!'
             , { positionClass: 'toast-bottom-right' })

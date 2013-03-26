@@ -114,7 +114,7 @@ namespace 'SensuDashboard.Views.Events', (exports) ->
         parent = $(ev.target)
       icon = parent.find('i').first()
       text = parent.find('span').first()
-      icon.removeClass('icon-volume-off').addClass('icon-spinner icon-spin')
+      icon.removeClass('icon-ok').addClass('icon-spinner icon-spin')
       text.html('Resolving...')
       @event.resolve
         success: (model) ->

@@ -30,7 +30,7 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
         parent = $(ev.target)
       icon = parent.find('i').first()
       text = parent.find('span').first()
-      icon.removeClass('icon-volume-off').addClass('icon-spinner icon-spin')
+      icon.removeClass('icon-remove').addClass('icon-spinner icon-spin')
       text.html('Removing...')
       @model.remove
         success: (model) ->
