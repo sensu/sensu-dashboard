@@ -6,6 +6,7 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
 
     events:
       'click #silence_client': 'silenceClient'
+      'click #remove_client': 'removeClient'
 
     initialize: ->
       @$el.on('hidden', => @remove())
@@ -59,3 +60,24 @@ namespace 'SensuDashboard.Views.Clients', (exports) ->
             toastr.error('Error silencing client ' + client_name + '.'
               , 'Silencing Error!'
               , { positionClass: 'toast-bottom-right' })
+
+    removeClient: (ev) ->
+      tag_name = $(ev.target).prop('tagName')
+      if tag_name == 'SPAN' || tag_name == 'I'
+        parent = $(ev.target).parent()
+      else
+        parent = $(ev.target)
+      icon = parent.find('i').first()
+      text = parent.find('span').first()
+      icon.removeClass('icon-remove').addClass('icon-spinner icon-spin')
+      text.html('Removing...')
+      @model.remove
+        success: (model) ->
+          toastr.success('Removed client ' + model.get('name') + '.'
+            , 'Success!'
+            , { positionClass: 'toast-bottom-right' })
+        error: (model) ->
+          toastr.error('Error removing client ' + model.get('name') + '. ' +
+            'The client may have already been removed or Sensu API is down.'
+            , 'Removal Error!'
+            , { positionClass: 'toast-bottom-right' })
