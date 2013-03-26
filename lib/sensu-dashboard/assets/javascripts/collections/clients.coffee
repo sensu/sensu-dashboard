@@ -71,3 +71,13 @@ namespace 'SensuDashboard.Collections', (exports) ->
             @successCallback.call(this, model) if @successCallback
           error: (model, xhr, opts) =>
             @errorCallback.call(this, model) if @errorCallback
+
+    removeSelected: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      for client in @getSelected()
+        client.remove
+          success: (model, response, opts) =>
+            @successCallback.call(this, model) if @successCallback
+          error: (model, xhr, opts) =>
+            @errorCallback.call(this, model) if @errorCallback

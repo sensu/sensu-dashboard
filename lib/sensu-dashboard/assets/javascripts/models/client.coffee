@@ -46,3 +46,12 @@ namespace 'SensuDashboard.Models', (exports) ->
             @errorCallback.apply(this, [this, xhr, opts]) if @errorCallback
       else
         @errorCallback.apply(this, [this]) if @errorCallback
+
+    remove: (options = {}) =>
+      @successCallback = options.success
+      @errorCallback = options.error
+      @destroy
+        success: (model, response, opts) =>
+          @successCallback.apply(this, [model, response, opts]) if @successCallback
+        error: (model, xhr, opts) =>
+          @errorCallback.apply(this, [model, xhr, opts]) if @errorCallback
