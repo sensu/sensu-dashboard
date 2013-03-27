@@ -1,12 +1,12 @@
-namespace 'SensuDashboard.Models', (exports) ->
+namespace "SensuDashboard.Models", (exports) ->
 
   class exports.Stash extends Backbone.Model
 
     defaults:
-      path: 'silence'
+      path: "silence"
       content: {}
 
-    idAttribute: 'path'
+    idAttribute: "path"
 
     isNew: =>
       !_.contains(SensuDashboard.Stashes.models, this)
@@ -18,8 +18,8 @@ namespace 'SensuDashboard.Models', (exports) ->
 
     sync: (method, model, options) =>
       options ||= {}
-      if method == 'delete'
-        options.url = SensuDashboard.Stashes.url + '/' + model.get('path')
+      if method == "delete"
+        options.url = "#{SensuDashboard.Stashes.url}/#{model.get("path")}"
       Backbone.sync(method, model, options)
 
     remove: (options = {}) =>

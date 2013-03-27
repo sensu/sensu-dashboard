@@ -1,8 +1,8 @@
-namespace 'SensuDashboard.Views.Checks', (exports) ->
+namespace "SensuDashboard.Views.Checks", (exports) ->
 
   class exports.Index extends SensuDashboard.Views.Base
 
-    name: 'checks/index'
+    name: "checks/index"
 
     initialize: ->
       @autocomplete_view = new SensuDashboard.Views.AutoCompleteField()
@@ -13,6 +13,6 @@ namespace 'SensuDashboard.Views.Checks', (exports) ->
 
     render: ->
       @$el.html(@template(checks: @collection))
-      @assign(@subview, '#checks_container')
-      @$el.find('#filter').html(@autocomplete_view.render().el)
+      @assign(@subview, "#checks_container")
+      @$el.find("#filter").html(@autocomplete_view.render().el)
       this

@@ -1,4 +1,4 @@
-namespace 'SensuDashboard', (exports) ->
+namespace "SensuDashboard", (exports) ->
 
   class Application
 
@@ -13,7 +13,7 @@ namespace 'SensuDashboard', (exports) ->
           new SensuDashboard.Views.Error
           toastr.error("Error during bootstrap. Is Sensu API running?"
             , "Bootstrap Error"
-            , { positionClass: 'toast-bottom-right' })
+            , { positionClass: "toast-bottom-right" })
 
     boot: ->
       Backbone.history.start()

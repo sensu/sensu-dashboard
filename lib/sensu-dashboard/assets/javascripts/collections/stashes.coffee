@@ -1,8 +1,8 @@
-namespace 'SensuDashboard.Collections', (exports) ->
+namespace "SensuDashboard.Collections", (exports) ->
 
   class exports.Stashes extends SensuDashboard.Collections.Base
     model: SensuDashboard.Models.Stash,
-    url: '/stashes'
+    url: "/stashes"
 
     getSelected: ->
       @where(selected: true)

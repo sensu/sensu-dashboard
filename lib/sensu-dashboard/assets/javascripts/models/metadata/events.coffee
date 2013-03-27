@@ -1,4 +1,4 @@
-namespace 'SensuDashboard.Models.Metadata', (exports) ->
+namespace "SensuDashboard.Models.Metadata", (exports) ->
 
   class exports.Events extends Backbone.Model
 
@@ -9,7 +9,7 @@ namespace 'SensuDashboard.Models.Metadata', (exports) ->
       unknown: 0
 
     initialize: ->
-      SensuDashboard.Events.on 'all', @updateCounts, this
+      SensuDashboard.Events.on "all", @updateCounts, this
       @updateCounts()
 
     updateCounts: ->
