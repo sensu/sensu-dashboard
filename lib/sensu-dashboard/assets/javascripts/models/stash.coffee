@@ -26,6 +26,7 @@ namespace 'SensuDashboard.Models', (exports) ->
       @successCallback = options.success
       @errorCallback = options.error
       @destroy
+        wait: true
         success: (model, response, opts) =>
           @successCallback.apply(this, [model, response, opts]) if @successCallback
         error: (model, xhr, opts) =>
