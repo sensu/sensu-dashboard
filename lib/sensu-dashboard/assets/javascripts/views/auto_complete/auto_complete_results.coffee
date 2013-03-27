@@ -1,4 +1,4 @@
-namespace 'SensuDashboard.Views', (exports) ->
+namespace "SensuDashboard.Views", (exports) ->
 
   class exports.AutoCompleteResults extends exports.Base
 
@@ -110,8 +110,8 @@ namespace 'SensuDashboard.Views', (exports) ->
         $(@delegate.inputTester).popover({
           html: true
           content: @$el
-          placement: 'bottom'
-          trigger: 'manual'
+          placement: "bottom"
+          trigger: "manual"
         }).popover("show")
         @setElement(@delegate.$el.find("div.popover-content ul.auto-complete-results")[0])
         @visible = true

@@ -1,4 +1,4 @@
-namespace 'SensuDashboard', (exports) ->
+namespace "SensuDashboard", (exports) ->
 
   class exports.Bootstrapper
 
@@ -8,10 +8,10 @@ namespace 'SensuDashboard', (exports) ->
 
       try
         $.ajax
-          type: 'GET'
-          url: '/all'
+          type: "GET"
+          url: "/all"
           context: this
-          dataType: 'json'
+          dataType: "json"
           success: (data, textStatus, jqXHR) ->
             SensuDashboard.PollFrequency = data.info.sensu_dashboard.poll_frequency
             SensuDashboard.Stashes = new SensuDashboard.Collections.Stashes(data.stashes)

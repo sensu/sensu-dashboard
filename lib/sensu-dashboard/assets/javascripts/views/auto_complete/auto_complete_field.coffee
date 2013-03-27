@@ -1,4 +1,4 @@
-namespace 'SensuDashboard.Views', (exports) ->
+namespace "SensuDashboard.Views", (exports) ->
 
   class exports.AutoCompleteField extends TokenField
 
@@ -9,16 +9,16 @@ namespace 'SensuDashboard.Views', (exports) ->
     maxResults: 9
 
     localEvents:
-      'blur input': '_blur'
-      'focus input': '_focus'
-      'focusin input': 'focusIn'
-      'focusout input': 'focusOut'
+      "blur input": "_blur"
+      "focus input": "_focus"
+      "focusin input": "focusIn"
+      "focusout input": "focusOut"
 
     focusIn: ->
-      $('#filter').addClass('focus')
+      $("#filter").addClass("focus")
 
     focusOut: ->
-      $('#filter').removeClass('focus')
+      $("#filter").removeClass("focus")
 
     initialize: ->
       super

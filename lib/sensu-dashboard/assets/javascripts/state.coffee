@@ -1,4 +1,4 @@
-namespace 'SensuDashboard', (exports) ->
+namespace "SensuDashboard", (exports) ->
 
   class exports.State
 

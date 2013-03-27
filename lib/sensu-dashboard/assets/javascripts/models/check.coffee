@@ -1,4 +1,4 @@
-namespace 'SensuDashboard.Models', (exports) ->
+namespace "SensuDashboard.Models", (exports) ->
 
   class exports.Check extends Backbone.Model
 
@@ -8,4 +8,4 @@ namespace 'SensuDashboard.Models', (exports) ->
       subscribers: ["all"]
       interval: 60
 
-    idAttribute: 'name'
+    idAttribute: "name"

@@ -2,9 +2,9 @@
   payload = payload || {}
   context = context || window
 
-  parts = nspace.split '.'
+  parts = nspace.split "."
   parent = context
-  currentPart = ''
+  currentPart = ""
 
   while currentPart = parts.shift()
     if parts.length != 0

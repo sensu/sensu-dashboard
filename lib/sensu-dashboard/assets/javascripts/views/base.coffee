@@ -1,4 +1,4 @@
-namespace 'SensuDashboard.Views', (exports) ->
+namespace "SensuDashboard.Views", (exports) ->
 
   class exports.Base extends Backbone.View
 
