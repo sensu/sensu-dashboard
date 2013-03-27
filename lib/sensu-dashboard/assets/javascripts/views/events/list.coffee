@@ -30,15 +30,23 @@ namespace "SensuDashboard.Views.Events", (exports) ->
 
       resolved
 
-    renderCollection: ->
-      super(_(@resolvedCollection().map().value()))
+    resolved: ->
+      _(@resolvedCollection().map().value())
 
-    renderEmpty: ->
-      super(_(@resolvedCollection().map().value()))
+    renderCollection: (collection) ->
+      super(collection || @resolved())
+
+    renderEmpty: (collection) ->
+      super(collection || @resolved())
 
     #
     # Autocomplete delegate
     #
 
     filtersUpdated: ->
-      @render()
+      filtered = @resolved()
+      @collection.each (model) ->
+        model.set(selected: false) unless filtered.contains(model)
+
+      @$el.html(@template())
+      @renderCollection(filtered)
