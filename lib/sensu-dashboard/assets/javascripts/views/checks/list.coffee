@@ -1,8 +1,8 @@
-namespace 'SensuDashboard.Views.Checks', (exports) ->
+namespace "SensuDashboard.Views.Checks", (exports) ->
 
   class exports.List extends SensuDashboard.Views.List
 
-    name: 'checks/list'
+    name: "checks/list"
 
     initialize: ->
       @autocomplete_view = @options.autocomplete_view
@@ -18,10 +18,10 @@ namespace 'SensuDashboard.Views.Checks', (exports) ->
         resolved = if _.isString(token.object)
           resolved.filter (record) =>
             result = @matchForKeys(token.object, record,
-              { key: 'interval', threshold: 1 },
-              { key: 'name', threshold: 0.92 }
+              { key: "interval", threshold: 1 },
+              { key: "name", threshold: 0.92 }
             )
-            result || _.detect(record.get('subscribers'), (sub) =>
+            result || _.detect(record.get("subscribers"), (sub) =>
               liquidMetal.score(sub, token.object) > 0.96) != undefined
 
       resolved

@@ -1,4 +1,4 @@
-namespace 'SensuDashboard.Models', (exports) ->
+namespace "SensuDashboard.Models", (exports) ->
 
   class exports.Client extends Backbone.Model
 
@@ -8,26 +8,26 @@ namespace 'SensuDashboard.Models', (exports) ->
       subscriptions: []
       timestamp: 0
 
-    idAttribute: 'name'
+    idAttribute: "name"
 
     initialize: ->
-      @set(silence_path: 'silence/'+@get('name'))
-      @listenTo(SensuDashboard.Stashes, 'reset', @setSilencing)
-      @listenTo(SensuDashboard.Stashes, 'add', @setSilencing)
-      @listenTo(SensuDashboard.Stashes, 'remove', @setSilencing)
+      @set(silence_path: "silence/#{@get("name")}")
+      @listenTo(SensuDashboard.Stashes, "reset", @setSilencing)
+      @listenTo(SensuDashboard.Stashes, "add", @setSilencing)
+      @listenTo(SensuDashboard.Stashes, "remove", @setSilencing)
       @setSilencing()
 
     setSilencing: ->
       silenced = false
-      silenced = true if SensuDashboard.Stashes.get(@get('silence_path'))
-      if @get('silenced') != silenced
+      silenced = true if SensuDashboard.Stashes.get(@get("silence_path"))
+      if @get("silenced") != silenced
         @set(silenced: silenced)
 
     silence: (options = {}) =>
       @successCallback = options.success
       @errorCallback = options.error
       stash = SensuDashboard.Stashes.create({
-        path: @get('silence_path')
+        path: @get("silence_path")
         content: { timestamp: Math.round(new Date().getTime() / 1000) }}, {
         success: (model, response, opts) =>
           @successCallback.apply(this, [this, response]) if @successCallback
@@ -37,7 +37,7 @@ namespace 'SensuDashboard.Models', (exports) ->
     unsilence: (options = {}) =>
       @successCallback = options.success
       @errorCallback = options.error
-      stash = SensuDashboard.Stashes.get(@get('silence_path'))
+      stash = SensuDashboard.Stashes.get(@get("silence_path"))
       if stash
         stash.destroy
           success: (model, response, opts) =>

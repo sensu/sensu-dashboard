@@ -1,11 +1,11 @@
-namespace 'SensuDashboard.Collections', (exports) ->
+namespace "SensuDashboard.Collections", (exports) ->
 
   class exports.Clients extends SensuDashboard.Collections.Base
     model: SensuDashboard.Models.Client,
-    url: '/clients'
+    url: "/clients"
 
     comparator: (event) ->
-      event.get('name')
+      event.get("name")
 
     getSelected: ->
       @where(selected: true)

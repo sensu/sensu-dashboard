@@ -1,4 +1,4 @@
-namespace 'SensuDashboard.Collections', (exports) ->
+namespace "SensuDashboard.Collections", (exports) ->
 
   class exports.Base extends Backbone.Collection
     longPolling: false

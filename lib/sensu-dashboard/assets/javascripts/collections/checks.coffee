@@ -1,8 +1,8 @@
-namespace 'SensuDashboard.Collections', (exports) ->
+namespace "SensuDashboard.Collections", (exports) ->
 
   class exports.Checks extends SensuDashboard.Collections.Base
     model: SensuDashboard.Models.Check,
-    url: '/checks'
+    url: "/checks"
 
     comparator: (event) ->
-      event.get 'name'
+      event.get "name"

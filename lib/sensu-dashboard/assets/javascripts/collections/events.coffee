@@ -1,17 +1,17 @@
-namespace 'SensuDashboard.Collections', (exports) ->
+namespace "SensuDashboard.Collections", (exports) ->
 
   class exports.Events extends SensuDashboard.Collections.Base
     model: SensuDashboard.Models.Event,
-    url: '/events'
+    url: "/events"
 
     comparator: (event) ->
-      event.get('status_name')
+      event.get("status_name")
 
     getSelected: ->
       @where(selected: true)
 
     getSelectedClients: ->
-      _.map(@getSelected(), (event) -> event.get('client'))
+      _.map(@getSelected(), (event) -> event.get("client"))
 
     getUniqueSelectedClients: ->
       clients = _.uniq(@getSelectedClients())
@@ -21,7 +21,7 @@ namespace 'SensuDashboard.Collections', (exports) ->
 
     getUnknowns: ->
       @filter (event) ->
-        status = event.get('status')
+        status = event.get("status")
         return status != 1 && status != 2
 
     getWarnings: ->
@@ -44,8 +44,8 @@ namespace 'SensuDashboard.Collections', (exports) ->
 
     getSelectedUnknowns: ->
       @filter (event) ->
-        status = event.get('status')
-        selected = event.get('selected')
+        status = event.get("status")
+        selected = event.get("selected")
         return status != 1 && status != 2 && selected == true
 
     getSelectedWarnings: ->

@@ -1,4 +1,4 @@
-namespace 'SensuDashboard.Models', (exports) ->
+namespace "SensuDashboard.Models", (exports) ->
 
   class exports.Info extends Backbone.Model
 
@@ -21,11 +21,11 @@ namespace 'SensuDashboard.Models', (exports) ->
         version: null
         poll_frequency: 10
 
-    url: '/info'
+    url: "/info"
 
     initialize: ->
-      @setRMQStatus   @get('rabbitmq').connected
-      @setRedisStatus @get('redis').connected
+      @setRMQStatus   @get("rabbitmq").connected
+      @setRedisStatus @get("redis").connected
 
     setRMQStatus: (status) ->
       @set { rmq_status: @_onlineStatus(status) }
@@ -35,7 +35,7 @@ namespace 'SensuDashboard.Models', (exports) ->
 
 # Private
     _onlineStatus: (status) ->
-      if status then 'Online' else 'Offline'
+      if status then "Online" else "Offline"
 
     longPolling: false
 

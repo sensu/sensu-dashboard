@@ -1,14 +1,14 @@
-namespace 'SensuDashboard.Views.Stashes', (exports) ->
+namespace "SensuDashboard.Views.Stashes", (exports) ->
 
   class exports.Index extends SensuDashboard.Views.Base
 
-    name: 'stashes/index'
+    name: "stashes/index"
 
     events:
-      'click #toggle-checkboxes': 'toggleSelected'
-      'click #select-all': 'selectAll'
-      'click #select-none': 'selectNone'
-      'click #remove-selected': 'removeSelected'
+      "click #toggle-checkboxes": "toggleSelected"
+      "click #select-all": "selectAll"
+      "click #select-none": "selectNone"
+      "click #remove-selected": "removeSelected"
 
     initialize: ->
       @autocomplete_view = new SensuDashboard.Views.AutoCompleteField()
@@ -20,9 +20,9 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
 
     render: ->
       @$el.html(@template(stashes: @collection))
-      @assign(@counts_subview, '#counts')
-      @assign(@stashes_view, '#stashes_container')
-      @$el.find('#filter').html(@autocomplete_view.render().el)
+      @assign(@counts_subview, "#counts")
+      @assign(@stashes_view, "#stashes_container")
+      @$el.find("#filter").html(@autocomplete_view.render().el)
       this
 
     toggleSelected: ->
@@ -37,13 +37,13 @@ namespace 'SensuDashboard.Views.Stashes', (exports) ->
     removeSelected: ->
       @collection.removeSelected
         success: (model) ->
-          stash_name = model.get('path')
-          toastr.success('Removed stash ' + stash_name + '.'
-            , 'Success!'
-            , { positionClass: 'toast-bottom-right' })
+          stash_name = model.get("path")
+          toastr.success("Removed stash #{stash_name}."
+            , "Success!"
+            , { positionClass: "toast-bottom-right" })
         error: (model) ->
-          stash_name = model.get('path')
-          toastr.error('Error removing stash ' + stash_name + '. ' +
-            'The stash may already be removed or Sensu API is down.'
-            , 'Removal Error!'
-            , { positionClass: 'toast-bottom-right' })
+          stash_name = model.get("path")
+          toastr.error("Error removing stash #{stash_name}.
+            The stash may already be removed or Sensu API is down."
+            , "Removal Error!"
+            , { positionClass: "toast-bottom-right" })

@@ -1,11 +1,11 @@
-namespace 'SensuDashboard.Views.Events', (exports) ->
+namespace "SensuDashboard.Views.Events", (exports) ->
 
   class exports.Counts extends SensuDashboard.Views.Base
 
-    name: 'events/counts'
+    name: "events/counts"
 
     initialize: (model) ->
-      @listenTo(@model, 'all', @render)
+      @listenTo(@model, "all", @render)
 
     render: ->
       @$el.html(@template(@model.toJSON()))

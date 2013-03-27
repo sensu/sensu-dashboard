@@ -1,15 +1,15 @@
-namespace 'SensuDashboard.Views', (exports) ->
+namespace "SensuDashboard.Views", (exports) ->
 
   class exports.Error extends SensuDashboard.Views.Base
 
-    el: $('#main')
+    el: $("#main")
 
-    name: 'error'
+    name: "error"
 
     initialize: ->
       @template_data =
-        title: 'Oh no!' ? @options.title
-        message: 'Something isn\'t right. Try refreshing.' ? @options.message
+        title: "Oh no!" ? @options.title
+        message: "Something isn't right. Try refreshing." ? @options.message
       @render()
 
     render: ->

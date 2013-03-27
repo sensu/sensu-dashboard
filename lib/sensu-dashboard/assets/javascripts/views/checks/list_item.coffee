@@ -1,11 +1,11 @@
-namespace 'SensuDashboard.Views.Checks', (exports) ->
+namespace "SensuDashboard.Views.Checks", (exports) ->
 
   class exports.ListItem extends SensuDashboard.Views.ListItem
 
-    name: 'checks/list_item'
+    name: "checks/list_item"
 
     className: ->
-      @model.get('name')
+      @model.get("name")
 
     render: ->
       @$el.html(@template(@presenter()))
@@ -13,5 +13,5 @@ namespace 'SensuDashboard.Views.Checks', (exports) ->
 
     presenter: ->
       _.extend(@model.toJSON(), {
-        standalone: @model.get('standalone') || 'false'
+        standalone: @model.get("standalone") || "false"
       })

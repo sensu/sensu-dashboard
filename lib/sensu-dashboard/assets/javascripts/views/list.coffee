@@ -1,8 +1,8 @@
-namespace 'SensuDashboard.Views', (exports) ->
+namespace "SensuDashboard.Views", (exports) ->
 
   class exports.List extends SensuDashboard.Views.Base
 
-    collectionEl: 'tbody'
+    collectionEl: "tbody"
 
     itemName: "list_item"
 
@@ -14,9 +14,9 @@ namespace 'SensuDashboard.Views', (exports) ->
       view = new kls(model: model, name: @itemName)
 
     initialize: ->
-      @listenTo(@collection, 'remove', @renderEmpty)
-      @listenTo(@collection, 'reset', @render)
-      @listenTo(@collection, 'add', @render)
+      @listenTo(@collection, "remove", @renderEmpty)
+      @listenTo(@collection, "reset", @render)
+      @listenTo(@collection, "add", @render)
 
     addItem: (item) ->
       @renderItem(item)

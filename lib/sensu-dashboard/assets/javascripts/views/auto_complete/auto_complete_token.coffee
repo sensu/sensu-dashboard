@@ -1,9 +1,9 @@
-namespace 'SensuDashboard.Views', (exports) ->
+namespace "SensuDashboard.Views", (exports) ->
 
   class exports.AutoCompleteToken extends exports.Base
 
-    tagName: 'li'
-    className: 'token'
+    tagName: "li"
+    className: "token"
 
     initialize: ->
       @delegate = @options.delegate
