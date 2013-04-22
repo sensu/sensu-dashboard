@@ -14,13 +14,16 @@ namespace "SensuDashboard.Views", (exports) ->
       view = new kls(model: model, name: @itemName)
 
     initialize: ->
-      @listenTo(@collection, "remove", @renderEmpty)
+      @listenTo(@collection, "remove", @removeItem)
       @listenTo(@collection, "reset", @render)
       @listenTo(@collection, "add", @render)
 
     addItem: (item) ->
       @renderItem(item)
       @collection.sort()
+
+    removeItem: (item, collection = @collection) ->
+      @renderEmpty(collection)
 
     renderItem: (item) ->
       item_view = @itemView(item)
