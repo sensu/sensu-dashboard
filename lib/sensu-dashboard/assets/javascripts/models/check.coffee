@@ -5,7 +5,7 @@ namespace "SensuDashboard.Models", (exports) ->
     defaults:
       handlers: ["default"]
       standalone: false
-      subscribers: ["all"]
+      subscribers: []
       interval: 60
 
     idAttribute: "name"
