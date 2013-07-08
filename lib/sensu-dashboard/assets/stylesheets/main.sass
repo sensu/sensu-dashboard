@@ -321,9 +321,10 @@ table.table#events_table
 table.table#stashes_table
   tbody
     tr
+      color: #999
+      background-color: #eee
+
       td
-        color: #999
-        background-color: #eee
 
       td.path
         font-weight: bold
@@ -331,12 +332,17 @@ table.table#stashes_table
       td.keys
         white-space: normal
 
+    tr:hover
+      color: #eee
+      background-color: #999
+
 table.table#clients_table
   tbody
     tr
+      color: #999
+      background-color: #eee
+
       td
-        color: #999
-        background-color: #eee
 
       td.client_id
         font-weight: bold
@@ -346,12 +352,17 @@ table.table#clients_table
         white-space: normal
         word-break: break-all
 
+    tr:hover
+      color: #eee
+      background-color: #999
+
 table.table#checks_table
   tbody
     tr
+      color: #999
+      background-color: #eee
+
       td
-        color: #999
-        background-color: #eee
 
       td.check_id
         font-weight: bold
@@ -359,6 +370,10 @@ table.table#checks_table
 
       td.command
         word-break: break-all
+
+    tr:hover
+      color: #eee
+      background-color: #999
 
 table.table#info_table
   width: 400px
