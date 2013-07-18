@@ -19,7 +19,11 @@ html(lang='en')
     / multi resolution favicon for IE
     link(rel="shortcut icon" href="favicon.ico")
     link(rel='stylesheet' type='text/css' href='assets/app.css')
-  body
+    javascript:
+      function timedRefresh(timeoutPeriod) {
+        setTimeout("location.reload(true);",timeoutPeriod);
+      }
+  body onload="JavaScript:timedRefresh(60000);"
     .navbar.navbar-inverse
       .navbar-inner
         .container
