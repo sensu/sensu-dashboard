@@ -32,7 +32,7 @@ namespace "SensuDashboard.Views", (exports) ->
           @renderItem(item)
 
     renderEmpty: (collection = @collection) ->
-      if collection.isEmpty()
+      if !collection?
         tmpl = HandlebarsTemplates["empty_list"]
         @$el.html(tmpl())
         true
