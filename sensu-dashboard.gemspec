@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency('yui-compressor')
   s.add_dependency('coffee-script')
   s.add_dependency('handlebars_assets')
-  s.add_dependency('therubyracer')
+  s.add_dependency('therubyracer', '0.11.4')
   s.add_dependency('less')
   s.add_dependency('sinatra', '1.3.5')
 
