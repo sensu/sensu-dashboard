@@ -10,7 +10,7 @@
   <div class="well">
   {{#each event}}
     {{#if this}}
-      <strong>{{@key}}</strong> <span class="modal_value">{{this}}</span><br/>
+      <strong>{{@key}}</strong> <span class="modal_value">{{strip this}}</span><br/>
     {{/if}}
   {{/each}}
   </div>
