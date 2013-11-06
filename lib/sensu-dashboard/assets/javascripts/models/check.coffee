@@ -10,9 +10,6 @@ namespace "SensuDashboard.Models", (exports) ->
 
     idAttribute: "name"
 
-    initialize: ->
-
-    
     request: (options = {}) =>
       @successCallback = options.success
       @errorCallback = options.error
