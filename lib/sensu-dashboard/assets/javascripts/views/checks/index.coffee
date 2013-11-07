@@ -8,6 +8,7 @@ namespace "SensuDashboard.Views.Checks", (exports) ->
       "click #toggle-checkboxes": "toggleSelected"
       "click #select-all": "selectAll"
       "click #select-none": "selectNone"
+      "click #request-selected-checks": "requestSelected"
 
     initialize: ->
       @autocomplete_view = new SensuDashboard.Views.AutoCompleteField()
@@ -30,3 +31,17 @@ namespace "SensuDashboard.Views.Checks", (exports) ->
 
     selectNone: ->
       @collection.selectNone()
+
+    requestSelected: ->
+      @collection.requestSelected
+        success: (model) ->
+          client_name = model.get("name")
+          toastr.success("Un-silenced client #{client_name}."
+            , "Success!"
+            , { positionClass: "toast-bottom-right" })
+        error: (model) ->
+          client_name = model.get("name")
+          toastr.error("Error un-silencing client #{client_name}.
+            The client may already be un-sileneced or Sensu API is down."
+            , "Un-silencing Error!"
+            , { positionClass: "toast-bottom-right" })

@@ -13,3 +13,9 @@ namespace "SensuDashboard.Models", (exports) ->
     request: (options = {}) =>
       @successCallback = options.success
       @errorCallback = options.error
+      console.log("hi")
+      $.ajax
+        type: "POST"
+        url: "http://sensu-master.edtd.net:4567/check/request"
+        data:
+          check: "port_http"

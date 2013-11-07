@@ -24,3 +24,12 @@ namespace "SensuDashboard.Collections", (exports) ->
       @each (client) ->
         client.set(selected: false)
         
+    requestSelected: (options = {}) ->
+      @successCallback = options.success
+      @errorCallback = options.error
+      for check in @getSelected()
+        check.request
+          success: (model, xhr, opts) =>
+            @successCallback.call(this, model) if @successCallback
+          error: (model, xhr, opts) =>
+            @errorCallback.call(this, model) if @errorCallback
