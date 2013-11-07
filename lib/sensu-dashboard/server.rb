@@ -207,7 +207,9 @@ module Sensu::Dashboard
 
       multi.callback do
         empty_body = routes.detect do |route|
-          multi.responses[:callback][route].response == ""
+          if multi.responses[:callback][route]
+            multi.responses[:callback][route].response == ""
+          end
         end
 
         unless multi.responses[:errback].keys.count > 0 || empty_body
