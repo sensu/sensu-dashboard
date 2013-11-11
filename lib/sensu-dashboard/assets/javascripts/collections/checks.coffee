@@ -29,7 +29,9 @@ namespace "SensuDashboard.Collections", (exports) ->
       @errorCallback = options.error
       for check in @getSelected()
         check.request
-          success: (model, xhr, opts) =>
+          success: (model) =>
             @successCallback.call(this, model) if @successCallback
-          error: (model, xhr, opts) =>
+            @selectNone()
+          error: (model) =>
             @errorCallback.call(this, model) if @errorCallback
+            @selectNone()

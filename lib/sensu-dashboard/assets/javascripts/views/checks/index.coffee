@@ -35,13 +35,8 @@ namespace "SensuDashboard.Views.Checks", (exports) ->
     requestSelected: ->
       @collection.requestSelected
         success: (model) ->
-          client_name = model.get("name")
-          toastr.success("Un-silenced client #{client_name}."
-            , "Success!"
-            , { positionClass: "toast-bottom-right" })
+          check_name = model.get('name')
+          toastr.success("Check #{check_name} requested", "Success!", { positionClass: "toast-bottom-right" })
         error: (model) ->
-          client_name = model.get("name")
-          toastr.error("Error un-silencing client #{client_name}.
-            The client may already be un-sileneced or Sensu API is down."
-            , "Un-silencing Error!"
-            , { positionClass: "toast-bottom-right" })
+          check_name = model.get('name')
+          toastr.error("Error requesting check #{check_name}.", "Request Check Error!", { positionClass: "toast-bottom-right" })
