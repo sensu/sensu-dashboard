@@ -12,8 +12,6 @@ namespace "SensuDashboard.Views.Events", (exports) ->
       "click input[type=checkbox]": "toggleSelect"
 
     initialize: ->
-      @client = SensuDashboard.Clients.get(@model.get("client"))
-      @listenTo(@client, "remove", @remove)
       super
 
     toggleSelect: ->
@@ -22,4 +20,3 @@ namespace "SensuDashboard.Views.Events", (exports) ->
     showDetails: ->
       new SensuDashboard.Views.Events.Modal
         event: @model
-        client: @client

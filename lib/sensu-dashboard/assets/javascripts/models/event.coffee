@@ -6,23 +6,21 @@ namespace "SensuDashboard.Models", (exports) ->
       client: null
       check: null
       occurrences: 0
-      output: null
-      status: 3
-      flapping: false
-      issued: "0000-00-00T00:00:00Z"
+      action: null
 
     initialize: ->
-      @set(id: "#{@get("client")}/#{@get("check")}")
-      @setOutputIfEmpty(@get("output"))
-      @setStatusName(@get("status"))
+      @set(id: "#{@get("client")["name"]}/#{@get("check")["name"]}")
+      @setOutputIfEmpty(@get("check")["output"])
+      @setStatusName(@get("check")["status"])
       @set
         url: "/events/#{@get("id")}"
-        client_silence_path: "silence/#{@get("client")}"
-        silence_path: "silence/#{@get("id")}"
+        client_silence_path: "silence/#{@get("client")["name"]}"
+        silence_path: "silence/#{@get("client")["name"]}/#{@get("check")["name"]}"
       @listenTo(SensuDashboard.Stashes, "reset", @setSilencing)
       @listenTo(SensuDashboard.Stashes, "add", @setSilencing)
       @listenTo(SensuDashboard.Stashes, "remove", @setSilencing)
       @setSilencing()
+      console.log @
 
     setSilencing: ->
       silenced = false
@@ -36,7 +34,7 @@ namespace "SensuDashboard.Models", (exports) ->
 
     setOutputIfEmpty: (output) ->
       if output == ""
-        @set(output: "nil output")
+        @set(output: "empty output")
 
     setStatusName: (status) ->
       switch status
