@@ -1,8 +1,8 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h4 id="modal_label">
-      <span>{{event.client}}</span><br />
-      <small>{{event.check}}</small>
+      <span>{{event.client.name}}</span><br />
+      <small>{{event.check.name}}</small>
     </h4>
 </div>
 <div class="modal-body">
@@ -14,26 +14,8 @@
     {{/if}}
   {{/each}}
   </div>
-
-  <h3 class="section_title">client data</h3>
-  <div class="well">
-  {{#each client}}
-    {{#if this}}
-      <strong>{{@key}}</strong> <span class="modal_value">{{{modalValue this}}}</span><br />
-    {{/if}}
-  {{/each}}
-  </div>
 </div>
 <div class="modal-footer">
-  <button id="silence_client" class="btn btn-danger">
-    {{#if client.silenced}}
-      <i class="icon-volume-off icon-white" />
-      <span>&nbsp;Un-silence Client</span>
-    {{else}}
-      <i class="icon-volume-up icon-white" />
-      <span>&nbsp;Silence Client</span>
-    {{/if}}
-  </button>
   <button id="silence_check" class="btn btn-danger">
     {{#if event.silenced}}
       <i class="icon-volume-off icon-white" />

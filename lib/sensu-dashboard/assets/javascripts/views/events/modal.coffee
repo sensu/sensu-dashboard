@@ -5,24 +5,20 @@ namespace "SensuDashboard.Views.Events", (exports) ->
     name: "events/modal"
 
     events:
-      "click #silence_client": "silenceClient"
+      #"click #silence_client": "silenceClient"
       "click #silence_check": "silenceCheck"
       "click #resolve_check": "resolveCheck"
 
     initialize: ->
       @$el.on("hidden", => @remove())
       @event = @options.event
-      @client = @options.client
       @listenTo(@event, "change", @render)
       @listenTo(@event, "destroy", @remove)
-      @listenTo(@client, "change", @render)
-      @listenTo(@client, "destroy", @remove)
       @render()
 
     render: ->
       template_data =
         event: @event.toJSON()
-        client: @client.toJSON()
       if @$el.html() == ""
         @$el.html(@template(template_data))
         @$el.appendTo("body")
@@ -81,12 +77,12 @@ namespace "SensuDashboard.Views.Events", (exports) ->
         text.html("Un-silencing...")
         @event.unsilence
           success: (model) ->
-            check_name = model.get("check")
+            check_name = model.get("check")["name"]
             toastr.success("Un-silenced check #{check_name}."
               , "Success!"
               , { positionClass: "toast-bottom-right" })
           error: (model) ->
-            check_name = model.get("check")
+            check_name = model.get("check")["name"]
             toastr.error("Error un-silencing check #{check_name}.
               The check may already be un-sileneced or Sensu API is down."
               , "Un-silencing Error!"
@@ -96,12 +92,12 @@ namespace "SensuDashboard.Views.Events", (exports) ->
         text.html("Silencing...")
         @event.silence
           success: (model) ->
-            check_name = model.get("check")
+            check_name = model.get("check")["name"]
             toastr.success("Silenced check #{check_name}."
               , "Success!"
               , { positionClass: "toast-bottom-right" })
           error: (model) ->
-            check_name = model.get("check")
+            check_name = model.get("check")["name"]
             toastr.error("Error silencing check #{check_name}."
               , "Silencing Error!"
               , { positionClass: "toast-bottom-right" })
@@ -118,12 +114,12 @@ namespace "SensuDashboard.Views.Events", (exports) ->
       text.html("Resolving...")
       @event.resolve
         success: (model) ->
-          event_name = "#{model.get("client")}_#{model.get("check")}"
+          event_name = "#{model.get("client")["name"]}_#{model.get("check")["name"]}"
           toastr.success("Resolved event #{event_name}."
             , "Success!"
             , { positionClass: "toast-bottom-right" })
         error: (model) ->
-          event_name = "#{model.get("client")}_#{model.get("check")}"
+          event_name = "#{model.get("client")["name"]}_#{model.get("check")["name"]}"
           toastr.error("Error resolving event #{event_name}. Is Sensu API running?"
             , "Resolving Error"
             , { positionClass: "toast-bottom-right" })

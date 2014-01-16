@@ -5,7 +5,7 @@
   {{else}}
     <i class="icon-volume-up icon-white" />
   {{/if}}
-  {{client}}
+  {{client.name}}
 </td>
 <td class="check">
   {{#if silenced}}
@@ -13,6 +13,6 @@
   {{else}}
     <i class="icon-volume-up icon-white" />
   {{/if}}
-  {{check}}
+  {{check.name}}
 </td>
-<td class="output">{{truncate output 90}}</td>
+<td class="output">{{truncate check.output 90}}</td>
