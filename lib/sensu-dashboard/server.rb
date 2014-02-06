@@ -60,7 +60,7 @@ module Sensu::Dashboard
         $dashboard_settings = settings[:dashboard] || Hash.new
         $dashboard_settings[:port] ||= 8080
         $dashboard_settings[:poll_frequency] ||= 10
-        $api_settings = settings[:api] || Hash.new
+        $api_settings = $dashboard_settings[:api] || settings[:api] || Hash.new
         $api_settings[:host] ||= 'localhost'
         $api_settings[:port] ||= 4567
         unless $dashboard_settings[:port].is_a?(Integer)
