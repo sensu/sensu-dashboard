@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.has_rdoc    = false
 
   s.add_dependency('sensu', '>= 0.9.12')
+  s.add_dependency('cookiejar', '0.3.0')
   s.add_dependency('em-http-request', '~> 1.0.1')
   s.add_dependency('sass')
   s.add_dependency('slim')
