@@ -20,4 +20,5 @@ Handlebars.registerHelper "modalValue", (key, text) ->
   return Handlebars.helpers.strip(linkified)
 
 Handlebars.registerHelper "formatTimestamp", (text) ->
-    return Date(text*100)
+  date = new Date(text*1000)
+  return date.toISOString()
