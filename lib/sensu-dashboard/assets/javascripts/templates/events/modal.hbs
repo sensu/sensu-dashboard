@@ -10,7 +10,7 @@
   <div class="well">
   {{#each event}}
     {{#if this}}
-      <strong>{{@key}}</strong> <span class="modal_value">{{{modalValue this}}}</span><br/>
+      <strong>{{@key}}</strong> <span class="modal_value">{{{modalValue @key this}}}</span><br/>
     {{/if}}
   {{/each}}
   </div>
@@ -19,7 +19,7 @@
   <div class="well">
   {{#each client}}
     {{#if this}}
-      <strong>{{@key}}</strong> <span class="modal_value">{{{modalValue this}}}</span><br />
+      <strong>{{@key}}</strong> <span class="modal_value">{{{modalValue @key this}}}</span><br />
     {{/if}}
   {{/each}}
   </div>

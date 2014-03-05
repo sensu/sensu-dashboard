@@ -9,7 +9,7 @@
   {{#each this}}
     <div class="well">
       <h5>{{@key}}</h5>
-      <span class="modal_value">{{#if this}}{{this}}{{else}}false/nil{{/if}}</span>
+      <span class="modal_value">{{#if this}}{{{modalValue @key this}}}{{else}}false/nil{{/if}}</span>
     </div>
   {{/each}}
 </div>

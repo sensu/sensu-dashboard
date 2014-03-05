@@ -14,6 +14,10 @@ Handlebars.registerHelper "linkify", (text) ->
   exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
   return text.toString().replace(exp,"<a href='$1'>$1</a>")
 
-Handlebars.registerHelper "modalValue", (text) ->
+Handlebars.registerHelper "modalValue", (key, text) ->
+  text = Handlebars.helpers.formatTimestamp(text) if key in ["issued", "timestamp"]
   linkified = Handlebars.helpers.linkify(text)
   return Handlebars.helpers.strip(linkified)
+
+Handlebars.registerHelper "formatTimestamp", (text) ->
+    return Date(text*100)
