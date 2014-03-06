@@ -10,6 +10,7 @@ namespace "SensuDashboard.Models", (exports) ->
       status: 3
       flapping: false
       issued: "0000-00-00T00:00:00Z"
+      expire: 300
 
     initialize: ->
       @set(id: "#{@get("client")}/#{@get("check")}")
@@ -58,6 +59,7 @@ namespace "SensuDashboard.Models", (exports) ->
       @errorCallback = options.error
       stash = SensuDashboard.Stashes.create({
         path: @get("silence_path")
+        expire: options.expire_time
         content: { timestamp: Math.round(new Date().getTime() / 1000) }}, {
         success: (model, response, opts) =>
           @successCallback.apply(this, [this, response]) if @successCallback

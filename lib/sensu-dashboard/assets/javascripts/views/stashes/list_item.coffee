@@ -15,6 +15,7 @@ namespace "SensuDashboard.Views.Stashes", (exports) ->
       template_data =
         selected: @model.get("selected"),
         path: @model.get("path"),
+        expire: @model.get("expire"),
         key_list: Object.keys(@model.get("content")).join(", ")
       @$el.html(@template(template_data))
       this

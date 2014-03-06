@@ -14,15 +14,19 @@
   {{/each}}
 </div>
 <div class="modal-footer">
-  <button id="silence_client" class="btn btn-danger">
-    {{#if silenced}}
+  {{#if silenced}}
+    <button id="silence_client" class="btn btn-danger">
       <i class="icon-volume-off icon-white" />
       <span>&nbsp;Un-silence Client</span>
-    {{else}}
+    </button>
+  {{else}}
+    Expire (seconds): <input id="silence_client_expire" type="text" value="{{expire}}" />
+    <button id="silence_client" class="btn btn-danger">
       <i class="icon-volume-up icon-white" />
       <span>&nbsp;Silence Client</span>
-    {{/if}}
-  </button>
+    </button>
+  {{/if}}
+  <br/>
   <button id="remove_client" class="btn btn-danger">
       <i class="icon-remove icon-white" />
       <span>&nbsp;Remove Client</span>

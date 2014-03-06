@@ -5,6 +5,7 @@ namespace "SensuDashboard.Models", (exports) ->
     defaults:
       path: "silence"
       content: {}
+      expire: 300
 
     idAttribute: "path"
 

@@ -38,6 +38,7 @@ namespace "SensuDashboard.Views.Events", (exports) ->
         parent = $(ev.target)
       icon = parent.find("i").first()
       text = parent.find("span").first()
+      expire_time = parseInt($("#silence_client_expire").val(), 10)
       if @client.get("silenced")
         icon.removeClass("icon-volume-off").addClass("icon-spinner icon-spin")
         text.html("Un-silencing...")
@@ -57,6 +58,7 @@ namespace "SensuDashboard.Views.Events", (exports) ->
         icon.removeClass("icon-volume-up").addClass("icon-spinner icon-spin")
         text.html("Silencing...")
         @client.silence
+          expire_time: expire_time
           success: (model) ->
             client_name = model.get("name")
             toastr.success("Silenced client #{client_name}."
@@ -76,6 +78,7 @@ namespace "SensuDashboard.Views.Events", (exports) ->
         parent = $(ev.target)
       icon = parent.find("i").first()
       text = parent.find("span").first()
+      expire_time = parseInt($("#silence_check_expire").val(), 10)
       if @event.get("silenced")
         icon.removeClass("icon-volume-off").addClass("icon-spinner icon-spin")
         text.html("Un-silencing...")
@@ -95,6 +98,7 @@ namespace "SensuDashboard.Views.Events", (exports) ->
         icon.removeClass("icon-volume-up").addClass("icon-spinner icon-spin")
         text.html("Silencing...")
         @event.silence
+          expire_time: expire_time
           success: (model) ->
             check_name = model.get("check")
             toastr.success("Silenced check #{check_name}."
