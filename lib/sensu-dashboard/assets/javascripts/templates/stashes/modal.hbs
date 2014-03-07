@@ -10,6 +10,10 @@
     <h5>Path</h5>
     <span class="modal_value">{{path}}</span>
   </div>
+  <div class="well">
+    <h5>Expire</h5>
+    <span class="modal_value">{{expire}}</span>
+  </div>
   {{#each content}}
     <div class="well">
       <h5>{{@key}}</h5>
@@ -18,6 +22,14 @@
   {{/each}}
 </div>
 <div class="modal-footer">
+  <input id="silence_path" type="hidden" value="{{path}}" />
+  Expire:
+  <input style="width:50px;" id="stash_expire" type="number" value="{{expire}}" />
+  <button id="update_stash" class="btn btn-danger">
+    <i class="icon-volume-off icon-white" />
+    <span>&nbsp;Save Change</span>
+  </button>
+  <br />
   <button id="remove_stash" class="btn btn-danger">
     <i class="icon-remove icon-white" />
     <span>&nbsp;Remove</span>

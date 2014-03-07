@@ -5,6 +5,7 @@ namespace "SensuDashboard.Views.Stashes", (exports) ->
     name: "stashes/modal"
 
     events:
+      "click #update_stash": "updateStash"
       "click #remove_stash": "removeStash"
 
     initialize: ->
@@ -43,4 +44,26 @@ namespace "SensuDashboard.Views.Stashes", (exports) ->
           toastr.error("Error removing stash #{stash_name}.
             The stash may already be removed or Sensu API is down."
             , "Removal Error!"
+            , { positionClass: "toast-bottom-right" })
+
+    updateStash: (ev) ->
+      tag_name = $(ev.target).prop("tagName")
+      if tag_name == "SPAN" || tag_name == "I"
+        parent = $(ev.target).parent()
+      else
+        parent = $(ev.target)
+      text = parent.find("span").first()
+      silence_path = $("#silence_path").val()
+      expire_time = parseInt($("#stash_expire").val(), 10)
+      text.html("Updating...")
+      @model.updateStash
+        expire_time: expire_time
+        silence_path: silence_path
+        success: (model) ->
+          toastr.success("Updated stash #{silence_path}."
+            , "Success!"
+            , { positionClass: "toast-bottom-right" })
+        error: (model, xhr, opts) ->
+          toastr.error("Error updating stash#{silence_path}."
+            , "Updating Error!"
             , { positionClass: "toast-bottom-right" })
