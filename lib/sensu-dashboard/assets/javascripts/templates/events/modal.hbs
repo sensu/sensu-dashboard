@@ -25,30 +25,35 @@
   </div>
 </div>
 <div class="modal-footer">
+  Expire:
+  <input style="width:50px;" id="silence_client_expire" type="number" value="{{client.expire}}" />
   {{#if client.silenced}}
     <button id="silence_client" class="btn btn-danger">
       <i class="icon-volume-off icon-white" />
       <span>&nbsp;Un-silence Client</span>
     </button>
   {{else}}
-    Expire (seconds): <input id="silence_client_expire" type="text" value="{{client.expire}}" />
     <button id="silence_client" class="btn btn-danger">
       <i class="icon-volume-up icon-white" />
       <span>&nbsp;Silence Client</span>
     </button>
   {{/if}}
+  <br />
+
+  Expire:
+  <input style="width:50px;" id="silence_check_expire" type="number" value="{{event.expire}}" />
   {{#if event.silenced}}
     <button id="silence_check" class="btn btn-danger">
       <i class="icon-volume-off icon-white" />
       <span>&nbsp;Un-silence Check</span>
     </button>
   {{else}}
-    Expire (seconds): <input id="silence_check_expire" type="text" value="{{event.expire}}" />
     <button id="silence_check" class="btn btn-danger">
       <i class="icon-volume-up icon-white" />
       <span>&nbsp;Silence Check</span>
     </button>
   {{/if}}
+  <br />
   <button id="resolve_check" class="btn btn-danger">
     <i class="icon-ok icon-white" />
     <span>&nbsp;Resolve</span>
