@@ -33,8 +33,8 @@ module Sensu::Dashboard
 
     class << self
       def run(options={})
+        setup(options)
         EM::run do
-          setup(options)
           start
           trap_signals
         end
@@ -73,12 +73,12 @@ module Sensu::Dashboard
             :settings => $dashboard_settings
           })
         end
-        base.setup_process
         $api_url = 'http://' + $api_settings[:host] + ':' + $api_settings[:port].to_s
         $api_options = {:head => {'Accept' => 'application/json'}}
         if $api_settings[:user] && $api_settings[:password]
           $api_options.merge!(:head => {:authorization => [$api_settings[:user], $api_settings[:password]]})
         end
+        base.setup_process
       end
 
       def start
