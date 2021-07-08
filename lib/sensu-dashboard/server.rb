@@ -265,6 +265,30 @@ module Sensu::Dashboard
       end
     end
 
+    apost '/*/*', :provides => 'json' do |path, action|
+      content_type 'application/json'
+      begin
+        $api_options[:body] = request.body.read
+        http = EM::HttpRequest.new($api_url + '/' + path + '/' + action).post($api_options)
+      rescue => error
+        $logger.error('failed to query the sensu api', {
+          :error => error
+        })
+        status 404
+        body '{"error":"could not retrieve /'+path+' from the sensu api"}'
+      end
+
+      http.errback do
+        status 502
+        body '{"error":"could not retrieve /'+path+' from the sensu api"}'
+      end
+
+      http.callback do
+        status http.response_header.status
+        body http.response
+      end
+    end
+    
     apost '/*', :provides => 'json' do |path|
       content_type 'application/json'
       begin

@@ -7,6 +7,12 @@ namespace "SensuDashboard.Views.Checks", (exports) ->
     className: ->
       @model.get("name")
 
+    events:
+      "click input[type=checkbox]": "toggleSelect"
+
+    toggleSelect: ->
+      @model.set(selected: !@model.get("selected"))
+
     render: ->
       @$el.html(@template(@presenter()))
       this
